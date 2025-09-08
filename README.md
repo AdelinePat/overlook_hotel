@@ -1,2 +1,2 @@
 # overlook_hotel
-projet à quatre sur spring boot
+projet à trois sur spring boot
