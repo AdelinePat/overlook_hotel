@@ -19,3 +19,5 @@ buildNumber.properties
 # IDE settings
 .vscode/
 .edea/
+.idea/**
+.idea/
