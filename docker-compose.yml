@@ -1,0 +1,56 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: dockerfile.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - type: bind
+        source: ./target
+        target: /app/target
+      - type: bind
+        source: ./src
+        target: /app/src
+      - type: bind
+        source: pom.xml
+        target: /app/pom.xml
+      - type: volume
+        source: maven-repo
+        target: /root/.m2
+    command: mvn spring-boot:run -Dspring-boot.run.fork=false -Dspring-boot.run.jvmArguments='-Dspring.devtools.restart.poll-interval=1000'
+    environment:
+      MAVEN_OPTS: -Dmaven.test.skip=true
+      SPRING_DEVTOOLS_RESTART_POLL_INTERVAL: 1000
+      SPRING_DEVTOOLS_RESTART_ENABLED: true
+      CHOKIDAR_USEPOLLING: true
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    depends_on:
+      - mysql-db
+#    restart: unless-stopped
+
+  # https://hub.docker.com/_/mysql
+  mysql-db:
+    image: mysql:9.4.0-oraclelinux9
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - type: volume
+        source: mysql-data
+        target: /var/lib/mysql
+      - type: bind
+        source: ./init.sql
+        target: /docker-entrypoint-initdb.d/init.sql
+#    restart: unless-stopped
+
+volumes:
+  maven-repo:
+  mysql-data:
+
