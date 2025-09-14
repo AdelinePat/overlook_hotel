@@ -5,6 +5,7 @@ CREATE DATABASE IF NOT EXISTS overlook_hotel
     COLLATE utf8mb4_unicode_ci;
 
 USE overlook_hotel;
+SET NAMES 'utf8mb4';
 
 CREATE TABLE IF NOT EXISTS manager (
         id_manager INT AUTO_INCREMENT PRIMARY KEY,
