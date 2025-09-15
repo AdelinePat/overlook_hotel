@@ -1,0 +1,411 @@
+-- /!\ First attempt creating database, not tested yet !!!
+
+CREATE DATABASE IF NOT EXISTS overlook_hotel
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+USE overlook_hotel;
+SET NAMES 'utf8mb4';
+
+CREATE TABLE IF NOT EXISTS manager (
+        id_manager INT AUTO_INCREMENT PRIMARY KEY,
+        lastname VARCHAR(100) NOT NULL,
+        firstname VARCHAR(100) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        salt VARCHAR(255),
+        password VARCHAR(255)
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- client
+CREATE TABLE IF NOT EXISTS client (
+        id_client INT AUTO_INCREMENT PRIMARY KEY,
+        lastname VARCHAR(100) NOT NULL,
+        firstname VARCHAR(100) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        phone VARCHAR(15) NOT NULL,
+        salt VARCHAR(255),
+        password VARCHAR(255)
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS fidelity (
+        id_fidelity INT AUTO_INCREMENT PRIMARY KEY,
+        id_client INT NOT NULL,
+        value INT NOT NULL,
+        FOREIGN KEY (id_client) REFERENCES client(id_client) ON DELETE CASCADE
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- employee
+CREATE TABLE IF NOT EXISTS employee (
+        id_employee INT AUTO_INCREMENT PRIMARY KEY,
+        lastname VARCHAR(100) NOT NULL,
+        firstname VARCHAR(100) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        job ENUM('recetionniste', 'agent entretien', 'hôte', 'coordinateur', 'bagagiste', 'chef cuisinier') NOT NULL,
+        salt VARCHAR(255),
+        password VARCHAR(255)
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS formation (
+         id_formation INT AUTO_INCREMENT PRIMARY KEY,
+         start DATE NOT NULL,
+         end DATE NOT NULL,
+         title VARCHAR(50)
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS schedule (
+        id_schedule INT AUTO_INCREMENT PRIMARY KEY,
+        day_of_week ENUM('lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche') NOT NULL,
+        shift ENUM('matin', 'après-midi', 'soir', 'nuit') NOT NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS vacation (
+        id_vacation INT AUTO_INCREMENT PRIMARY KEY,
+        id_employee INT NOT NULL,
+        start DATE NOT NULL,
+        end DATE NOT NULL,
+        FOREIGN KEY (id_employee) REFERENCES employee(id_employee) ON DELETE CASCADE
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS employee_schedule (
+        id_employee_schedule INT AUTO_INCREMENT PRIMARY KEY,
+        id_employee INT NOT NULL,
+        id_schedule INT,
+        FOREIGN KEY (id_employee) REFERENCES employee(id_employee) ON DELETE CASCADE,
+        FOREIGN KEY (id_schedule) REFERENCES schedule(id_schedule) ON DELETE SET NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS employee_formation (
+        id_employee_formation INT AUTO_INCREMENT PRIMARY KEY,
+        id_employee INT NOT NULL,
+        id_formation INT,
+        FOREIGN KEY (id_employee) REFERENCES employee(id_employee) ON DELETE CASCADE,
+        FOREIGN KEY (id_formation) REFERENCES formation(id_formation) ON DELETE SET NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- room
+CREATE TABLE IF NOT EXISTS room (
+        id_room INT AUTO_INCREMENT PRIMARY KEY,
+        number INT NOT NULL,
+        capacity INT NOT NULL,
+        description VARCHAR(500),
+        standing ENUM('superieure', 'de_luxe', 'superbe_vue', 'simple') NOT NULL,
+        type ENUM('simple', 'double'),
+        night_price DECIMAL(6,2) NOT NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS room_bonus (
+        id_room_bonus INT AUTO_INCREMENT PRIMARY KEY,
+        type ENUM('television', 'seche_cheveux', 'mini_bar', 'bouilloire', 'fauteuil_massant', 'pc_gaming', 'jacuzzi') NOT NULL,
+        daily_price DECIMAL(6,2) NOT NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS room_reservation (
+        id_room_reservation INT AUTO_INCREMENT PRIMARY KEY,
+        id_client INT,
+        creation DATETIME NOT NULL,
+        start_date DATETIME NOT NULL,
+        night_number INT NOT NULL,
+        status ENUM('confirmee', 'annulee'),
+        payment_date DATETIME,
+        total_price DECIMAL(6,2) NOT NULL,
+        FOREIGN KEY (id_client) REFERENCES client(id_client) ON DELETE SET NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS room_link_reservation (
+        id_room_link_reservation INT AUTO_INCREMENT PRIMARY KEY,
+        id_room_reservation INT NOT NULL,
+        id_room INT,
+        FOREIGN KEY (id_room_reservation) REFERENCES room_reservation(id_room_reservation) ON DELETE CASCADE,
+        FOREIGN KEY (id_room) REFERENCES room(id_room) ON DELETE SET NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS room_link_bonus (
+        id_room_link_bonus INT AUTO_INCREMENT PRIMARY KEY,
+        id_room_bonus INT,
+        id_room INT,
+        FOREIGN KEY (id_room_bonus) REFERENCES room_bonus(id_room_bonus) ON DELETE SET NULL,
+        FOREIGN KEY (id_room) REFERENCES room(id_room) ON DELETE SET NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- event
+CREATE TABLE IF NOT EXISTS place (
+        id_place INT AUTO_INCREMENT PRIMARY KEY,
+        type ENUM('salle_de_reunion', 'piscine', 'spa', 'tennis', 'placard_a_balais_sous_l_escalier', 'salle_sur_demande') NOT NULL,
+        capacity INT NOT NULL,
+        hourly_price DECIMAL(6,2) NOT NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS event_reservation (
+        id_event_reservation INT AUTO_INCREMENT PRIMARY KEY,
+        id_client INT,
+        event ENUM('mariage', 'fete', 'anniversaire', 'enterrement', 'reunion', 'autre') NOT NULL,
+        start_date DATETIME NOT NULL,
+        end_date DATETIME NOT NULL,
+        total_price DECIMAL(6,2) NOT NULL,
+        FOREIGN KEY (id_client) REFERENCES client(id_client) ON DELETE SET NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS event_link_place (
+        id_event_link_place INT AUTO_INCREMENT PRIMARY KEY,
+        id_event_reservation INT NOT NULL,
+        id_place INT,
+        FOREIGN KEY (id_event_reservation) REFERENCES event_reservation(id_event_reservation) ON DELETE CASCADE,
+        FOREIGN KEY (id_place) REFERENCES place(id_place) ON DELETE SET NULL
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- depend on multiple tables
+CREATE TABLE IF NOT EXISTS feedback (
+        id_feedback INT AUTO_INCREMENT PRIMARY KEY,
+        id_room_reservation INT,
+        rate INT NOT NULL,
+        comment VARCHAR(500),
+        FOREIGN KEY (id_room_reservation) REFERENCES room_reservation(id_room_reservation) ON DELETE CASCADE
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS response (
+        id_response INT AUTO_INCREMENT PRIMARY KEY,
+        id_manager INT,
+        id_feedback INT NOT NULL,
+        answer VARCHAR(500),
+        FOREIGN KEY (id_manager) REFERENCES manager(id_manager) ON DELETE SET NULL,
+        FOREIGN KEY (id_feedback) REFERENCES feedback(id_feedback) ON DELETE CASCADE
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- fake data
+INSERT INTO manager (lastname, firstname, email, salt, password)
+VALUES
+        ('Dupont', 'Jean', 'jean.dupont@example.com', 'somesalt1', 'password1'),
+        ('Martin', 'Sophie', 'sophie.martin@example.com', 'somesalt2', 'password2');
+
+INSERT INTO client (lastname, firstname, email, phone, salt, password)
+VALUES
+        ('Durand', 'Alice', 'alice.durand@example.com', '0123456789', 'salt1', 'pass1'),
+        ('Moreau', 'Bob', 'bob.moreau@example.com', '0987654321', 'salt2', 'pass2'),
+        ('Petit', 'Claire', 'claire.petit@example.com', '0612345678', 'salt3', 'pass3'),
+        ('Roux', 'David', 'david.roux@example.com', '0654321987', 'salt4', 'pass4'),
+        ('Blanc', 'Emma', 'emma.blanc@example.com', '0623456789', 'salt5', 'pass5'),
+        ('Lemoine', 'Franck', 'franck.lemoine@example.com', '0678912345', 'salt6', 'pass6'),
+        ('Gautier', 'Hélène', 'helene.gautier@example.com', '0612349876', 'salt7', 'pass7'),
+        ('Faure', 'Isabelle', 'isabelle.faure@example.com', '0656781234', 'salt8', 'pass8'),
+        ('Chevalier', 'Julien', 'julien.chevalier@example.com', '0621987654', 'salt9', 'pass9'),
+        ('Michel', 'Karine', 'karine.michel@example.com', '0612345671', 'salt10', 'pass10'),
+        ('Perrin', 'Laurent', 'laurent.perrin@example.com', '0623456782', 'salt11', 'pass11'),
+        ('Henry', 'Marie', 'marie.henry@example.com', '0678123490', 'salt12', 'pass12'),
+        ('Noel', 'Nicolas', 'nicolas.noel@example.com', '0612987654', 'salt13', 'pass13'),
+        ('Robin', 'Olivia', 'olivia.robin@example.com', '0654321765', 'salt14', 'pass14'),
+        ('Giraud', 'Paul', 'paul.giraud@example.com', '0612349872', 'salt15', 'pass15'),
+        ('Colin', 'Quentin', 'quentin.colin@example.com', '0623451987', 'salt16', 'pass16'),
+        ('Marchand', 'Roxane', 'roxane.marchand@example.com', '0678123459', 'salt17', 'pass17'),
+        ('Lucas', 'Sylvain', 'sylvain.lucas@example.com', '0612348765', 'salt18', 'pass18'),
+        ('Bertrand', 'Thomas', 'thomas.bertrand@example.com', '0623456780', 'salt19', 'pass19'),
+        ('Lefevre', 'Valérie', 'valerie.lefevre@example.com', '0678123491', 'salt20', 'pass20');
+
+INSERT INTO employee (lastname, firstname, email, job, salt, password)
+VALUES
+        ('Legrand', 'Pierre', 'pierre.legrand@example.com', 'recetionniste', 'saltE1', 'passE1'),
+        ('Bernard', 'Marie', 'marie.bernard@example.com', 'agent entretien', 'saltE2', 'passE2'),
+        ('Faure', 'Luc', 'luc.faure@example.com', 'hôte', 'saltE3', 'passE3'),
+        ('Dupuis', 'Anne', 'anne.dupuis@example.com', 'coordinateur', 'saltE4', 'passE4'),
+        ('Meyer', 'Sébastien', 'sebastien.meyer@example.com', 'bagagiste', 'saltE5', 'passE5'),
+        ('Renaud', 'Céline', 'celine.renaud@example.com', 'chef cuisinier', 'saltE6', 'passE6'),
+        ('Benoit', 'Éric', 'eric.benoit@example.com', 'recetionniste', 'saltE7', 'passE7'),
+        ('Girard', 'Fanny', 'fanny.girard@example.com', 'agent entretien', 'saltE8', 'passE8'),
+        ('Robert', 'Hugo', 'hugo.robert@example.com', 'hôte', 'saltE9', 'passE9'),
+        ('Vidal', 'Inès', 'ines.vidal@example.com', 'coordinateur', 'saltE10', 'passE10');
+
+INSERT INTO room (number, capacity, description, standing, type, night_price)
+VALUES
+        (101, 2, 'Double room with garden view', 'superieure', 'double', 120.00),
+        (102, 1, 'Single room with city view', 'simple', 'simple', 80.00),
+        (103, 2, 'Double room with balcony', 'de_luxe', 'double', 150.00),
+        (104, 2, 'Superb view of the lake', 'superbe_vue', 'double', 200.00),
+        (105, 1, 'Cozy single room', 'simple', 'simple', 75.00),
+        (106, 3, 'Family room', 'superieure', 'double', 180.00),
+        (107, 2, 'Double room with jacuzzi', 'de_luxe', 'double', 220.00),
+        (108, 1, 'Economy single room', 'simple', 'simple', 70.00),
+        (109, 2, 'Superior double room', 'superieure', 'double', 130.00),
+        (110, 2, 'Deluxe double with terrace', 'de_luxe', 'double', 170.00);
+
+
+INSERT INTO fidelity (id_client, value) VALUES
+        (1, 100),
+        (2, 50),
+        (3, 75),
+        (4, 120),
+        (5, 30),
+        (6, 80),
+        (7, 200),
+        (8, 60),
+        (9, 90),
+        (10, 40);
+
+
+INSERT INTO formation (start, end, title) VALUES
+        ('2025-09-01', '2025-09-03', 'Customer Service Training'),
+        ('2025-09-05', '2025-09-07', 'Safety Procedures'),
+        ('2025-09-08', '2025-09-10', 'Advanced Cleaning Techniques'),
+        ('2025-09-11', '2025-09-13', 'Front Desk Management'),
+        ('2025-09-14', '2025-09-16', 'Kitchen Hygiene'),
+        ('2025-09-17', '2025-09-19', 'Conflict Resolution'),
+        ('2025-09-20', '2025-09-22', 'Event Coordination'),
+        ('2025-09-23', '2025-09-25', 'Hospitality Leadership'),
+        ('2025-09-26', '2025-09-28', 'Luxury Room Maintenance'),
+        ('2025-09-29', '2025-10-01', 'Food Safety Certification');
+
+INSERT INTO schedule (day_of_week, shift) VALUES
+        ('lundi', 'matin'),
+        ('lundi', 'après-midi'),
+        ('mardi', 'matin'),
+        ('mardi', 'soir'),
+        ('mercredi', 'nuit'),
+        ('jeudi', 'matin'),
+        ('vendredi', 'soir'),
+        ('samedi', 'après-midi'),
+        ('dimanche', 'matin'),
+        ('dimanche', 'soir');
+
+INSERT INTO vacation (id_employee, start, end) VALUES
+        (1, '2025-09-01', '2025-09-05'),
+        (2, '2025-09-02', '2025-09-06'),
+        (3, '2025-09-03', '2025-09-07'),
+        (4, '2025-09-04', '2025-09-08'),
+        (5, '2025-09-05', '2025-09-09'),
+        (6, '2025-09-06', '2025-09-10'),
+        (7, '2025-09-07', '2025-09-11'),
+        (8, '2025-09-08', '2025-09-12'),
+        (9, '2025-09-09', '2025-09-13'),
+        (10, '2025-09-10', '2025-09-14');
+
+INSERT INTO employee_schedule (id_employee, id_schedule) VALUES
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+        (6, 6),
+        (7, 7),
+        (8, 8),
+        (9, 9),
+        (10, 10);
+
+INSERT INTO employee_formation (id_employee, id_formation) VALUES
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+        (6, 6),
+        (7, 7),
+        (8, 8),
+        (9, 9),
+        (10, 10);
+
+INSERT INTO room_bonus (type, daily_price) VALUES
+        ('television', 5.00),
+        ('seche_cheveux', 2.00),
+        ('mini_bar', 10.00),
+        ('bouilloire', 3.00),
+        ('fauteuil_massant', 15.00),
+        ('pc_gaming', 20.00),
+        ('jacuzzi', 25.00),
+        ('television', 5.00),
+        ('mini_bar', 10.00),
+        ('fauteuil_massant', 15.00);
+
+
+INSERT INTO room_reservation (id_client, creation, start_date, night_number, status, payment_date, total_price) VALUES
+        (1, '2025-09-01 10:00:00', '2025-09-05 14:00:00', 3, 'confirmee', '2025-09-01 12:00:00', 360.00),
+        (2, '2025-09-02 11:00:00', '2025-09-06 15:00:00', 2, 'confirmee', '2025-09-02 12:30:00', 160.00),
+        (3, '2025-09-03 12:00:00', '2025-09-07 16:00:00', 4, 'annulee', NULL, 320.00),
+        (4, '2025-09-04 13:00:00', '2025-09-08 14:00:00', 1, 'confirmee', '2025-09-04 14:00:00', 80.00),
+        (5, '2025-09-05 14:00:00', '2025-09-09 15:00:00', 2, 'confirmee', '2025-09-05 15:30:00', 150.00),
+        (6, '2025-09-06 15:00:00', '2025-09-10 14:00:00', 3, 'confirmee', '2025-09-06 16:00:00', 360.00),
+        (7, '2025-09-07 16:00:00', '2025-09-11 15:00:00', 2, 'annulee', NULL, 300.00),
+        (8, '2025-09-08 17:00:00', '2025-09-12 14:00:00', 1, 'confirmee', '2025-09-08 18:00:00', 75.00),
+        (9, '2025-09-09 18:00:00', '2025-09-13 15:00:00', 4, 'confirmee', '2025-09-09 19:00:00', 520.00),
+        (10, '2025-09-10 19:00:00', '2025-09-14 14:00:00', 2, 'confirmee', '2025-09-10 20:00:00', 260.00);
+
+INSERT INTO room_link_reservation (id_room_reservation, id_room) VALUES
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+        (2, 6),
+        (7, 7),
+        (2, 8),
+        (9, 9),
+        (3, 1);
+
+INSERT INTO room_link_bonus (id_room_bonus, id_room) VALUES
+         (1, 1),
+         (2, 2),
+         (3, 3),
+         (4, 4),
+         (5, 5),
+         (6, 6),
+         (7, 7),
+         (8, 8),
+         (9, 9),
+         (4, 1);
+
+INSERT INTO place (type, capacity, hourly_price) VALUES
+        ('salle_de_reunion', 20, 50.00),
+        ('piscine', 15, 30.00),
+        ('spa', 10, 40.00),
+        ('tennis', 4, 25.00),
+        ('placard_a_balais_sous_l_escalier', 1, 5.00),
+        ('salle_sur_demande', 25, 60.00),
+        ('salle_de_reunion', 18, 45.00),
+        ('spa', 8, 35.00),
+        ('piscine', 12, 32.00),
+        ('tennis', 6, 28.00);
+
+
+INSERT INTO event_reservation (id_client, event, start_date, end_date, total_price) VALUES
+        (1, 'mariage', '2025-10-01 12:00:00', '2025-10-01 18:00:00', 1000.00),
+        (2, 'fete', '2025-10-02 14:00:00', '2025-10-02 20:00:00', 800.00),
+        (3, 'anniversaire', '2025-10-03 10:00:00', '2025-10-03 15:00:00', 500.00),
+        (4, 'enterrement', '2025-10-04 09:00:00', '2025-10-04 13:00:00', 300.00),
+        (5, 'reunion', '2025-10-05 11:00:00', '2025-10-05 16:00:00', 700.00),
+        (6, 'autre', '2025-10-06 12:00:00', '2025-10-06 18:00:00', 600.00),
+        (7, 'mariage', '2025-10-07 14:00:00', '2025-10-07 20:00:00', 1200.00),
+        (8, 'fete', '2025-10-08 15:00:00', '2025-10-08 21:00:00', 900.00),
+        (9, 'anniversaire', '2025-10-09 10:00:00', '2025-10-09 15:00:00', 550.00),
+        (10, 'reunion', '2025-10-10 11:00:00', '2025-10-10 16:00:00', 750.00);
+
+INSERT INTO event_link_place (id_event_reservation, id_place) VALUES
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+        (6, 6),
+        (7, 7),
+        (8, 8),
+        (9, 9),
+        (10, 10);
+
+INSERT INTO feedback (id_room_reservation, rate, comment) VALUES
+        (1, 5, 'Excellent stay!'),
+        (2, 4, 'Very good service.'),
+        (3, 3, 'Average experience.'),
+        (4, 2, 'Room was not clean.'),
+        (5, 5, 'Loved it!'),
+        (6, 4, 'Nice stay.'),
+        (7, 3, 'Okay experience.'),
+        (8, 5, 'Fantastic!'),
+        (9, 4, 'Good overall.'),
+        (10, 3, 'Could be better.');
+
+INSERT INTO response (id_manager, id_feedback, answer) VALUES
+        (1, 1, 'Thank you for your feedback!'),
+        (2, 2, 'We appreciate your comment.'),
+        (1, 3, 'Sorry to hear that.'),
+        (2, 4, 'We will improve.'),
+        (1, 5, 'Glad you enjoyed it!'),
+        (2, 6, 'Thanks for your review.'),
+        (1, 7, 'We will work on it.'),
+        (2, 8, 'Fantastic! Thank you!'),
+        (1, 9, 'We appreciate your feedback.'),
+        (2, 10, 'Thank you for your suggestions.');
