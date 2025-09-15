@@ -5,21 +5,22 @@ import overlook_hotel.overlook_hotel.repository.ClientRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import overlook_hotel.overlook_hotel.service.ClientService;
 
 import java.util.List;
 
 @Controller
 public class ClientController {
 
-    private final ClientRepository clientRepository;
+    private final ClientService clientService;
 
-    public ClientController(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        List<Client> clients = clientRepository.findAll();
+        public String index(Model model) {
+        List<Client> clients = clientService.findAllFiltered("", "", "", "");
         model.addAttribute("clients", clients);
         model.addAttribute("testBlabla", "salutation les gens. coucou florence et thibault");
         return "index";

@@ -1,4 +1,4 @@
-package overlook_hotel.overlook_hotel.model;
+package overlook_hotel.overlook_hotel.specification;
 
 import org.springframework.data.jpa.domain.Specification;
 import overlook_hotel.overlook_hotel.entity.Client;

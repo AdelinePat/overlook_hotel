@@ -2,6 +2,7 @@ package overlook_hotel.overlook_hotel.service;
 import overlook_hotel.overlook_hotel.entity.Client;
 
 import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +21,7 @@ public class ClientServiceTest {
         for (Client client : clients) {
             System.out.println("\t" + client.getLastname() + " " + client.getFirstname());
         }
-        Assertions.assertEquals(20, clients.size());
+        assertEquals(20, clients.size());
     }
 
     @Test
@@ -30,7 +31,7 @@ public class ClientServiceTest {
         for (Client client : clients) {
             System.out.println("\t" + client.getLastname() + " " + client.getFirstname());
         }
-        Assertions.assertEquals(4, clients.size());
+        assertEquals(4, clients.size());
     }
 
     @Test
@@ -40,6 +41,6 @@ public class ClientServiceTest {
         for (Client client : clients) {
             System.out.println("\t" + client.getLastname() + " " + client.getFirstname());
         }
-        Assertions.assertEquals(2, clients.size());
+        assertEquals(2, clients.size());
     }
 }

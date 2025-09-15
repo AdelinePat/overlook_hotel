@@ -4,8 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import overlook_hotel.overlook_hotel.entity.Room;
 import overlook_hotel.overlook_hotel.model.BedType;
-import overlook_hotel.overlook_hotel.model.RoomSpecification;
-import overlook_hotel.overlook_hotel.model.Job;
+import overlook_hotel.overlook_hotel.specification.RoomSpecification;
 import overlook_hotel.overlook_hotel.model.RoomStanding;
 import overlook_hotel.overlook_hotel.repository.RoomRepository;
 

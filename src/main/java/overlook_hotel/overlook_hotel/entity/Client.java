@@ -15,32 +15,32 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Client {
-
-    @Id@Column(name="id_client", nullable = false, unique = true)
+    @Id
+    @Column(name = "id_client", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idClient;
 
     @NotBlank
-    @Column(name="lastname", length = 100)
+    @Column(name = "lastname", length = 100)
     private String lastname;
 
     @NotBlank
-    @Column(name="firstname", length = 100)
+    @Column(name = "firstname", length = 100)
     private String firstname;
 
     @NotBlank
-    @Column(name="email", length = 255)
+    @Column(name = "email", length = 255)
     private String email;
 
     @NotBlank
-    @Column(name="phone", length = 15)
+    @Column(name = "phone", length = 15)
     private String phone;
 
     @NotBlank
-    @Column(name="password", length = 255)
+    @Column(name = "password", length = 255)
     private String password;
 
     @NotBlank
-    @Column(name="salt", length = 255)
+    @Column(name = "salt", length = 255)
     private String salt;
 }
