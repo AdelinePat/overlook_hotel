@@ -2,7 +2,7 @@ services:
   dev:
     build:
       context: .
-      dockerfile: dockerfile.dev
+      dockerfile: Dockerfile.dev
     ports:
       - "8080:8080"
     volumes:
@@ -42,7 +42,7 @@ services:
       MYSQL_CHARSET: utf8mb4
       MYSQL_COLLATION: utf8mb4_unicode_ci
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - type: volume
         source: mysql-data
