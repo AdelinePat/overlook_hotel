@@ -2,59 +2,45 @@ package overlook_hotel.overlook_hotel.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "client")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Client {
 
-    @Id
+    @Id@Column(name="id_client", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idClient;
 
+    @NotBlank
+    @Column(name="lastname", length = 100)
     private String lastname;
+
+    @NotBlank
+    @Column(name="firstname", length = 100)
     private String firstname;
+
+    @NotBlank
+    @Column(name="email", length = 255)
     private String email;
+
+    @NotBlank
+    @Column(name="phone", length = 15)
     private String phone;
 
-    // Getters and setters
+    @NotBlank
+    @Column(name="password", length = 255)
+    private String password;
 
-    public Integer getIdClient() {
-        return idClient;
-    }
-
-    public void setIdClient(Integer idClient) {
-        this.idClient = idClient;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+    @NotBlank
+    @Column(name="salt", length = 255)
+    private String salt;
 }

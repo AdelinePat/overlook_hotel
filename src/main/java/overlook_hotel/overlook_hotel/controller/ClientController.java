@@ -21,7 +21,7 @@ public class ClientController {
     public String index(Model model) {
         List<Client> clients = clientRepository.findAll();
         model.addAttribute("clients", clients);
-        model.addAttribute("testBlabla", "salutation les gens. coucou florence et thibault");
+        model.addAttribute("testBlabla", "HAAAAAAAA salutation les gens. coucou florence et thibault");
         return "index";
     }
 }
