@@ -29,7 +29,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     depends_on:
       - mysql-db
-#    restart: unless-stopped
+    restart: unless-stopped
 
   # https://hub.docker.com/_/mysql
   mysql-db:
@@ -51,7 +51,7 @@ services:
         source: ./init.sql
         target: /docker-entrypoint-initdb.d/init.sql
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-#    restart: unless-stopped
+    restart: unless-stopped
 
 volumes:
   maven-repo:

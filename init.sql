@@ -409,4 +409,3 @@ INSERT INTO response (id_manager, id_feedback, answer) VALUES
         (2, 8, 'Fantastic! Thank you!'),
         (1, 9, 'We appreciate your feedback.'),
         (2, 10, 'Thank you for your suggestions.');
-
