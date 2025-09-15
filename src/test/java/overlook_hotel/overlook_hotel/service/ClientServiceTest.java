@@ -16,9 +16,9 @@ public class ClientServiceTest {
     @Test
     public void findAllClients() {
         List<Client> clients = clientService.findAllFiltered("", "", "", "");
-        System.out.println("#### 1 #### liste des clients:");
+        System.out.println("\t\t #### 1 #### liste des clients:");
         for (Client client : clients) {
-            System.out.println(client.getLastname() + " " + client.getFirstname());
+            System.out.println("\t" + client.getLastname() + " " + client.getFirstname());
         }
         Assertions.assertEquals(20, clients.size());
     }
@@ -26,9 +26,9 @@ public class ClientServiceTest {
     @Test
     public void findClientByLastname() {
         List<Client> clients = clientService.findAllFiltered("M", "", "", "");
-        System.out.println("#### 2 #### liste des clients nom:");
+        System.out.println("\t\t #### 2 #### liste des clients nom:");
         for (Client client : clients) {
-            System.out.println(client.getLastname() + " " + client.getFirstname());
+            System.out.println("\t" + client.getLastname() + " " + client.getFirstname());
         }
         Assertions.assertEquals(4, clients.size());
     }
@@ -36,9 +36,9 @@ public class ClientServiceTest {
     @Test
     public void findClientByLastnameAndFirstname() {
         List<Client> clients = clientService.findAllFiltered("M", "o", "", "");
-        System.out.println("#### 3 #### liste des clients nom prénom:");
+        System.out.println("\t\t #### 3 #### liste des clients nom prénom:");
         for (Client client : clients) {
-            System.out.println(client.getLastname() + " " + client.getFirstname());
+            System.out.println("\t" + client.getLastname() + " " + client.getFirstname());
         }
         Assertions.assertEquals(2, clients.size());
     }

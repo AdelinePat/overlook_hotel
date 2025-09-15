@@ -40,7 +40,12 @@ CREATE TABLE IF NOT EXISTS employee (
         lastname VARCHAR(100) NOT NULL,
         firstname VARCHAR(100) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
-        job ENUM('recetionniste', 'agent entretien', 'hôte', 'coordinateur', 'bagagiste', 'chef cuisinier') NOT NULL,
+        job ENUM('RECEPTIONNISTE',
+                 'AGENT_ENTRETIEN',
+                 'HOTE',
+                 'COORDINATEUR',
+                 'BAGAGISTE',
+                 'CHEF_CUISINIER') NOT NULL,
         salt VARCHAR(255),
         password VARCHAR(255)
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -88,8 +93,8 @@ CREATE TABLE IF NOT EXISTS room (
         number INT NOT NULL,
         capacity INT NOT NULL,
         description VARCHAR(500),
-        standing ENUM('superieure', 'de_luxe', 'superbe_vue', 'simple') NOT NULL,
-        type ENUM('simple', 'double'),
+        standing ENUM('SUPERIEURE', 'DE_LUXE', 'SUPERBE_VUE', 'SIMPLE') NOT NULL,
+        type ENUM('SIMPLE', 'DOUBLE'),
         night_price DECIMAL(6,2) NOT NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -202,29 +207,31 @@ VALUES
 
 INSERT INTO employee (lastname, firstname, email, job, salt, password)
 VALUES
-        ('Legrand', 'Pierre', 'pierre.legrand@example.com', 'recetionniste', 'saltE1', 'passE1'),
-        ('Bernard', 'Marie', 'marie.bernard@example.com', 'agent entretien', 'saltE2', 'passE2'),
-        ('Faure', 'Luc', 'luc.faure@example.com', 'hôte', 'saltE3', 'passE3'),
-        ('Dupuis', 'Anne', 'anne.dupuis@example.com', 'coordinateur', 'saltE4', 'passE4'),
-        ('Meyer', 'Sébastien', 'sebastien.meyer@example.com', 'bagagiste', 'saltE5', 'passE5'),
-        ('Renaud', 'Céline', 'celine.renaud@example.com', 'chef cuisinier', 'saltE6', 'passE6'),
-        ('Benoit', 'Éric', 'eric.benoit@example.com', 'recetionniste', 'saltE7', 'passE7'),
-        ('Girard', 'Fanny', 'fanny.girard@example.com', 'agent entretien', 'saltE8', 'passE8'),
-        ('Robert', 'Hugo', 'hugo.robert@example.com', 'hôte', 'saltE9', 'passE9'),
-        ('Vidal', 'Inès', 'ines.vidal@example.com', 'coordinateur', 'saltE10', 'passE10');
+        ('Legrand', 'Pierre', 'pierre.legrand@example.com', 'RECEPTIONNISTE', 'saltE1', 'passE1'),
+        ('Bernard', 'Marie', 'marie.bernard@example.com', 'AGENT_ENTRETIEN', 'saltE2', 'passE2'),
+        ('Faure', 'Luc', 'luc.faure@example.com', 'HOTE', 'saltE3', 'passE3'),
+        ('Dupuis', 'Anne', 'anne.dupuis@example.com', 'COORDINATEUR', 'saltE4', 'passE4'),
+        ('Meyer', 'Sébastien', 'sebastien.meyer@example.com', 'BAGAGISTE', 'saltE5', 'passE5'),
+        ('Renaud', 'Céline', 'celine.renaud@example.com', 'CHEF_CUISINIER', 'saltE6', 'passE6'),
+        ('Benoit', 'Éric', 'eric.benoit@example.com', 'RECEPTIONNISTE', 'saltE7', 'passE7'),
+        ('Girard', 'Fanny', 'fanny.girard@example.com', 'AGENT_ENTRETIEN', 'saltE8', 'passE8'),
+        ('Robert', 'Hugo', 'hugo.robert@example.com', 'HOTE', 'saltE9', 'passE9'),
+        ('Meyera', 'Sébastiena', 'sebastiena.meyera@example.com', 'BAGAGISTE', 'saltE5', 'passE5'),
+        ('Vidal', 'Inès', 'ines.vidal@example.com', 'COORDINATEUR', 'saltE10', 'passE10');
+
 
 INSERT INTO room (number, capacity, description, standing, type, night_price)
 VALUES
-        (101, 2, 'Double room with garden view', 'superieure', 'double', 120.00),
-        (102, 1, 'Single room with city view', 'simple', 'simple', 80.00),
-        (103, 2, 'Double room with balcony', 'de_luxe', 'double', 150.00),
-        (104, 2, 'Superb view of the lake', 'superbe_vue', 'double', 200.00),
-        (105, 1, 'Cozy single room', 'simple', 'simple', 75.00),
-        (106, 3, 'Family room', 'superieure', 'double', 180.00),
-        (107, 2, 'Double room with jacuzzi', 'de_luxe', 'double', 220.00),
-        (108, 1, 'Economy single room', 'simple', 'simple', 70.00),
-        (109, 2, 'Superior double room', 'superieure', 'double', 130.00),
-        (110, 2, 'Deluxe double with terrace', 'de_luxe', 'double', 170.00);
+        (101, 2, 'Double room with garden view', 'SUPERIEURE', 'DOUBLE', 120.00),
+        (102, 1, 'Single room with city view', 'SIMPLE', 'SIMPLE', 80.00),
+        (103, 2, 'Double room with balcony', 'DE_LUXE', 'DOUBLE', 150.00),
+        (104, 2, 'Superb view of the lake', 'SUPERBE_VUE', 'DOUBLE', 200.00),
+        (105, 1, 'Cozy single room', 'SIMPLE', 'SIMPLE', 75.00),
+        (106, 3, 'Family room', 'SUPERIEURE', 'DOUBLE', 180.00),
+        (107, 2, 'Double room with jacuzzi', 'DE_LUXE', 'DOUBLE', 220.00),
+        (108, 1, 'Economy single room', 'SIMPLE', 'SIMPLE', 70.00),
+        (109, 2, 'Superior double room', 'SUPERIEURE', 'DOUBLE', 130.00),
+        (110, 2, 'Deluxe double with terrace', 'DE_LUXE', 'DOUBLE', 170.00);
 
 
 INSERT INTO fidelity (id_client, value) VALUES
