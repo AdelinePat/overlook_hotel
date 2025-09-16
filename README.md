@@ -21,10 +21,10 @@ docker compose up --build
 ```
 This will pull & build images and create necessary network and volumes
 3. Stop containers (if needed)
-Since the configuration makes the container restart unless you manually stop it, you'll have to stop it if you don't need it anymore
 ```bash
 docker compose stop
 ```
+The containers are set to restart automatically; stop them manually if not needed
 4. Restart containers
 ```bash
 docker compose start
@@ -55,5 +55,6 @@ docker compose exec mysql-db sh -c 'mysql -h localhost -u "$MYSQL_USER" -p"$MYSQ
 ```bash
 docker compose exec mysql-db sh -c 'mysql -h localhost -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" < /queriesTest.sql' 
 ``` 
-Notes:
-`$MYSQL_USER, $MYSQL_PASSWORD and $MYSQL_DATABASE are set in the mysql-db container environment variables`
+
+> Notes:
+`$MYSQL_USER`, `$MYSQL_PASSWORD` and `$MYSQL_DATABASE` are set in the mysql-db container environment variables
