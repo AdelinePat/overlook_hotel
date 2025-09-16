@@ -9,38 +9,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 </head>
 <body>
-<h2>J'essaie d'afficher la liste des clients hehe</h2>
-<p th:text="${testBlabla}">texte par défaut</p>
-<p>coucou??</p>
+<div class="page">
+    <h2>J'essaie d'afficher la liste des clients hehe</h2>
+    <p th:text="${testBlabla}">texte par défaut</p>
+    <p>coucou??</p>
 
-<div class="container">
-    <div class="display-table">
-        <h1>Clients</h1>
-        <table border="1">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Lastname</th>
-                <th>Firstname</th>
-                <th>Email</th>
-                <th>Phone</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="client : ${clients}">
-                <td th:text="${client.idClient}"></td>
-                <td th:text="${client.lastname}"></td>
-                <td th:text="${client.firstname}"></td>
-                <td th:text="${client.email}"></td>
-                <td th:text="${client.phone}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="display-focus">
-        <h2>Focus</h2>
+    <div class="container">
+        <div class="display-table">
+            <h1>Clients</h1>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Lastname</th>
+                    <th>Firstname</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="client : ${clients}">
+                    <td th:text="${client.idClient}"></td>
+                    <td th:text="${client.lastname}"></td>
+                    <td th:text="${client.firstname}"></td>
+                    <td th:text="${client.email}"></td>
+                    <td th:text="${client.phone}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="display-focus">
+            <h2>Focus</h2>
+            <form action="" method="post">
+                <input type="text" name="name" id="name" placeholder="nom de famille">
+                <input type="text" name="firstname" id="firstname" placeholder="prénom">
+                <input type="text" name="email" id="email" placeholder="email">
+                <input type="text" name="phone" id="phone" placeholder="telephone">
+            </form>
+        </div>
     </div>
 </div>
+
 
 
 </body>
