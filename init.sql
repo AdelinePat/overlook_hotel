@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS room_reservation (
         end_date DATE NOT NULL,
         status BOOLEAN NOT NULL,
         payment_date DATETIME,
-        total_price DECIMAL(6,2) NOT NULL,
+        total_price DECIMAL(6,2) NULL,
         FOREIGN KEY (id_client) REFERENCES client(id_client) ON DELETE SET NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -334,16 +334,16 @@ INSERT INTO room_bonus (type, daily_price) VALUES
 
 
 INSERT INTO room_reservation (id_client, creation, start_date, end_date, status, payment_date, total_price) VALUES
-        (1, '2025-09-01', '2025-09-05', '2025-09-08', 1, '2025-09-01 12:00:00', 360.00),
-        (2, '2025-09-02', '2025-09-06', '2025-09-08', 1, '2025-09-02 12:30:00', 660.00),
-        (3, '2025-09-03', '2025-09-07', '2025-09-11', 0, NULL, 320.00),
-        (4, '2025-09-04', '2025-09-08', '2025-09-09', 1, '2025-09-04 14:00:00', 80.00),
-        (5, '2025-09-05', '2025-09-09', '2025-09-11', 1, '2025-09-05 15:30:00', 150.00),
-        (6, '2025-09-06', '2025-09-10', '2025-09-13', 1, '2025-09-06 16:00:00', 360.00),
-        (7, '2025-09-07', '2025-09-11', '2025-09-13', 0, NULL, 300.00),
-        (8, '2025-09-08', '2025-09-12', '2025-09-13', 1, '2025-09-08 18:00:00', 75.00),
-        (9, '2025-09-09', '2025-09-13', '2025-09-17', 1, '2025-09-09 19:00:00', 520.00),
-        (10, '2025-09-10', '2025-09-14', '2025-09-16', 1, '2025-09-10 20:00:00', 260.00);
+        (1, '2025-09-01', '2025-09-05', '2025-09-08', 1, '2025-09-01 12:00:00', null),
+        (2, '2025-09-02', '2025-09-06', '2025-09-08', 1, '2025-09-02 12:30:00', null),
+        (3, '2025-09-03', '2025-09-07', '2025-09-11', 0, NULL, null),
+        (4, '2025-09-04', '2025-09-08', '2025-09-09', 1, '2025-09-04 14:00:00', null),
+        (5, '2025-09-05', '2025-09-09', '2025-09-11', 1, '2025-09-05 15:30:00', null),
+        (6, '2025-09-06', '2025-09-10', '2025-09-13', 1, '2025-09-06 16:00:00', null),
+        (7, '2025-09-07', '2025-09-11', '2025-09-13', 0, NULL, null),
+        (2, '2025-09-08', '2025-09-12', '2025-09-13', 1, '2025-09-08 18:00:00', null),
+        (9, '2025-09-09', '2025-09-13', '2025-09-17', 1, '2025-09-09 19:00:00', null),
+        (10, '2025-09-10', '2025-09-14', '2025-09-16', 1, '2025-09-10 20:00:00', null);
 
 INSERT INTO room_link_reservation (id_room_reservation, id_room) VALUES
         (1, 1),
@@ -354,7 +354,7 @@ INSERT INTO room_link_reservation (id_room_reservation, id_room) VALUES
         (2, 6),
         (7, 7),
         (2, 8),
-        (9, 9),
+        (8, 9),
         (3, 1);
 
 INSERT INTO room_link_bonus (id_room_bonus, id_room) VALUES
@@ -429,3 +429,33 @@ INSERT INTO response (id_manager, id_feedback, answer) VALUES
         (2, 8, 'Fantastic! Thank you!'),
         (1, 9, 'We appreciate your feedback.'),
         (2, 10, 'Thank you for your suggestions.');
+--
+-- PAR CLIENT liste resa + prix total
+-- SELECT resa.id_client,
+--        resa.id_room_reservation,
+--        resa.start_date,
+--        resa.end_date,
+--        (SUM(night_price) * DATEDIFF(resa.end_date, resa.start_date))
+--             AS total_price
+-- FROM room_reservation AS resa
+--     JOIN room_link_reservation AS link
+--         USING(id_room_reservation)
+--     JOIN room
+--         USING(id_room)
+-- WHERE resa.id_client = 2
+-- GROUP BY resa.id_client, resa.id_room_reservation, resa.start_date, resa.end_date;
+--
+-- PAR RESERVATION (client) resa + prix total
+-- SELECT resa.id_client,
+--        resa.id_room_reservation,
+--        resa.start_date,
+--        resa.end_date,
+--        (SUM(night_price) * DATEDIFF(resa.end_date, resa.start_date))
+--            AS total_price
+-- FROM room_reservation AS resa
+--          JOIN room_link_reservation AS link
+--               USING(id_room_reservation)
+--          JOIN room
+--               USING(id_room)
+-- WHERE resa.id_room_reservation = 2
+-- GROUP BY resa.id_client, resa.id_room_reservation, resa.start_date, resa.end_date;
