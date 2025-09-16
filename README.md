@@ -1,52 +1,59 @@
 # Overlook Hotel
 School group project, 3 contributors.
-Create a solution for a hotel management with 3 different services : an app for the client, another for the manager and one for the employees
+Solution for hotel management with 3 different services : 
+- Client app (rent a/multiple room(s), rent a/multiple place for an event, comment on past stay)
+- Manager app (CRUD employee, manage employee schedule, view analytics, can do everything clients can in their stead)
 
 ## Tools
-The project will be developed using Java and Spring Boot with the following dependencies :
-- dependency name here
-- docker & docker-compose
+- Language & Framework: Java, Spring Boot
+- Dependencies: Thymeleaf, DevTools, Spring Security, Validation, JPA, Lombok
+- Containerization: Docker & Docker Compose
 
 ## Setup
-Don't forget to create a .env file with the key variable that you find in .env.example
-
-To launch and build the project in dev mode :
+1. Create .env file
+Copy `.env.example` and fill in the necessary values:
 ```bash
-docker compose up --build 
+cp .env.example .env
 ```
-This will pull image and build image if necessary , create necessary network and volumes
-
-if you already did this you can stop container if any problem arise, as restart: unless-stopped is in the configuration, you have to stop it manually:
+2. Build and run the project in dev mode
+```bash
+docker compose up --build
+```
+This will pull & build images and create necessary network and volumes
+3. Stop containers (if needed)
+Since the configuration makes the container restart unless you manually stop it, you'll have to stop it if you don't need it anymore
 ```bash
 docker compose stop
 ```
-
-If you need to restart it:
+4. Restart containers
 ```bash
 docker compose start
 ```
-
-To run some tests, since everything is running inside container, you can't do it from host and you have to do:
-Run all tests:
+## Running tests
+Since the app runs inside containers, you need to execute tests from the `dev` container:
+- Run all tests:
 ```bash
 docker compose exec dev mvn test 
 ```
-Run only tests from the specific class (replace ClassName by the wanted test class)
+- Run a specific test class:
 ```bash
 docker compose exec dev mvn test -Dtest=ClassName
 ```
 
 ## Database
-The database will be created using MySQL, the MCD can be found in the resources folder
-To access the database and query directly into it, you can go inside sql container and then do the basic sql command that follows:
+- Database: MySQL
+- Schema: MPD available in the `resources` folder as mpd.jpg
+- Initialization: script available in `init.sql` in root
+Don't forget to create a .env file with the key variable that you find in .env.example
+
+### Access the database
+1. Enter the MySQL container `mysql-db` and connect using the environment variables:
 ```bash
-docker compose exec mysql-db sh -c 'mysql -h localhost -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" overlook_hotel'
+docker compose exec mysql-db sh -c 'mysql -h localhost -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"'
 ```
-Else, you can use this command to run the query inside queriesTest.sql
+2. Or run queries from queriesTest.sql
 ```bash
 docker compose exec mysql-db sh -c 'mysql -h localhost -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" < /queriesTest.sql' 
-```
-$MYSQL_USER and $MYSQL_PASSWORD value are inside environment variables of mysql-db container and will directly connect to MySQL CLI inside container
-
-[//]: # (docker compose exec mysql-db mysql -h localhost -u ${MYSQL_USER} -p overlook_hotel)
-[//]: # (docker compose exec mysql-db sh -c 'mysql -h localhost -u "$MYSQL_USER" -p overlook_hotel')
+``` 
+Notes:
+`$MYSQL_USER, $MYSQL_PASSWORD and $MYSQL_DATABASE are set in the mysql-db container environment variables`
