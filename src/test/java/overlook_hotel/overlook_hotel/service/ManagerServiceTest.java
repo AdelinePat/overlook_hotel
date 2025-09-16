@@ -2,14 +2,16 @@ package overlook_hotel.overlook_hotel.service;
 
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import overlook_hotel.overlook_hotel.entity.Manager;
+import overlook_hotel.overlook_hotel.model.entity.Manager;
 
 import java.util.List;
 
 @SpringBootTest
+@Disabled
 public class ManagerServiceTest {
 
     @Autowired

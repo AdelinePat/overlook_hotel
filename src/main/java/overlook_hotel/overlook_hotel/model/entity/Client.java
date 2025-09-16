@@ -1,4 +1,5 @@
-package overlook_hotel.overlook_hotel.entity;
+package overlook_hotel.overlook_hotel.model.entity;
+
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -8,34 +9,38 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "manager")
+@Table(name = "client")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Manager {
+public class Client {
     @Id
+    @Column(name = "id_client", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_manager")
-    private int id;
+    private Integer idClient;
 
     @NotBlank
-    @Column(name="lastname", length = 100)
+    @Column(name = "lastname", length = 100)
     private String lastname;
 
     @NotBlank
-    @Column(name="firstname", length = 100)
+    @Column(name = "firstname", length = 100)
     private String firstname;
 
     @NotBlank
-    @Column(name="email", length = 255)
+    @Column(name = "email", length = 255)
     private String email;
 
     @NotBlank
-    @Column(name="password", length = 255)
+    @Column(name = "phone", length = 15)
+    private String phone;
+
+    @NotBlank
+    @Column(name = "password", length = 255)
     private String password;
 
     @NotBlank
-    @Column(name="salt", length = 255)
+    @Column(name = "salt", length = 255)
     private String salt;
 }

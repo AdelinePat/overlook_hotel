@@ -2,7 +2,7 @@ package overlook_hotel.overlook_hotel.service;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import overlook_hotel.overlook_hotel.entity.Manager;
+import overlook_hotel.overlook_hotel.model.entity.Manager;
 import overlook_hotel.overlook_hotel.specification.ManagerSpecification;
 import overlook_hotel.overlook_hotel.repository.ManagerRepository;
 

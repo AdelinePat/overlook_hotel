@@ -1,4 +1,4 @@
-package overlook_hotel.overlook_hotel.entity;
+package overlook_hotel.overlook_hotel.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import overlook_hotel.overlook_hotel.model.BedType;
-import overlook_hotel.overlook_hotel.model.RoomStanding;
+import overlook_hotel.overlook_hotel.model.enumList.BedType;
+import overlook_hotel.overlook_hotel.model.enumList.RoomStanding;
 
 import java.math.BigDecimal;
 

@@ -1,7 +1,7 @@
 package overlook_hotel.overlook_hotel.specification;
 
 import org.springframework.data.jpa.domain.Specification;
-import overlook_hotel.overlook_hotel.entity.Client;
+import overlook_hotel.overlook_hotel.model.entity.Client;
 
 public class ClientSpecification {
     public static Specification<Client> hasLastname(final String lastname) {

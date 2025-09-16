@@ -1,8 +1,8 @@
 package overlook_hotel.overlook_hotel.specification;
 import org.springframework.data.jpa.domain.Specification;
-import overlook_hotel.overlook_hotel.entity.Room;
-import overlook_hotel.overlook_hotel.model.BedType;
-import overlook_hotel.overlook_hotel.model.RoomStanding;
+import overlook_hotel.overlook_hotel.model.entity.Room;
+import overlook_hotel.overlook_hotel.model.enumList.BedType;
+import overlook_hotel.overlook_hotel.model.enumList.RoomStanding;
 
 import java.util.List;
 

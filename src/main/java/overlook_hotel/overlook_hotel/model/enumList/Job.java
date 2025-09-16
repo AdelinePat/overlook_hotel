@@ -1,4 +1,4 @@
-package overlook_hotel.overlook_hotel.model;
+package overlook_hotel.overlook_hotel.model.enumList;
 
 public enum Job {
     RECEPTIONNISTE,

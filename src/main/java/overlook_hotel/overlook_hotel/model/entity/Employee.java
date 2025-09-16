@@ -1,4 +1,4 @@
-package overlook_hotel.overlook_hotel.entity;
+package overlook_hotel.overlook_hotel.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import overlook_hotel.overlook_hotel.model.Job;
+import overlook_hotel.overlook_hotel.model.enumList.Job;
 
 @Entity
 @Table(name = "employee")

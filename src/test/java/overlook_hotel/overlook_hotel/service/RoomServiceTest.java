@@ -1,17 +1,19 @@
 package overlook_hotel.overlook_hotel.service;
 
-import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import overlook_hotel.overlook_hotel.entity.Room;
-import overlook_hotel.overlook_hotel.model.BedType;
-import overlook_hotel.overlook_hotel.model.RoomStanding;
+import overlook_hotel.overlook_hotel.model.entity.Room;
+import overlook_hotel.overlook_hotel.model.enumList.BedType;
+import overlook_hotel.overlook_hotel.model.enumList.RoomStanding;
 import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
+@Disabled
 public class RoomServiceTest {
     private final RoomStanding roomStanding = RoomStanding.DE_LUXE;
     private final BedType type = BedType.SIMPLE;

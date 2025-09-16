@@ -59,8 +59,8 @@ CREATE TABLE IF NOT EXISTS formation (
 
 CREATE TABLE IF NOT EXISTS schedule (
         id_schedule INT AUTO_INCREMENT PRIMARY KEY,
-        day_of_week ENUM('lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche') NOT NULL,
-        shift ENUM('matin', 'après-midi', 'soir', 'nuit') NOT NULL
+        day_of_week ENUM('LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI', 'DIMANCHE') NOT NULL,
+        shift ENUM('MATIN', 'APRES_MIDI', 'SOIR', 'NUIT') NOT NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS vacation (
@@ -100,17 +100,17 @@ CREATE TABLE IF NOT EXISTS room (
 
 CREATE TABLE IF NOT EXISTS room_bonus (
         id_room_bonus INT AUTO_INCREMENT PRIMARY KEY,
-        type ENUM('television', 'seche_cheveux', 'mini_bar', 'bouilloire', 'fauteuil_massant', 'pc_gaming', 'jacuzzi') NOT NULL,
+        type ENUM('TV', 'SECHOIR', 'MINI_BAR', 'BOUILLOIRE', 'FAUTEUIL_MASSANT', 'PC_GAMING', 'JACUZZI') NOT NULL,
         daily_price DECIMAL(6,2) NOT NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS room_reservation (
         id_room_reservation INT AUTO_INCREMENT PRIMARY KEY,
-        id_client INT,
-        creation DATETIME NOT NULL,
-        start_date DATETIME NOT NULL,
-        night_number INT NOT NULL,
-        status ENUM('confirmee', 'annulee'),
+        id_client INT NULL,
+        creation DATE NOT NULL,
+        start_date DATE NOT NULL,
+        end_date DATE NOT NULL,
+        status BOOLEAN NOT NULL,
         payment_date DATETIME,
         total_price DECIMAL(6,2) NOT NULL,
         FOREIGN KEY (id_client) REFERENCES client(id_client) ON DELETE SET NULL
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS room_link_bonus (
 -- event
 CREATE TABLE IF NOT EXISTS place (
         id_place INT AUTO_INCREMENT PRIMARY KEY,
-        type ENUM('salle_de_reunion', 'piscine', 'spa', 'tennis', 'placard_a_balais_sous_l_escalier', 'salle_sur_demande') NOT NULL,
+        type ENUM('SALLE_DE_REUNION', 'PISCINE', 'SPA', 'TENNIS', 'PLACARD_A_BALAIS', 'SALLE_SUR_DEMANDE') NOT NULL,
         capacity INT NOT NULL,
         hourly_price DECIMAL(6,2) NOT NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS place (
 CREATE TABLE IF NOT EXISTS event_reservation (
         id_event_reservation INT AUTO_INCREMENT PRIMARY KEY,
         id_client INT,
-        event ENUM('mariage', 'fete', 'anniversaire', 'enterrement', 'reunion', 'autre') NOT NULL,
+        event ENUM('MARIAGE', 'FETE', 'ANNIVERSAIRE', 'ENTERREMENT', 'REUNION', 'AUTRE') NOT NULL,
         start_date DATETIME NOT NULL,
         end_date DATETIME NOT NULL,
         total_price DECIMAL(6,2) NOT NULL,
@@ -228,7 +228,7 @@ VALUES
         (104, 2, 'Superb view of the lake', 'SUPERBE_VUE', 'DOUBLE', 200.00),
         (105, 1, 'Cozy single room', 'SIMPLE', 'SIMPLE', 75.00),
         (106, 3, 'Family room', 'SUPERIEURE', 'DOUBLE', 180.00),
-        (107, 2, 'Double room with jacuzzi', 'DE_LUXE', 'DOUBLE', 220.00),
+        (107, 2, 'Double room with JACUZZI', 'DE_LUXE', 'DOUBLE', 220.00),
         (108, 1, 'Economy single room', 'SIMPLE', 'SIMPLE', 70.00),
         (109, 2, 'Superior double room', 'SUPERIEURE', 'DOUBLE', 130.00),
         (110, 2, 'Deluxe double with terrace', 'DE_LUXE', 'DOUBLE', 170.00);
@@ -260,16 +260,16 @@ INSERT INTO formation (start, end, title) VALUES
         ('2025-09-29', '2025-10-01', 'Food Safety Certification');
 
 INSERT INTO schedule (day_of_week, shift) VALUES
-        ('lundi', 'matin'),
-        ('lundi', 'après-midi'),
-        ('mardi', 'matin'),
-        ('mardi', 'soir'),
-        ('mercredi', 'nuit'),
-        ('jeudi', 'matin'),
-        ('vendredi', 'soir'),
-        ('samedi', 'après-midi'),
-        ('dimanche', 'matin'),
-        ('dimanche', 'soir');
+        ('LUNDI', 'MATIN'),
+        ('LUNDI', 'APRES_MIDI'),
+        ('MARDI', 'MATIN'),
+        ('MARDI', 'SOIR'),
+        ('MERCREDI', 'NUIT'),
+        ('JEUDI', 'MATIN'),
+        ('VENDREDI', 'SOIR'),
+        ('SAMEDI', 'APRES_MIDI'),
+        ('DIMANCHE', 'MATIN'),
+        ('DIMANCHE', 'SOIR');
 
 INSERT INTO vacation (id_employee, start, end) VALUES
         (1, '2025-09-01', '2025-09-05'),
@@ -308,29 +308,42 @@ INSERT INTO employee_formation (id_employee, id_formation) VALUES
         (10, 10);
 
 INSERT INTO room_bonus (type, daily_price) VALUES
-        ('television', 5.00),
-        ('seche_cheveux', 2.00),
-        ('mini_bar', 10.00),
-        ('bouilloire', 3.00),
-        ('fauteuil_massant', 15.00),
-        ('pc_gaming', 20.00),
-        ('jacuzzi', 25.00),
-        ('television', 5.00),
-        ('mini_bar', 10.00),
-        ('fauteuil_massant', 15.00);
+        ('TV', 5.00),
+        ('SECHOIR', 2.00),
+        ('MINI_BAR', 10.00),
+        ('BOUILLOIRE', 3.00),
+        ('FAUTEUIL_MASSANT', 15.00),
+        ('PC_GAMING', 20.00),
+        ('JACUZZI', 25.00),
+        ('TV', 5.00),
+        ('MINI_BAR', 10.00),
+        ('FAUTEUIL_MASSANT', 15.00);
+
+--
+-- INSERT INTO room_reservation (id_client, creation, start_date, end_date, status, payment_date, total_price) VALUES
+--         (1, '2025-09-01', '2025-09-05', 3, 1, '2025-09-01 12:00:00', 360.00),
+--         (2, '2025-09-02', '2025-09-06', 2, 1, NULL, 160.00),
+--         (1, '2025-09-01', '2025-09-05', 3, 1, '2025-09-01 12:00:00', 320.00),
+--         (4, '2025-09-04', '2025-09-08', 1, 1, '2025-09-04 14:00:00', 80.00),
+--         (5, '2025-09-05', '2025-09-09', 2, 0, '2025-09-05 15:30:00', 150.00),
+--         (6, '2025-09-06', '2025-09-10', 3, 1, '2025-09-06 15:30:00', 360.00),
+--         (1, '2025-09-01', '2025-09-05', 3, 1, '2025-09-01 12:00:00', 300.00),
+--         (8, '2025-09-08', '2025-09-12', 1, 1, '2025-09-08 18:00:00', 75.00),
+--         (9, '2025-09-09', '2025-09-13', 4, 1, '2025-09-09 19:00:00', 520.00),
+--         (10, '2025-09-10', '2025-09-14', 2, 0, NULL, 260.00);
 
 
-INSERT INTO room_reservation (id_client, creation, start_date, night_number, status, payment_date, total_price) VALUES
-        (1, '2025-09-01 10:00:00', '2025-09-05 14:00:00', 3, 'confirmee', '2025-09-01 12:00:00', 360.00),
-        (2, '2025-09-02 11:00:00', '2025-09-06 15:00:00', 2, 'confirmee', '2025-09-02 12:30:00', 160.00),
-        (3, '2025-09-03 12:00:00', '2025-09-07 16:00:00', 4, 'annulee', NULL, 320.00),
-        (4, '2025-09-04 13:00:00', '2025-09-08 14:00:00', 1, 'confirmee', '2025-09-04 14:00:00', 80.00),
-        (5, '2025-09-05 14:00:00', '2025-09-09 15:00:00', 2, 'confirmee', '2025-09-05 15:30:00', 150.00),
-        (6, '2025-09-06 15:00:00', '2025-09-10 14:00:00', 3, 'confirmee', '2025-09-06 16:00:00', 360.00),
-        (7, '2025-09-07 16:00:00', '2025-09-11 15:00:00', 2, 'annulee', NULL, 300.00),
-        (8, '2025-09-08 17:00:00', '2025-09-12 14:00:00', 1, 'confirmee', '2025-09-08 18:00:00', 75.00),
-        (9, '2025-09-09 18:00:00', '2025-09-13 15:00:00', 4, 'confirmee', '2025-09-09 19:00:00', 520.00),
-        (10, '2025-09-10 19:00:00', '2025-09-14 14:00:00', 2, 'confirmee', '2025-09-10 20:00:00', 260.00);
+INSERT INTO room_reservation (id_client, creation, start_date, end_date, status, payment_date, total_price) VALUES
+        (1, '2025-09-01', '2025-09-05', '2025-09-08', 1, '2025-09-01 12:00:00', 360.00),
+        (2, '2025-09-02', '2025-09-06', '2025-09-08', 1, '2025-09-02 12:30:00', 660.00),
+        (3, '2025-09-03', '2025-09-07', '2025-09-11', 0, NULL, 320.00),
+        (4, '2025-09-04', '2025-09-08', '2025-09-09', 1, '2025-09-04 14:00:00', 80.00),
+        (5, '2025-09-05', '2025-09-09', '2025-09-11', 1, '2025-09-05 15:30:00', 150.00),
+        (6, '2025-09-06', '2025-09-10', '2025-09-13', 1, '2025-09-06 16:00:00', 360.00),
+        (7, '2025-09-07', '2025-09-11', '2025-09-13', 0, NULL, 300.00),
+        (8, '2025-09-08', '2025-09-12', '2025-09-13', 1, '2025-09-08 18:00:00', 75.00),
+        (9, '2025-09-09', '2025-09-13', '2025-09-17', 1, '2025-09-09 19:00:00', 520.00),
+        (10, '2025-09-10', '2025-09-14', '2025-09-16', 1, '2025-09-10 20:00:00', 260.00);
 
 INSERT INTO room_link_reservation (id_room_reservation, id_room) VALUES
         (1, 1),
@@ -357,29 +370,29 @@ INSERT INTO room_link_bonus (id_room_bonus, id_room) VALUES
          (4, 1);
 
 INSERT INTO place (type, capacity, hourly_price) VALUES
-        ('salle_de_reunion', 20, 50.00),
-        ('piscine', 15, 30.00),
-        ('spa', 10, 40.00),
-        ('tennis', 4, 25.00),
-        ('placard_a_balais_sous_l_escalier', 1, 5.00),
-        ('salle_sur_demande', 25, 60.00),
-        ('salle_de_reunion', 18, 45.00),
-        ('spa', 8, 35.00),
-        ('piscine', 12, 32.00),
-        ('tennis', 6, 28.00);
+        ('SALLE_DE_REUNION', 20, 50.00),
+        ('PISCINE', 15, 30.00),
+        ('SPA', 10, 40.00),
+        ('TENNIS', 4, 25.00),
+        ('PLACARD_A_BALAIS', 1, 5.00),
+        ('SALLE_SUR_DEMANDE', 25, 60.00),
+        ('SALLE_DE_REUNION', 18, 45.00),
+        ('SPA', 8, 35.00),
+        ('PISCINE', 12, 32.00),
+        ('TENNIS', 6, 28.00);
 
 
 INSERT INTO event_reservation (id_client, event, start_date, end_date, total_price) VALUES
-        (1, 'mariage', '2025-10-01 12:00:00', '2025-10-01 18:00:00', 1000.00),
-        (2, 'fete', '2025-10-02 14:00:00', '2025-10-02 20:00:00', 800.00),
-        (3, 'anniversaire', '2025-10-03 10:00:00', '2025-10-03 15:00:00', 500.00),
-        (4, 'enterrement', '2025-10-04 09:00:00', '2025-10-04 13:00:00', 300.00),
-        (5, 'reunion', '2025-10-05 11:00:00', '2025-10-05 16:00:00', 700.00),
-        (6, 'autre', '2025-10-06 12:00:00', '2025-10-06 18:00:00', 600.00),
-        (7, 'mariage', '2025-10-07 14:00:00', '2025-10-07 20:00:00', 1200.00),
-        (8, 'fete', '2025-10-08 15:00:00', '2025-10-08 21:00:00', 900.00),
-        (9, 'anniversaire', '2025-10-09 10:00:00', '2025-10-09 15:00:00', 550.00),
-        (10, 'reunion', '2025-10-10 11:00:00', '2025-10-10 16:00:00', 750.00);
+        (1, 'MARIAGE', '2025-10-01 12:00:00', '2025-10-01 18:00:00', 1000.00),
+        (2, 'FETE', '2025-10-02 14:00:00', '2025-10-02 20:00:00', 800.00),
+        (3, 'ANNIVERSAIRE', '2025-10-03 10:00:00', '2025-10-03 15:00:00', 500.00),
+        (4, 'ENTERREMENT', '2025-10-04 09:00:00', '2025-10-04 13:00:00', 300.00),
+        (5, 'REUNION', '2025-10-05 11:00:00', '2025-10-05 16:00:00', 700.00),
+        (6, 'AUTRE', '2025-10-06 12:00:00', '2025-10-06 18:00:00', 600.00),
+        (7, 'MARIAGE', '2025-10-07 14:00:00', '2025-10-07 20:00:00', 1200.00),
+        (8, 'FETE', '2025-10-08 15:00:00', '2025-10-08 21:00:00', 900.00),
+        (9, 'ANNIVERSAIRE', '2025-10-09 10:00:00', '2025-10-09 15:00:00', 550.00),
+        (10, 'REUNION', '2025-10-10 11:00:00', '2025-10-10 16:00:00', 750.00);
 
 INSERT INTO event_link_place (id_event_reservation, id_place) VALUES
         (1, 1),

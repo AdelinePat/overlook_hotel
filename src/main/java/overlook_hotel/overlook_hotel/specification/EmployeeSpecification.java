@@ -1,7 +1,7 @@
 package overlook_hotel.overlook_hotel.specification;
 import org.springframework.data.jpa.domain.Specification;
-import overlook_hotel.overlook_hotel.entity.Employee;
-import overlook_hotel.overlook_hotel.model.Job;
+import overlook_hotel.overlook_hotel.model.entity.Employee;
+import overlook_hotel.overlook_hotel.model.enumList.Job;
 
 public class EmployeeSpecification {
     public static Specification<Employee> hasLastname(final String lastname) {
