@@ -9,5 +9,5 @@ FROM room_reservation AS resa
               USING(id_room_reservation)
          JOIN room
               USING(id_room)
-WHERE id_client = 2
+WHERE id_client = 1
 GROUP BY resa.id_room_reservation, resa.start_date, resa.end_date;

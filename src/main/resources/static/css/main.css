@@ -1,3 +1,45 @@
+* {
+ margin: none;
+ padding: none;
+ box-sizing: border-box;
+ font-family: "Inter", sans-serif;
+}
+
+h1, h2 {
+    text-transform: uppercase;
+    padding: 10px;
+    padding-bottom: 15px;
+    font-size: 1.2rem;
+    border-bottom: 1px solid;
+    text-align: center;
+}
+
 table {
     background: yellow;
+}
+
+body {
+    width: 1200px;
+    margin: auto;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-content: center;
+}
+
+.display-table {
+    flex-basis: 1;
+    background: red;
+    width: 55%;
+}
+
+.display-focus {
+    flex-basis: 1;
+    background: #EBE0E9;
+    width: 40%;
+    border-radius: 20px;
+    align-self: center;
 }

@@ -4,30 +4,44 @@
     <meta charset="UTF-8">
     <title>Client List</title>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 </head>
 <body>
 <h2>J'essaie d'afficher la liste des clients hehe</h2>
 <p th:text="${testBlabla}">texte par défaut</p>
-<h1>Clients</h1>
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Lastname</th>
-        <th>Firstname</th>
-        <th>Email</th>
-        <th>Phone</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="client : ${clients}">
-        <td th:text="${client.idClient}"></td>
-        <td th:text="${client.lastname}"></td>
-        <td th:text="${client.firstname}"></td>
-        <td th:text="${client.email}"></td>
-        <td th:text="${client.phone}"></td>
-    </tr>
-    </tbody>
-</table>
+<p>coucou??</p>
+
+<div class="container">
+    <div class="display-table">
+        <h1>Clients</h1>
+        <table border="1">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Lastname</th>
+                <th>Firstname</th>
+                <th>Email</th>
+                <th>Phone</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="client : ${clients}">
+                <td th:text="${client.idClient}"></td>
+                <td th:text="${client.lastname}"></td>
+                <td th:text="${client.firstname}"></td>
+                <td th:text="${client.email}"></td>
+                <td th:text="${client.phone}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="display-focus">
+        <h2>Focus</h2>
+    </div>
+</div>
+
+
 </body>
 </html>

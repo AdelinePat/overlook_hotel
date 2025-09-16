@@ -18,6 +18,9 @@ services:
       - type: volume
         source: maven-repo
         target: /root/.m2
+#      - type: bind
+#        source: ./src/main/resources
+#        target: /app/src/main/resources
     command: mvn spring-boot:run -Dspring-boot.run.fork=false -Dspring-boot.run.jvmArguments='-Dspring.devtools.restart.poll-interval=1000'
     environment:
       MAVEN_OPTS: -Dmaven.test.skip=false
