@@ -20,7 +20,7 @@ services:
         target: /root/.m2
     command: mvn spring-boot:run -Dspring-boot.run.fork=false -Dspring-boot.run.jvmArguments='-Dspring.devtools.restart.poll-interval=1000'
     environment:
-      MAVEN_OPTS: -Dmaven.test.skip=true
+      MAVEN_OPTS: -Dmaven.test.skip=false
       SPRING_DEVTOOLS_RESTART_POLL_INTERVAL: 1000
       SPRING_DEVTOOLS_RESTART_ENABLED: true
       CHOKIDAR_USEPOLLING: true

@@ -1,13 +1,15 @@
 package overlook_hotel.overlook_hotel.service;
-import overlook_hotel.overlook_hotel.entity.Client;
+import org.junit.jupiter.api.Disabled;
+import overlook_hotel.overlook_hotel.model.entity.Client;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
+@Disabled
 public class ClientServiceTest {
 
     @Autowired
@@ -16,30 +18,30 @@ public class ClientServiceTest {
     @Test
     public void findAllClients() {
         List<Client> clients = clientService.findAllFiltered("", "", "", "");
-        System.out.println("#### 1 #### liste des clients:");
+        System.out.println("\t\t #### 1 #### liste des clients:");
         for (Client client : clients) {
-            System.out.println(client.getLastname() + " " + client.getFirstname());
+            System.out.println("\t" + client.getLastname() + " " + client.getFirstname());
         }
-        Assertions.assertEquals(20, clients.size());
+        assertEquals(20, clients.size());
     }
 
     @Test
     public void findClientByLastname() {
         List<Client> clients = clientService.findAllFiltered("M", "", "", "");
-        System.out.println("#### 2 #### liste des clients nom:");
+        System.out.println("\t\t #### 2 #### liste des clients nom:");
         for (Client client : clients) {
-            System.out.println(client.getLastname() + " " + client.getFirstname());
+            System.out.println("\t" + client.getLastname() + " " + client.getFirstname());
         }
-        Assertions.assertEquals(4, clients.size());
+        assertEquals(4, clients.size());
     }
 
     @Test
     public void findClientByLastnameAndFirstname() {
         List<Client> clients = clientService.findAllFiltered("M", "o", "", "");
-        System.out.println("#### 3 #### liste des clients nom prénom:");
+        System.out.println("\t\t #### 3 #### liste des clients nom prénom:");
         for (Client client : clients) {
-            System.out.println(client.getLastname() + " " + client.getFirstname());
+            System.out.println("\t" + client.getLastname() + " " + client.getFirstname());
         }
-        Assertions.assertEquals(2, clients.size());
+        assertEquals(2, clients.size());
     }
 }

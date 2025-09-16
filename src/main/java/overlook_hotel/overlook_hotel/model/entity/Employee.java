@@ -1,24 +1,25 @@
-package overlook_hotel.overlook_hotel.entity;
-
+package overlook_hotel.overlook_hotel.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
+import overlook_hotel.overlook_hotel.model.enumList.Job;
 
 @Entity
-@Table(name = "client")
+@Table(name = "employee")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Client {
-
-    @Id@Column(name="id_client", nullable = false, unique = true)
+public class Employee {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idClient;
+    @Column(name = "id_employee")
+    private int id;
 
     @NotBlank
     @Column(name="lastname", length = 100)
@@ -32,9 +33,10 @@ public class Client {
     @Column(name="email", length = 255)
     private String email;
 
-    @NotBlank
-    @Column(name="phone", length = 15)
-    private String phone;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name="job", length = 20)
+    private Job job;
 
     @NotBlank
     @Column(name="password", length = 255)
@@ -43,4 +45,5 @@ public class Client {
     @NotBlank
     @Column(name="salt", length = 255)
     private String salt;
+
 }
