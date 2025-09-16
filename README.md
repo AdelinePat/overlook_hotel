@@ -28,6 +28,9 @@ docker compose exec dev mvn test -Dtest=ClassName # will run only tests from the
 The database will be created using MySQL, the MCD can be found in the resources folder
 To access the database and query directly into it, you can go inside sql container and then do the basic sql command that follows:
 ```bash
-docker compose exec mysql-db mysql -h localhost -u ${MYSQL_USER} -p overlook_hotel
-# ${MYSQL_USER} value is inside your .env and after doing this command, will ask for your password ${MYSQL_PASSWORD}
+docker compose exec mysql-db sh -c 'mysql -h localhost -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" overlook_hotel'
 ```
+$MYSQL_USER and $MYSQL_PASSWORD value are inside environment variables of mysql-db container and will directly connect to MySQL CLI inside container
+
+[//]: # (docker compose exec mysql-db mysql -h localhost -u ${MYSQL_USER} -p overlook_hotel)
+[//]: # (docker compose exec mysql-db sh -c 'mysql -h localhost -u "$MYSQL_USER" -p overlook_hotel')
