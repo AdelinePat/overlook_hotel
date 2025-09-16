@@ -50,6 +50,9 @@ services:
       - type: bind
         source: ./init.sql
         target: /docker-entrypoint-initdb.d/init.sql
+      - type: bind
+        source: ./queriesTest.sql
+        target: /queriesTest.sql
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     restart: unless-stopped
 
