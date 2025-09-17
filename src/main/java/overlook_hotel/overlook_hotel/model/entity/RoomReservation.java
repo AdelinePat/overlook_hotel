@@ -23,30 +23,31 @@ public class RoomReservation {
     @Column(name = "id_room_reservation")
     private int id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_client", referencedColumnName = "id_client")
     private Client client;
 
     @NotNull
-    @Column(name="creation_date")
-    private LocalDate creation_date;
+    @Column(name="creation")
+    private LocalDate creationDate;
 
     @NotNull
     @Column(name="start_date")
-    private LocalDate start_date;
+    private LocalDate startDate;
 
     @NotNull
     @Column(name="end_date")
-    private LocalDate end_date;
+    private LocalDate endDate;
 
     @NotNull
     @Column(name="status")
     private Boolean status;
 
     @Column(name="payment_date")
-    private LocalDateTime payment_date;
+    private LocalDateTime paymentDate;
 
     // TODO PROBABLY DELETE THIS FIELD ?
-    @Column(name="total_price")
-    private BigDecimal total_price;
+//    @Column(name="total_price")
+    @Transient
+    private BigDecimal totalPrice;
 }

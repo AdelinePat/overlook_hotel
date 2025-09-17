@@ -36,17 +36,17 @@ public class RoomSpecification {
     }
     public static Specification<Room> hasPriceLowerThanOrEqual(final Integer night_price) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.lessThanOrEqualTo(root.get("night_price"), night_price);
+                criteriaBuilder.lessThanOrEqualTo(root.get("nightPrice"), night_price);
     }
 
     public static Specification<Room> hasPriceGreaterThan(final Integer night_price) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThan(root.get("night_price"), night_price);
+                criteriaBuilder.greaterThan(root.get("nightPrice"), night_price);
     }
 
     public static Specification<Room> hasPriceBetween(final List<Integer> night_price) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.between(root.get("night_price"), night_price.get(0), night_price.get(1));
+                criteriaBuilder.between(root.get("nightPrice"), night_price.get(0), night_price.get(1));
     }
 
     public static Specification<Room> hasDescription(final String words) {

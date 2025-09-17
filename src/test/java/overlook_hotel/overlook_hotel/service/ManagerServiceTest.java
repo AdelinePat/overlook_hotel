@@ -10,8 +10,9 @@ import overlook_hotel.overlook_hotel.model.entity.Manager;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest
-@Disabled
 public class ManagerServiceTest {
 
     @Autowired
@@ -20,7 +21,7 @@ public class ManagerServiceTest {
     @Test
     public void findAllManagers() {
         List<Manager> managers = managerService.findAllFiltered("", "", "");
-        Assertions.assertEquals(2, managers.size());
+        assertEquals(2, managers.size());
         System.out.println("\t\t #### 1 #### liste des manager");
         for (Manager manager : managers) {
             System.out.println("\t" + manager.getFirstname() + " " + manager.getLastname());
@@ -30,7 +31,7 @@ public class ManagerServiceTest {
     @Test
     public void findByEmail() {
         List<Manager> managers = managerService.findAllFiltered("", "", "n@e");
-        Assertions.assertEquals(1, managers.size());
+        assertEquals(1, managers.size());
         System.out.println("\t\t #### 2 #### liste des manager EMAIL");
         for (Manager manager : managers) {
             System.out.println("\t" + manager.getFirstname() + " " + manager.getLastname());

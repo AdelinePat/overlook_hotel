@@ -11,7 +11,6 @@ import overlook_hotel.overlook_hotel.model.enumList.Job;
 import java.util.List;
 
 @SpringBootTest
-@Disabled
 public class EmployeeServiceTest {
 
     @Autowired

@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
-@Disabled
 public class RoomServiceTest {
     private final RoomStanding roomStanding = RoomStanding.DE_LUXE;
     private final BedType type = BedType.SIMPLE;
@@ -31,7 +30,7 @@ public class RoomServiceTest {
         assertEquals(10, rooms.size());
         System.out.println("\t\t #### 1 #### liste des chambres");
         for (Room room : rooms) {
-            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNight_price());
+            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNightPrice());
         }
     }
 
@@ -42,7 +41,7 @@ public class RoomServiceTest {
         assertEquals(1, rooms.size());
         System.out.println("\t\t #### 2 #### liste des chambres par nombre");
         for (Room room : rooms) {
-            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNight_price());
+            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNightPrice());
         }
     }
 
@@ -53,7 +52,7 @@ public class RoomServiceTest {
         assertEquals(6, rooms.size());
         System.out.println("\t\t #### 3 #### liste des chambres capacité");
         for (Room room : rooms) {
-            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNight_price() + " " + room.getCapacity());
+            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNightPrice() + " " + room.getCapacity());
         }
     }
 
@@ -64,7 +63,7 @@ public class RoomServiceTest {
         assertEquals(3, rooms.size());
         System.out.println("\t\t #### 4 #### liste des chambres standing");
         for (Room room : rooms) {
-            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNight_price());
+            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNightPrice());
         }
     }
 
@@ -75,7 +74,7 @@ public class RoomServiceTest {
         assertEquals(3, rooms.size());
         System.out.println("\t\t #### 4 #### liste des chambres type");
         for (Room room : rooms) {
-            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNight_price() + " " + room.getType());
+            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNightPrice() + " " + room.getType());
         }
     }
 
@@ -86,7 +85,7 @@ public class RoomServiceTest {
         assertEquals(3, rooms.size());
         System.out.println("\t\t #### 5.1 #### liste des chambres prix LOWER");
         for (Room room : rooms) {
-            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNight_price());
+            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNightPrice());
         }
     }
 
@@ -97,7 +96,7 @@ public class RoomServiceTest {
         assertEquals(2, rooms.size());
         System.out.println("\t\t #### 5.2 #### liste des chambres prix GREATER");
         for (Room room : rooms) {
-            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNight_price());
+            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNightPrice());
         }
     }
 
@@ -108,7 +107,7 @@ public class RoomServiceTest {
         assertEquals(5, rooms.size());
         System.out.println("\t\t #### 5.3 #### liste des chambres prix BETWEEN");
         for (Room room : rooms) {
-            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNight_price());
+            System.out.println("\t" + room.getNumber() + " " + room.getStanding() + " " + room.getNightPrice());
         }
     }
 

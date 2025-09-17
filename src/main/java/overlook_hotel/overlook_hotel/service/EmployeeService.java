@@ -2,6 +2,7 @@ package overlook_hotel.overlook_hotel.service;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import overlook_hotel.overlook_hotel.model.entity.Client;
 import overlook_hotel.overlook_hotel.model.entity.Employee;
 import overlook_hotel.overlook_hotel.specification.EmployeeSpecification;
 import overlook_hotel.overlook_hotel.model.enumList.Job;
@@ -22,7 +23,7 @@ public class EmployeeService {
                                           String email,
                                           Job job) {
 
-        Specification<Employee> spec = Specification.unrestricted();
+        Specification<Employee> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
 
         if (lastname != null && !lastname.isBlank()) {
             spec = spec.and(EmployeeSpecification.hasLastname(lastname));

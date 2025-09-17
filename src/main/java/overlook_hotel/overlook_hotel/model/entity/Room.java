@@ -48,5 +48,5 @@ public class Room {
 
     @NotNull
     @Column(name="night_price")
-    private BigDecimal night_price;
+    private BigDecimal nightPrice;
 }
