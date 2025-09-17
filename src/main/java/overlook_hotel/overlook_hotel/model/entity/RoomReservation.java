@@ -48,5 +48,6 @@ public class RoomReservation {
 
     // TODO PROBABLY DELETE THIS FIELD ?
 //    @Column(name="total_price")
+    @Transient
     private BigDecimal totalPrice;
 }
