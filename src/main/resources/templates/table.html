@@ -36,31 +36,43 @@
             <button type="submit">rechercher</button>
         </form>
         <h1 th:text="${title}"></h1>
-        <table>
-            <thead>
-            <tr>
-                <th th:each="col : ${columns}" th:text="${col}"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="row : ${rows}">
-                <td th:text="${row.id}"></td>
-                <td th:text="${row.lastname}"></td>
-                <td th:text="${row.firstname}"></td>
-                <td th:text="${row.email}"></td>
-                <td th:switch="${entityType}">
-                    <span th:case="'client'" th:text="${row.phone}"></span>
-                    <span th:case="'employee'" th:text="${row.job}"></span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+<!--        <table>-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th th:each="col : ${columns}" th:text="${col}"></th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr th:each="row : ${rows}">-->
+<!--                <td th:text="${row.id}"></td>-->
+<!--                <td th:text="${row.lastname}"></td>-->
+<!--                <td th:text="${row.firstname}"></td>-->
+<!--                <td th:text="${row.email}"></td>-->
+<!--                <td th:switch="${entityType}">-->
+<!--                    <span th:case="'client'" th:text="${row.phone}"></span>-->
+<!--                    <span th:case="'employee'" th:text="${row.job}"></span>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
         <div th:switch="${entityType}">
-            <a th:case="'client'" th:href="@{/employees}">Employés</a>
-            <a th:case="'employee'" th:href="@{/clients}">Clients</a>
+            <div th:case="'client'"
+                 th:replace="~{fragments/client-table :: table}"
+                 th:remove="tag"></div>
+            <div th:case="'employee'"
+                 th:replace="~{fragments/employee-table :: table}"
+                 th:remove="tag"></div>
+            <div th:case="*">Type inconnu</div>
         </div>
-<!--        <a th:href="@{/reservations}">Réservations</a>-->
-<!--        *<a th:href="@{/event}">Evénements</a>-->
+
+
+
+        <div class="my20" th:switch="${entityType}">
+            <a class="btn" th:case="'client'" th:href="@{/employees}">Employés</a>
+            <a class="btn" th:case="'employee'" th:href="@{/clients}">Clients</a>
+        </div>
+        <!--        <a th:href="@{/reservations}">Réservations</a>-->
+        <!--        *<a th:href="@{/event}">Evénements</a>-->
     </div>
     <div class="display-focus">
         <h2>Focus</h2>

@@ -1,0 +1,18 @@
+<div th:fragment="table">
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th><th>Nom</th><th>Prénom</th><th>Email</th><th>Métier</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="e : ${rows}">
+      <td th:text="${e.id}">1</td>
+      <td th:text="${e.lastname}">Smith</td>
+      <td th:text="${e.firstname}">Anna</td>
+      <td th:text="${e.email}">anna@smith.com</td>
+      <td th:text="${e.job}">RECEPTIONIST</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
