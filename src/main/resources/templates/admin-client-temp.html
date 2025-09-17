@@ -47,13 +47,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="client : ${clients}">
-                    <td><a th:href="@{/admin-client-focus(idClient=${client.idClient})}" th:text="${client.idClient}"></a></td>
+                <tr th:each="client : ${clients}" 
+                    th:onclick="|window.location.href='@{/admin-client-focus(idClient=${client.idClient})}'|"
+                    style="cursor: pointer;">
+                    <td th:text="${client.idClient}"></td>
                     <td th:text="${client.lastname}"></td>
                     <td th:text="${client.firstname}"></td>
                     <td th:text="${client.email}"></td>
                     <td th:text="${client.phone}"></td>
                 </tr>
+
                 </tbody>
             </table>
         </div>
