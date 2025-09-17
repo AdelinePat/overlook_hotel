@@ -9,12 +9,18 @@ import org.springframework.context.annotation.Bean;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/", "*/*", "/*", "/css/**", "*/filterForm", "/js/**").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .formLogin(login -> login.loginPage("/login").permitAll());
+
         http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "*/*", "/css/**", "/js/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin(login -> login.loginPage("/login").permitAll());
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .csrf(csrf -> csrf.disable())
+                .formLogin(login -> login.disable())
+                .logout(logout -> logout.disable());
 
         return http.build();
     }

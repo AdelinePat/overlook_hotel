@@ -28,11 +28,18 @@ public class ClientSpecification {
                                 .as(String.class), "%" + email + "%");
     }
 
+//    public static Specification<Client> hasPhone(final String phone) {
+//        return (root, query, criteriaBuilder) ->
+//                criteriaBuilder
+//                        .like(root
+//                                .get("phone")
+//                                .as(String.class), "%" + phone + "%");
+//    }
+
     public static Specification<Client> hasPhone(final String phone) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder
-                        .equal(root
-                                .get("phone")
-                                .as(String.class), "%" + phone + "%");
+                        .like(root
+                                .get("phone"), "%" + phone + "%"); // remove .as(String.class)
     }
 }

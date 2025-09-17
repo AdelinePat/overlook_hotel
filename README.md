@@ -39,12 +39,15 @@ docker compose exec dev mvn test
 ```bash
 docker compose exec dev mvn test -Dtest=ClassName
 ```
+- Run a specific test:
+```bash
+docker compose exec dev mvn test -Dtest=ClassName#methodName
+```
 
 ## Database
 - Database: MySQL
 - Schema: MPD available in the `resources` folder as mpd.jpg
 - Initialization: script available in `init.sql` in root
-Don't forget to create a .env file with the key variable that you find in .env.example
 
 ### Access the database
 1. Enter the MySQL container `mysql-db` and connect using the environment variables:
