@@ -49,5 +49,14 @@ public class AdminClientControllerTemp {
         return "admin-client-temp";
     }
 
+    @GetMapping("/admin-client-focus")
+    public String focusClient(@RequestParam("idClient") int idClient, Model model) {
+        Client selectedClient = clientService.findById(idClient);
+        model.addAttribute("focusedClient", selectedClient);
+        model.addAttribute("clients", clientService.findAllFiltered("", "", "", ""));
+        model.addAttribute("clientFilter", new ClientFilter());
+        return "admin-client-temp";
+    }
+
 
 }

@@ -48,7 +48,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="client : ${clients}">
-                    <td th:text="${client.idClient}"></td>
+                    <td><a th:href="@{/admin-client-focus(idClient=${client.idClient})}" th:text="${client.idClient}"></a></td>
                     <td th:text="${client.lastname}"></td>
                     <td th:text="${client.firstname}"></td>
                     <td th:text="${client.email}"></td>
@@ -60,14 +60,13 @@
         <div class="display-focus">
             <h2>Focus</h2>
             <form action="" method="post">
-                <input type="text" name="name" id="focus-lastname" placeholder="nom de famille">
-                <input type="text" name="firstname" id="focus-firstname" placeholder="prénom">
-                <input type="text" name="email" id="focus-email" placeholder="email">
-                <input type="text" name="phone" id="focus-phone" placeholder="telephone">
+                <input type="text" name="name" id="focus-lastname" placeholder="nom de famille" th:value="${focusedClient?.lastname}">
+                <input type="text" name="firstname" id="focus-firstname" placeholder="prénom" th:value="${focusedClient?.firstname}">
+                <input type="text" name="email" id="focus-email" placeholder="email" th:value="${focusedClient?.email}">
+                <input type="text" name="phone" id="focus-phone" placeholder="telephone" th:value="${focusedClient?.phone}">
             </form>
         </div>
     </div>
-
 
 
 </body>
