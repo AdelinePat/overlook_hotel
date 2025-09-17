@@ -8,6 +8,7 @@ import overlook_hotel.overlook_hotel.repository.RoomReservationRepository;
 import overlook_hotel.overlook_hotel.specification.RoomReservationSpecification;
 import overlook_hotel.overlook_hotel.specification.RoomSpecification;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
