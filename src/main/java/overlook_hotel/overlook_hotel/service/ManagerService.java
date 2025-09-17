@@ -2,6 +2,7 @@ package overlook_hotel.overlook_hotel.service;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import overlook_hotel.overlook_hotel.model.entity.Client;
 import overlook_hotel.overlook_hotel.model.entity.Manager;
 import overlook_hotel.overlook_hotel.specification.ManagerSpecification;
 import overlook_hotel.overlook_hotel.repository.ManagerRepository;
@@ -19,7 +20,8 @@ public class ManagerService {
     public List<Manager> findAllFiltered(String lastname,
                                          String firstname,
                                          String email) {
-        Specification<Manager> spec = Specification.unrestricted();
+
+        Specification<Manager> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
 
         if (lastname != null && !lastname.isEmpty()) {
             spec = spec.and(ManagerSpecification.hasLastname(lastname));
