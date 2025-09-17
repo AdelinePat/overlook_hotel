@@ -23,7 +23,9 @@ public class ClientService {
 
 //        Specification<Client> spec = Specification.where(null);
 
-        Specification<Client> spec = Specification.unrestricted();
+//        Specification<Client> spec = Specification.unrestricted();
+
+        Specification<Client> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
 
         if (lastname != null && !lastname.isBlank()) {
             spec = spec.and(ClientSpecification.hasLastname(lastname));
@@ -40,6 +42,4 @@ public class ClientService {
 
         return clientRepository.findAll(spec);
     }
-
-
 }

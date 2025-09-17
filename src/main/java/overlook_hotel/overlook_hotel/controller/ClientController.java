@@ -31,7 +31,7 @@ public class ClientController {
         List<Client> clients = clientService.findAllFiltered("", "", "", "");
         model.addAttribute("clients", clients);
         model.addAttribute("clientFilter", new ClientFilter()); // ✅ add this line
-        model.addAttribute("testBlabla", "FONCTIOOOOONNE !!!! les gens. coucou florence et thibault");
+        model.addAttribute("testBlabla", "fdp !!!! les gens. coucou florence et thibault");
         return "index";
     }
 
@@ -62,9 +62,12 @@ public class ClientController {
                                 @RequestParam(required = false) String email,
                                 @RequestParam(required = false) String phone,
                                 Model model) {
-        System.out.println("\n\n\n\n\n\t\t\t\t\t\t\t" + email + "\n\n\n\n\n");
-        System.out.println(phone);
-        List<Client> filteredClients = clientService.findAllFiltered(lastname.trim(), firstname.trim(), email.toLowerCase().trim(), phone.toLowerCase().trim());
+        lastname = lastname == null ? "" : lastname.trim();
+        firstname = firstname == null ? "" : firstname.trim();
+        email = email == null ? "" : email.toLowerCase().trim();
+        phone = phone == null ? "" : phone.trim();
+
+        List<Client> filteredClients = clientService.findAllFiltered(lastname, firstname, email, phone);
         model.addAttribute("clientFilter", new ClientFilter()); // optionally prefill
         model.addAttribute("clients", filteredClients);
         return "index";

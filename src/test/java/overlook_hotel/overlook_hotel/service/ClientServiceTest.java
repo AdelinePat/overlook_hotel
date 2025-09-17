@@ -47,7 +47,7 @@ public class ClientServiceTest {
 
     @Test
     public void findClientByPhone() {
-        List<Client> clients = clientService.findAllFiltered("", "", "", "0123456789");
+        List<Client> clients = clientService.findAllFiltered("", "a", "", "0612345678");
         System.out.println("\t\t #### 3 #### liste des clients PHONE:");
         for (Client client : clients) {
             System.out.println("\t" + client.getLastname() + " " + client.getFirstname());
