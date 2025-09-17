@@ -42,4 +42,7 @@ public class ClientService {
 
         return clientRepository.findAll(spec);
     }
+    public Client findById(int idClient) {
+        return clientRepository.findById(idClient).orElse(null);
+    }
 }
