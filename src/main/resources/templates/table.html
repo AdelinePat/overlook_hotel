@@ -14,7 +14,7 @@
 <p>OOOOOOOH</p>
 <div class="container">
     <div class="display-table">
-        <form th:action="@{/clients}" th:object="${filterField}" method="post">
+        <form th:action="${entityType == 'client' ? '/clients' : '/employees'}" th:object="${filterField}" method="post">
             <div class="filter-input">
                 <label for="lastname">Nom de famille:</label>
                 <input type="text" id="lastname"  name="lastname" th:field="*{lastname}" />
@@ -55,7 +55,10 @@
             </tr>
             </tbody>
         </table>
-        <a th:href="@{/employees}">>Employés</a>
+        <div th:switch="${entityType}">
+            <a th:case="'client'" th:href="@{/employees}">Employés</a>
+            <a th:case="'employee'" th:href="@{/clients}">Clients</a>
+        </div>
 <!--        <a th:href="@{/reservations}">Réservations</a>-->
 <!--        *<a th:href="@{/event}">Evénements</a>-->
     </div>
