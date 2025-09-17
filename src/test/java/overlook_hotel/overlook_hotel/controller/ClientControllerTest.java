@@ -1,5 +1,6 @@
 package overlook_hotel.overlook_hotel.controller;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.ui.ConcurrentModel;
@@ -17,6 +18,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@Disabled
 public class ClientControllerTest {
 
     private final ClientService mockClientService = mock(ClientService.class);

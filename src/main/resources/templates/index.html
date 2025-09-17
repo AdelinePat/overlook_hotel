@@ -9,66 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h2>J'essaie d'afficher la liste des clients hehe</h2>
-    <p th:text="${testBlabla}">texte par défaut</p>
-    <p>VA TE FAIRE FDP</p>
-    <div class="container">
-        <div class="display-table">
-            <form th:action="@{/filterForm}" th:object="${clientFilter}" method="get">
-                <div class="filter-input">
-                    <label for="lastname">Nom de famille:</label>
-                    <input type="text" id="lastname"  name="lastname" th:field="*{lastname}" />
-                </div>
-                <div class="filter-input">
-                    <label for="firstname">Prénom:</label>
-                    <input type="text" id="firstname" name="firstname" th:field="*{firstname}" />
-                </div>
-                <div class="filter-input">
-                    <label for="email">Email:</label>
-                    <input type="text" id="email" name="email" th:field="*{email}" />
-                </div>
-                <div class="filter-input">
-                </div>
-                <div class="filter-input">
-                    <label>Téléphone:</label>
-                    <input type="text" id="phone" name="phone" th:field="*{phone}" />
-                </div>
-                <button type="submit">rechercher</button>
-            </form>
-            <h1>Clients</h1>
-            <table>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Lastname</th>
-                    <th>Firstname</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="client : ${clients}">
-                    <td th:text="${client.idClient}"></td>
-                    <td th:text="${client.lastname}"></td>
-                    <td th:text="${client.firstname}"></td>
-                    <td th:text="${client.email}"></td>
-                    <td th:text="${client.phone}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="display-focus">
-            <h2>Focus</h2>
-            <form action="" method="post">
-                <input type="text" name="name" id="focus-lastname" placeholder="nom de famille">
-                <input type="text" name="firstname" id="focus-firstname" placeholder="prénom">
-                <input type="text" name="email" id="focus-email" placeholder="email">
-                <input type="text" name="phone" id="focus-phone" placeholder="telephone">
-            </form>
-        </div>
-    </div>
-
-
-
+    <h1>HAAAAAAAAAAAAAa aller sur /clients</h1>
 </body>
 </html>
