@@ -2,6 +2,7 @@ package overlook_hotel.overlook_hotel.service;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import overlook_hotel.overlook_hotel.model.entity.Client;
 import overlook_hotel.overlook_hotel.model.entity.Room;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
 import overlook_hotel.overlook_hotel.specification.RoomSpecification;
@@ -25,7 +26,7 @@ public class RoomService {
                                       BedType type,
                                       List<Integer> night_price) {
 
-        Specification<Room> spec = Specification.unrestricted();
+        Specification<Room> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
 
         if (description != null && !description.isBlank()) {
             spec = spec.and(RoomSpecification.hasDescription(description));
