@@ -9,6 +9,7 @@ import overlook_hotel.overlook_hotel.specification.RoomReservationSpecification;
 import overlook_hotel.overlook_hotel.specification.RoomSpecification;
 
 import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -19,7 +20,7 @@ public class RoomReservationService {
         this.roomReservationRepository = roomReservationRepository;
     }
 
-    public List<RoomReservation> findAllFiltered(Integer idReservation,
+    public List<RoomReservation> findAllFiltered(Long idReservation,
                                                  String lastname,
                                                  String firstname) {
         Specification<RoomReservation> spec =
@@ -38,6 +39,29 @@ public class RoomReservationService {
             spec = spec.and(RoomReservationSpecification.hasIdReservation(idReservation));
         }
 
-        return roomReservationRepository.findAll(spec);
+        List<RoomReservation> reservations = roomReservationRepository.findAll(spec);
+        reservations.forEach(this::calculateTotalPrice);
+
+        return reservations;
     }
+
+    private void calculateTotalPrice(RoomReservation reservation) {
+        if (reservation.getRoomLinks() == null || reservation.getRoomLinks().isEmpty()) {
+            reservation.setTotalPrice(BigDecimal.ZERO);
+            return;
+        }
+
+        int nights = (int) ChronoUnit.DAYS.between(
+                reservation.getStartDate(),
+                reservation.getEndDate()
+        );
+
+        BigDecimal sumNightPrices = reservation.getRoomLinks().stream()
+                .map(link -> link.getRoom().getNightPrice())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        reservation.setTotalPrice(sumNightPrices.multiply(BigDecimal.valueOf(nights)));
+    }
+
+
 }

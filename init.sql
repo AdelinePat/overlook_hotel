@@ -8,7 +8,7 @@ USE overlook_hotel;
 SET NAMES 'utf8mb4';
 
 CREATE TABLE IF NOT EXISTS manager (
-        id_manager INT AUTO_INCREMENT PRIMARY KEY,
+        id_manager BIGINT AUTO_INCREMENT PRIMARY KEY,
         lastname VARCHAR(100) NOT NULL,
         firstname VARCHAR(100) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS manager (
 
 -- client
 CREATE TABLE IF NOT EXISTS client (
-        id_client INT AUTO_INCREMENT PRIMARY KEY,
+        id_client BIGINT AUTO_INCREMENT PRIMARY KEY,
         lastname VARCHAR(100) NOT NULL,
         firstname VARCHAR(100) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -28,15 +28,15 @@ CREATE TABLE IF NOT EXISTS client (
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS fidelity (
-        id_fidelity INT AUTO_INCREMENT PRIMARY KEY,
-        id_client INT NOT NULL,
+        id_fidelity BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_client BIGINT NOT NULL,
         value INT NOT NULL,
         FOREIGN KEY (id_client) REFERENCES client(id_client) ON DELETE CASCADE
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- employee
 CREATE TABLE IF NOT EXISTS employee (
-        id_employee INT AUTO_INCREMENT PRIMARY KEY,
+        id_employee BIGINT AUTO_INCREMENT PRIMARY KEY,
         lastname VARCHAR(100) NOT NULL,
         firstname VARCHAR(100) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -51,45 +51,45 @@ CREATE TABLE IF NOT EXISTS employee (
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS formation (
-         id_formation INT AUTO_INCREMENT PRIMARY KEY,
+         id_formation BIGINT AUTO_INCREMENT PRIMARY KEY,
          start DATE NOT NULL,
          end DATE NOT NULL,
          title VARCHAR(50)
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS schedule (
-        id_schedule INT AUTO_INCREMENT PRIMARY KEY,
+        id_schedule BIGINT AUTO_INCREMENT PRIMARY KEY,
         day_of_week ENUM('LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI', 'DIMANCHE') NOT NULL,
         shift ENUM('MATIN', 'APRES_MIDI', 'SOIR', 'NUIT') NOT NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS vacation (
-        id_vacation INT AUTO_INCREMENT PRIMARY KEY,
-        id_employee INT NOT NULL,
+        id_vacation BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_employee BIGINT NOT NULL,
         start DATE NOT NULL,
         end DATE NOT NULL,
         FOREIGN KEY (id_employee) REFERENCES employee(id_employee) ON DELETE CASCADE
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS employee_schedule (
-        id_employee_schedule INT AUTO_INCREMENT PRIMARY KEY,
-        id_employee INT NOT NULL,
-        id_schedule INT,
+        id_employee_schedule BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_employee BIGINT NOT NULL,
+        id_schedule BIGINT,
         FOREIGN KEY (id_employee) REFERENCES employee(id_employee) ON DELETE CASCADE,
         FOREIGN KEY (id_schedule) REFERENCES schedule(id_schedule) ON DELETE SET NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS employee_formation (
-        id_employee_formation INT AUTO_INCREMENT PRIMARY KEY,
-        id_employee INT NOT NULL,
-        id_formation INT,
+        id_employee_formation BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_employee BIGINT NOT NULL,
+        id_formation BIGINT,
         FOREIGN KEY (id_employee) REFERENCES employee(id_employee) ON DELETE CASCADE,
         FOREIGN KEY (id_formation) REFERENCES formation(id_formation) ON DELETE SET NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- room
 CREATE TABLE IF NOT EXISTS room (
-        id_room INT AUTO_INCREMENT PRIMARY KEY,
+        id_room BIGINT AUTO_INCREMENT PRIMARY KEY,
         number INT NOT NULL,
         capacity INT NOT NULL,
         description VARCHAR(500),
@@ -99,14 +99,14 @@ CREATE TABLE IF NOT EXISTS room (
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS room_bonus (
-        id_room_bonus INT AUTO_INCREMENT PRIMARY KEY,
+        id_room_bonus BIGINT AUTO_INCREMENT PRIMARY KEY,
         type ENUM('TV', 'SECHOIR', 'MINI_BAR', 'BOUILLOIRE', 'FAUTEUIL_MASSANT', 'PC_GAMING', 'JACUZZI') NOT NULL,
         daily_price DECIMAL(6,2) NOT NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS room_reservation (
-        id_room_reservation INT AUTO_INCREMENT PRIMARY KEY,
-        id_client INT NULL,
+        id_room_reservation BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_client BIGINT NULL,
         creation DATE NOT NULL,
         start_date DATE NOT NULL,
         end_date DATE NOT NULL,
@@ -117,32 +117,32 @@ CREATE TABLE IF NOT EXISTS room_reservation (
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS room_link_reservation (
-        id_room_link_reservation INT AUTO_INCREMENT PRIMARY KEY,
-        id_room_reservation INT NOT NULL,
-        id_room INT,
+        id_room_link_reservation BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_room_reservation BIGINT NOT NULL,
+        id_room BIGINT,
         FOREIGN KEY (id_room_reservation) REFERENCES room_reservation(id_room_reservation) ON DELETE CASCADE,
         FOREIGN KEY (id_room) REFERENCES room(id_room) ON DELETE SET NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS room_link_bonus (
-        id_room_link_bonus INT AUTO_INCREMENT PRIMARY KEY,
-        id_room_bonus INT,
-        id_room INT,
+        id_room_link_bonus BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_room_bonus BIGINT,
+        id_room BIGINT,
         FOREIGN KEY (id_room_bonus) REFERENCES room_bonus(id_room_bonus) ON DELETE SET NULL,
         FOREIGN KEY (id_room) REFERENCES room(id_room) ON DELETE SET NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- event
 CREATE TABLE IF NOT EXISTS place (
-        id_place INT AUTO_INCREMENT PRIMARY KEY,
+        id_place BIGINT AUTO_INCREMENT PRIMARY KEY,
         type ENUM('SALLE_DE_REUNION', 'PISCINE', 'SPA', 'TENNIS', 'PLACARD_A_BALAIS', 'SALLE_SUR_DEMANDE') NOT NULL,
         capacity INT NOT NULL,
         hourly_price DECIMAL(6,2) NOT NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS event_reservation (
-        id_event_reservation INT AUTO_INCREMENT PRIMARY KEY,
-        id_client INT,
+        id_event_reservation BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_client BIGINT,
         event ENUM('MARIAGE', 'FETE', 'ANNIVERSAIRE', 'ENTERREMENT', 'REUNION', 'AUTRE') NOT NULL,
         start_date DATETIME NOT NULL,
         end_date DATETIME NOT NULL,
@@ -151,26 +151,26 @@ CREATE TABLE IF NOT EXISTS event_reservation (
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS event_link_place (
-        id_event_link_place INT AUTO_INCREMENT PRIMARY KEY,
-        id_event_reservation INT NOT NULL,
-        id_place INT,
+        id_event_link_place BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_event_reservation BIGINT NOT NULL,
+        id_place BIGINT,
         FOREIGN KEY (id_event_reservation) REFERENCES event_reservation(id_event_reservation) ON DELETE CASCADE,
         FOREIGN KEY (id_place) REFERENCES place(id_place) ON DELETE SET NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- depend on multiple tables
 CREATE TABLE IF NOT EXISTS feedback (
-        id_feedback INT AUTO_INCREMENT PRIMARY KEY,
-        id_room_reservation INT,
+        id_feedback BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_room_reservation BIGINT,
         rate INT NOT NULL,
         comment VARCHAR(500),
         FOREIGN KEY (id_room_reservation) REFERENCES room_reservation(id_room_reservation) ON DELETE CASCADE
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS response (
-        id_response INT AUTO_INCREMENT PRIMARY KEY,
-        id_manager INT,
-        id_feedback INT NOT NULL,
+        id_response BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_manager BIGINT,
+        id_feedback BIGINT NOT NULL,
         answer VARCHAR(500),
         FOREIGN KEY (id_manager) REFERENCES manager(id_manager) ON DELETE SET NULL,
         FOREIGN KEY (id_feedback) REFERENCES feedback(id_feedback) ON DELETE CASCADE

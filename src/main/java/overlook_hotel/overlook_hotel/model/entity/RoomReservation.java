@@ -10,6 +10,8 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "room_reservation")
@@ -21,7 +23,7 @@ public class RoomReservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_room_reservation")
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_client", referencedColumnName = "id_client")
@@ -46,8 +48,10 @@ public class RoomReservation {
     @Column(name="payment_date")
     private LocalDateTime paymentDate;
 
-    // TODO PROBABLY DELETE THIS FIELD ?
-//    @Column(name="total_price")
+    @OneToMany(mappedBy = "roomReservation", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<RoomLinkReservation> roomLinks = new ArrayList<>();
+
     @Transient
     private BigDecimal totalPrice;
+
 }

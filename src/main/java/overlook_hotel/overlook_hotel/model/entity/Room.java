@@ -22,15 +22,15 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_room")
-    private int id;
+    private Long id;
 
     @NotNull
     @Column(name="number")
-    private int number;
+    private Integer number;
 
     @NotNull
     @Column(name="capacity")
-    private int capacity;
+    private Integer capacity;
 
     @NotBlank
     @Column(name="description", length = 500)
