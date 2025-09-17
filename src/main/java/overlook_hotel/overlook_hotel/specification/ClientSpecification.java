@@ -31,7 +31,7 @@ public class ClientSpecification {
     public static Specification<Client> hasPhone(final String phone) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder
-                        .equal(root
+                        .like(root
                                 .get("phone")
                                 .as(String.class), "%" + phone + "%");
     }

@@ -10,6 +10,14 @@
     --secondary-bg-color: #E6AADB;
 }
 
+body {
+    width: 80%;
+    max-width: 1200px;
+    min-width: 500px;
+    margin: auto;
+    min-height: 100vh;
+}
+
 h1, h2 {
     text-transform: uppercase;
     padding: 10px;
@@ -53,11 +61,11 @@ table thead tr td {
 }
 
 .page {
-    width: 80%;
-    max-width: 1200px;
-    min-width: 500px;
-    margin: auto;
-    min-height: 100vh;
+    /*width: 80%;*/
+    /*max-width: 1200px;*/
+    /*min-width: 500px;*/
+    /*margin: auto;*/
+    /*min-height: 100vh;*/
 }
 
 .container {

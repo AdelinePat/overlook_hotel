@@ -39,6 +39,10 @@ docker compose exec dev mvn test
 ```bash
 docker compose exec dev mvn test -Dtest=ClassName
 ```
+- Run a specific test:
+```bash
+docker compose exec dev mvn test -Dtest=ClassName#methodName
+```
 
 ## Database
 - Database: MySQL
