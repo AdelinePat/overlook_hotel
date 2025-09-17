@@ -4,7 +4,7 @@ import overlook_hotel.overlook_hotel.model.entity.Room;
 import overlook_hotel.overlook_hotel.model.entity.RoomReservation;
 
 public class RoomReservationSpecification {
-    public static Specification<RoomReservation> hasIdReservation(final Integer idReservation) {
+    public static Specification<RoomReservation> hasIdReservation(final Long idReservation) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("id"), idReservation);
     }

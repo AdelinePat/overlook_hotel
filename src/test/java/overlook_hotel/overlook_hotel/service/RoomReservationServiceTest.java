@@ -18,7 +18,11 @@ public class RoomReservationServiceTest {
         List<RoomReservation> reservations = roomReservationService.findAllFiltered(null, "", "");
         System.out.println("\n\n\t\t #### 1 #### liste des room reservations");
         for (RoomReservation reservation : reservations) {
-            System.out.println("\t" + reservation.getId()+ " " + reservation.getClient().getFirstname() + " " + reservation.getClient().getLastname() + " " + reservation.getPaymentDate());
+            System.out.println("\t" + reservation.getId()+
+                    " " + reservation.getClient().getFirstname() +
+                    " " + reservation.getClient().getLastname() +
+                    " " + reservation.getPaymentDate() +
+                    " " + reservation.getTotalPrice());
         }
 
         assertEquals(10, reservations.size());
@@ -26,10 +30,14 @@ public class RoomReservationServiceTest {
 
     @Test
     public void findByReservationID() {
-        List<RoomReservation> reservations = roomReservationService.findAllFiltered(5, "", "");
+        List<RoomReservation> reservations = roomReservationService.findAllFiltered(5L, "", "");
         System.out.println("\n\n\t\t #### 2 #### liste des room reservations par ID");
         for (RoomReservation reservation : reservations) {
-            System.out.println("\t" + reservation.getId()+ " " + reservation.getClient().getFirstname() + " " + reservation.getClient().getLastname() + " " + reservation.getPaymentDate());
+            System.out.println("\t" + reservation.getId()+
+                    " " + reservation.getClient().getFirstname() +
+                    " " + reservation.getClient().getLastname() +
+                    " " + reservation.getPaymentDate() +
+                    " " + reservation.getTotalPrice());
         }
 
         assertEquals(1, reservations.size());
@@ -40,7 +48,11 @@ public class RoomReservationServiceTest {
         List<RoomReservation> reservations = roomReservationService.findAllFiltered(null, "au", "");
         System.out.println("\n\n\t\t #### 3 #### liste des room reservations par CLIENT LASTNAME");
         for (RoomReservation reservation : reservations) {
-            System.out.println("\t" + reservation.getId()+ " " + reservation.getClient().getFirstname() + " " + reservation.getClient().getLastname() + " " + reservation.getPaymentDate());
+            System.out.println("\t" + reservation.getId()+
+                    " " + reservation.getClient().getFirstname() +
+                    " " + reservation.getClient().getLastname() +
+                    " " + reservation.getPaymentDate() +
+                    " " + reservation.getTotalPrice());
         }
 
         assertEquals(3, reservations.size());

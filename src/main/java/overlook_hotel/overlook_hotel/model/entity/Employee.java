@@ -19,7 +19,7 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_employee")
-    private int id;
+    private Long id;
 
     @NotBlank
     @Column(name="lastname", length = 100)

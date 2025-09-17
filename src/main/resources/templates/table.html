@@ -14,7 +14,7 @@
 <p>OOOOOOOH</p>
 <div class="container">
     <div class="display-table">
-        <form th:action="@{/clients}" th:object="${clientFilter}" method="post">
+        <form th:action="@{/clients}" th:object="${filterField}" method="post">
             <div class="filter-input">
                 <label for="lastname">Nom de famille:</label>
                 <input type="text" id="lastname"  name="lastname" th:field="*{lastname}" />
@@ -35,27 +35,29 @@
             </div>
             <button type="submit">rechercher</button>
         </form>
-        <h1>Clients</h1>
+        <h1 th:text="${title}"></h1>
         <table>
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Lastname</th>
-                <th>Firstname</th>
-                <th>Email</th>
-                <th>Phone</th>
+                <th th:each="col : ${columns}" th:text="${col}"></th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="client : ${clients}">
-                <td th:text="${client.idClient}"></td>
-                <td th:text="${client.lastname}"></td>
-                <td th:text="${client.firstname}"></td>
-                <td th:text="${client.email}"></td>
-                <td th:text="${client.phone}"></td>
+            <tr th:each="row : ${rows}">
+                <td th:text="${row.id}"></td>
+                <td th:text="${row.lastname}"></td>
+                <td th:text="${row.firstname}"></td>
+                <td th:text="${row.email}"></td>
+                <td th:switch="${entityType}">
+                    <span th:case="'client'" th:text="${row.phone}"></span>
+                    <span th:case="'employee'" th:text="${row.job}"></span>
+                </td>
             </tr>
             </tbody>
         </table>
+        <a th:href="@{/employees}">>Employés</a>
+<!--        <a th:href="@{/reservations}">Réservations</a>-->
+<!--        *<a th:href="@{/event}">Evénements</a>-->
     </div>
     <div class="display-focus">
         <h2>Focus</h2>
