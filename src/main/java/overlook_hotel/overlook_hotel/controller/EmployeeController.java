@@ -4,59 +4,30 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import overlook_hotel.overlook_hotel.model.FilterFields;
-import overlook_hotel.overlook_hotel.model.entity.Client;
 import overlook_hotel.overlook_hotel.model.entity.Employee;
-import overlook_hotel.overlook_hotel.model.enumList.Job;
-import overlook_hotel.overlook_hotel.service.ClientService;
 import overlook_hotel.overlook_hotel.service.EmployeeService;
+import overlook_hotel.overlook_hotel.model.entity.Job;
+import overlook_hotel.overlook_hotel.service.JobService;
+
 
 import java.util.List;
 
 @Controller
 public class EmployeeController {
     private final EmployeeService employeeService;
+    private final JobService jobService;
     private FilterFields filterFields;
     private FilterFields focusedField;
     private Employee focusedEmployee;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, JobService jobService) {
         this.employeeService = employeeService;
+        this.jobService = jobService;
         this.filterFields = new FilterFields();
         this.focusedField = new FilterFields();
         this.focusedEmployee = new Employee();
     }
 
-    // @RequestMapping(value = "/employees", method = {RequestMethod.GET, RequestMethod.POST})
-    // public String employees(@RequestParam(required = false) String lastname,
-    //                         @RequestParam(required = false) String firstname,
-    //                         @RequestParam(required = false) String email,
-    //                         @RequestParam(required = false) Job job,
-    //                         Model model) {
-
-    //     model.addAttribute("testBlabla", "les gens. coucou florence et thibault");
-
-    //     lastname = lastname == null ? "" : lastname.trim();
-    //     firstname = firstname == null ? "" : firstname.trim();
-    //     email = email == null ? "" : email.toLowerCase().trim();
-
-    //     FilterFields employeeFilter = new FilterFields();
-    //     model.addAttribute("filterField", employeeFilter);
-    //     List<Employee> employees = employeeService.findAllFiltered(lastname, firstname, email, job);
-
-    //     employeeFilter.setLastname(lastname);
-    //     employeeFilter.setFirstname(firstname);
-    //     employeeFilter.setEmail(email);
-    //     employeeFilter.setJob(job);
-
-    //     model.addAttribute("clients", employees);
-
-    //     model.addAttribute("title", "Employés");
-    //     model.addAttribute("columns", List.of("ID", "Nom", "Prénom", "Email", "Job"));
-    //     model.addAttribute("rows", employees);
-    //     model.addAttribute("entityType", "employee");
-
-    //     return "table";
-    // }
 
      @RequestMapping(value = "/employees", method = {RequestMethod.GET, RequestMethod.POST})
     public String employees(
@@ -71,8 +42,19 @@ public class EmployeeController {
         lastname = lastname == null ? "" : lastname.trim();
         firstname = firstname == null ? "" : firstname.trim();
         email = email == null ? "" : email.toLowerCase().trim();
-        Job job = (jobParam == null || jobParam.isBlank()) ? null : Job.valueOf(jobParam);
-        id = id == null ? null : id;
+        Long jobId = null;
+        id = id;
+
+        if (jobParam != null && !jobParam.isBlank()) {
+         try {
+             jobId = Long.parseLong(jobParam);
+         } catch (NumberFormatException ignored) {}
+        }
+
+         Job job = null;
+         if (jobId != null) {
+             job = jobService.findJobById(jobId);
+         }
 
         this.populateFilterFields(lastname, firstname, email, job);
 
@@ -83,7 +65,6 @@ public class EmployeeController {
             this.filterFields.getJob()
             );
 
-        
         // ---- FOCUS ----
         this.populateFocusField(id);
         if (this.focusedField.getId() != null) {
@@ -98,10 +79,12 @@ public class EmployeeController {
         model.addAttribute("focusField", this.focusedField);
         model.addAttribute("filterField", this.filterFields);
         model.addAttribute("title", "Employés");
-         model.addAttribute("titlePage", "Gestion des employés");
+        model.addAttribute("titlePage", "Gestion des employés");
         model.addAttribute("columns", List.of("ID", "Nom", "Prénom", "Email", "Job"));
         model.addAttribute("rows", employees);
         model.addAttribute("entityType", "employee");
+//        model.addAttribute("jobEnumValues", employeeService.getJobEnumValues());
+         model.addAttribute("jobEnumValues", jobService.getFullJobList());
 
         return "table";
     }
@@ -130,7 +113,7 @@ public class EmployeeController {
             this.focusedEmployee = employeeService.findById(id);
 
             if (this.focusedEmployee != null) {
-                this.focusedField.setId(this.focusedEmployee.getId().longValue());
+                this.focusedField.setId(this.focusedEmployee.getId());
                 this.focusedField.setLastname(this.focusedEmployee.getLastname());
                 this.focusedField.setFirstname(this.focusedEmployee.getFirstname());
                 this.focusedField.setEmail(this.focusedEmployee.getEmail());

@@ -37,7 +37,7 @@ public class ClientControllerTest {
                     .thenReturn(clientsList);
 
 
-        String clientPage = clientController.clients("", "", "", "", model);
+        String clientPage = clientController.clients("", "", "", "", null, model);
 
         List<Client> clients = (List<Client>) model.getAttribute("rows");
 

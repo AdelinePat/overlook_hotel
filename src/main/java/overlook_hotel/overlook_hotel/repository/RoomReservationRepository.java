@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RoomReservationRepository  extends JpaRepository<RoomReservation, Integer>, JpaSpecificationExecutor<RoomReservation> {
+public interface RoomReservationRepository  extends JpaRepository<RoomReservation, Long>, JpaSpecificationExecutor<RoomReservation> {
 
     // 1) Fetch reservation with links + rooms to avoid N+1 (entity approach)
     @Query("SELECT rr FROM RoomReservation rr " +

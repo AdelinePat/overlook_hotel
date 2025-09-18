@@ -7,7 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import overlook_hotel.overlook_hotel.model.enumList.Job;
+//import overlook_hotel.overlook_hotel.model.enumList.Job;
+
 
 @Entity
 @Table(name = "employee")
@@ -33,9 +34,8 @@ public class Employee {
     @Column(name="email", length = 255)
     private String email;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name="job", length = 20)
+    @ManyToOne
+    @JoinColumn(name = "id_job") // references job.id_job
     private Job job;
 
     @NotBlank

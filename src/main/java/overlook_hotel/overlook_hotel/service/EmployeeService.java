@@ -2,20 +2,22 @@ package overlook_hotel.overlook_hotel.service;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import overlook_hotel.overlook_hotel.model.entity.Client;
 import overlook_hotel.overlook_hotel.model.entity.Employee;
+import overlook_hotel.overlook_hotel.model.entity.Job;
 import overlook_hotel.overlook_hotel.specification.EmployeeSpecification;
-import overlook_hotel.overlook_hotel.model.enumList.Job;
 import overlook_hotel.overlook_hotel.repository.EmployeeRepository;
+import overlook_hotel.overlook_hotel.util.DatabaseEnumService;
 
 import java.util.List;
 
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final DatabaseEnumService databaseEnumService;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, DatabaseEnumService databaseEnumService) {
         this.employeeRepository = employeeRepository;
+        this.databaseEnumService = databaseEnumService;
     }
 
     public List<Employee> findAllFiltered(String lastname,
@@ -42,6 +44,7 @@ public class EmployeeService {
     }
 
     public Employee findById(Long id) {
-        return employeeRepository.findById(Math.toIntExact(id)).orElse(null);
+        return employeeRepository.findById(id).orElse(null);
     }
+
 }

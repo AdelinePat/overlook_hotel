@@ -35,19 +35,20 @@ CREATE TABLE IF NOT EXISTS fidelity (
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- employee
+CREATE TABLE IF NOT EXISTS job (
+    id_job BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS employee (
         id_employee BIGINT AUTO_INCREMENT PRIMARY KEY,
         lastname VARCHAR(100) NOT NULL,
         firstname VARCHAR(100) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
-        job ENUM('RECEPTIONNISTE',
-                 'AGENT_ENTRETIEN',
-                 'HOTE',
-                 'COORDINATEUR',
-                 'BAGAGISTE',
-                 'CHEF_CUISINIER') NOT NULL,
+        id_job BIGINT,
         salt VARCHAR(255),
-        password VARCHAR(255)
+        password VARCHAR(255),
+        FOREIGN KEY (id_job) REFERENCES job(id_job) ON DELETE SET NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS formation (
@@ -133,11 +134,17 @@ CREATE TABLE IF NOT EXISTS room_link_bonus (
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- event
+CREATE TABLE IF NOT EXISTS place_type (
+    id_place_type BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100)
+    );
+
 CREATE TABLE IF NOT EXISTS place (
         id_place BIGINT AUTO_INCREMENT PRIMARY KEY,
-        type ENUM('SALLE_DE_REUNION', 'PISCINE', 'SPA', 'TENNIS', 'PLACARD_A_BALAIS', 'SALLE_SUR_DEMANDE') NOT NULL,
+        id_place_type BIGINT,
         capacity INT NOT NULL,
-        hourly_price DECIMAL(6,2) NOT NULL
+        hourly_price DECIMAL(6,2) NOT NULL,
+        FOREIGN KEY (id_place_type) REFERENCES place_type(id_place_type)
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS event_reservation (
@@ -177,6 +184,24 @@ CREATE TABLE IF NOT EXISTS response (
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- fake data
+INSERT INTO job (title)
+VALUES
+        ('RECEPTIONNISTE'),
+        ('AGENT_ENTRETIEN'),
+        ('HOTE'),
+        ('COORDINATEUR'),
+        ('BAGAGISTE'),
+        ('CHEF_CUISINIER');
+
+INSERT INTO place_type (name)
+VALUES
+        ('SALLE_DE_REUNION'),
+        ('PISCINE'),
+        ('SPA'),
+        ('TENNIS'),
+        ('PLACARD_A_BALAIS'),
+        ('SALLE_SUR_DEMANDE');
+
 INSERT INTO manager (lastname, firstname, email, salt, password)
 VALUES
         ('Dupont', 'Jean', 'jean.dupont@example.com', 'somesalt1', 'password1'),
@@ -205,19 +230,19 @@ VALUES
         ('Bertrand', 'Thomas', 'thomas.bertrand@example.com', '0623456780', 'salt19', 'pass19'),
         ('Lefevre', 'Valérie', 'valerie.lefevre@example.com', '0678123491', 'salt20', 'pass20');
 
-INSERT INTO employee (lastname, firstname, email, job, salt, password)
+INSERT INTO employee (lastname, firstname, email, id_job, salt, password)
 VALUES
-        ('Legrand', 'Pierre', 'pierre.legrand@example.com', 'RECEPTIONNISTE', 'saltE1', 'passE1'),
-        ('Bernard', 'Marie', 'marie.bernard@example.com', 'AGENT_ENTRETIEN', 'saltE2', 'passE2'),
-        ('Faure', 'Luc', 'luc.faure@example.com', 'HOTE', 'saltE3', 'passE3'),
-        ('Dupuis', 'Anne', 'anne.dupuis@example.com', 'COORDINATEUR', 'saltE4', 'passE4'),
-        ('Meyer', 'Sébastien', 'sebastien.meyer@example.com', 'BAGAGISTE', 'saltE5', 'passE5'),
-        ('Renaud', 'Céline', 'celine.renaud@example.com', 'CHEF_CUISINIER', 'saltE6', 'passE6'),
-        ('Benoit', 'Éric', 'eric.benoit@example.com', 'RECEPTIONNISTE', 'saltE7', 'passE7'),
-        ('Girard', 'Fanny', 'fanny.girard@example.com', 'AGENT_ENTRETIEN', 'saltE8', 'passE8'),
-        ('Robert', 'Hugo', 'hugo.robert@example.com', 'HOTE', 'saltE9', 'passE9'),
-        ('Meyera', 'Sébastiena', 'sebastiena.meyera@example.com', 'BAGAGISTE', 'saltE5', 'passE5'),
-        ('Vidal', 'Inès', 'ines.vidal@example.com', 'COORDINATEUR', 'saltE10', 'passE10');
+        ('Legrand', 'Pierre', 'pierre.legrand@example.com', 1, 'saltE1', 'passE1'),
+        ('Bernard', 'Marie', 'marie.bernard@example.com', 2, 'saltE2', 'passE2'),
+        ('Faure', 'Luc', 'luc.faure@example.com', 3, 'saltE3', 'passE3'),
+        ('Dupuis', 'Anne', 'anne.dupuis@example.com', 4, 'saltE4', 'passE4'),
+        ('Meyer', 'Sébastien', 'sebastien.meyer@example.com', 5, 'saltE5', 'passE5'),
+        ('Renaud', 'Céline', 'celine.renaud@example.com', 6, 'saltE6', 'passE6'),
+        ('Benoit', 'Éric', 'eric.benoit@example.com', 1, 'saltE7', 'passE7'),
+        ('Girard', 'Fanny', 'fanny.girard@example.com', 2, 'saltE8', 'passE8'),
+        ('Robert', 'Hugo', 'hugo.robert@example.com', 3, 'saltE9', 'passE9'),
+        ('Meyera', 'Sébastiena', 'sebastiena.meyera@example.com', 5, 'saltE5', 'passE5'),
+        ('Vidal', 'Inès', 'ines.vidal@example.com', 4, 'saltE10', 'passE10');
 
 
 INSERT INTO room (number, capacity, description, standing, type, night_price)
@@ -369,17 +394,17 @@ INSERT INTO room_link_bonus (id_room_bonus, id_room) VALUES
          (9, 9),
          (4, 1);
 
-INSERT INTO place (type, capacity, hourly_price) VALUES
-        ('SALLE_DE_REUNION', 20, 50.00),
-        ('PISCINE', 15, 30.00),
-        ('SPA', 10, 40.00),
-        ('TENNIS', 4, 25.00),
-        ('PLACARD_A_BALAIS', 1, 5.00),
-        ('SALLE_SUR_DEMANDE', 25, 60.00),
-        ('SALLE_DE_REUNION', 18, 45.00),
-        ('SPA', 8, 35.00),
-        ('PISCINE', 12, 32.00),
-        ('TENNIS', 6, 28.00);
+INSERT INTO place (id_place_type, capacity, hourly_price) VALUES
+        (1, 20, 50.00),
+        (2, 15, 30.00),
+        (3, 10, 40.00),
+        (4, 4, 25.00),
+        (5, 1, 5.00),
+        (6, 25, 60.00),
+        (1, 18, 45.00),
+        (3, 8, 35.00),
+        (2, 12, 32.00),
+        (4, 6, 28.00);
 
 
 INSERT INTO event_reservation (id_client, event, start_date, end_date, total_price) VALUES
@@ -461,31 +486,31 @@ INSERT INTO response (id_manager, id_feedback, answer) VALUES
 -- GROUP BY resa.id_client, resa.id_room_reservation, resa.start_date, resa.end_date;
 
 
-
-SELECT resa.id_client,
-       resa.id_room_reservation,
-       resa.start_date,
-       resa.end_date,
-       (SUM(night_price) * DATEDIFF(resa.end_date, resa.start_date))
-           AS total_price
-FROM room_reservation AS resa
-         JOIN room_link_reservation AS link
-              USING(id_room_reservation)
-         JOIN room
-              USING(id_room)
-WHERE resa.id_room_reservation = 3
-GROUP BY resa.id_client, resa.id_room_reservation, resa.start_date, resa.end_date;
-
-
-SELECT resa.id_client,
-       resa.id_room_reservation,
-       resa.start_date,
-       resa.end_date,
-       SUM(room.night_price * DATEDIFF(resa.end_date, resa.start_date)) AS total_night_price
-FROM room_reservation AS resa
-         JOIN room_link_reservation AS link
-              USING(id_room_reservation)
-         JOIN room
-              USING(id_room)
-WHERE resa.id_client = 2
-GROUP BY resa.id_client, resa.id_room_reservation, resa.start_date, resa.end_date;
+--
+-- SELECT resa.id_client,
+--        resa.id_room_reservation,
+--        resa.start_date,
+--        resa.end_date,
+--        (SUM(night_price) * DATEDIFF(resa.end_date, resa.start_date))
+--            AS total_price
+-- FROM room_reservation AS resa
+--          JOIN room_link_reservation AS link
+--               USING(id_room_reservation)
+--          JOIN room
+--               USING(id_room)
+-- WHERE resa.id_room_reservation = 3
+-- GROUP BY resa.id_client, resa.id_room_reservation, resa.start_date, resa.end_date;
+--
+--
+-- SELECT resa.id_client,
+--        resa.id_room_reservation,
+--        resa.start_date,
+--        resa.end_date,
+--        SUM(room.night_price * DATEDIFF(resa.end_date, resa.start_date)) AS total_night_price
+-- FROM room_reservation AS resa
+--          JOIN room_link_reservation AS link
+--               USING(id_room_reservation)
+--          JOIN room
+--               USING(id_room)
+-- WHERE resa.id_client = 2
+-- GROUP BY resa.id_client, resa.id_room_reservation, resa.start_date, resa.end_date;
