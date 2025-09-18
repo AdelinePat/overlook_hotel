@@ -89,19 +89,25 @@ CREATE TABLE IF NOT EXISTS employee_formation (
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- room
+CREATE TABLE IF NOT EXISTS standing (
+    id_standing BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100)
+);
+
 CREATE TABLE IF NOT EXISTS room (
         id_room BIGINT AUTO_INCREMENT PRIMARY KEY,
         number INT NOT NULL,
         capacity INT NOT NULL,
         description VARCHAR(500),
-        standing ENUM('SUPERIEURE', 'DE_LUXE', 'SUPERBE_VUE', 'SIMPLE') NOT NULL,
+        id_standing BIGINT NOT NULL,
+--         standing ENUM('SUPERIEURE', 'DE_LUXE', 'SUPERBE_VUE', 'SIMPLE') NOT NULL,
         type ENUM('SIMPLE', 'DOUBLE'),
         night_price DECIMAL(6,2) NOT NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS room_bonus (
         id_room_bonus BIGINT AUTO_INCREMENT PRIMARY KEY,
-        type ENUM('TV', 'SECHOIR', 'MINI_BAR', 'BOUILLOIRE', 'FAUTEUIL_MASSANT', 'PC_GAMING', 'JACUZZI') NOT NULL,
+        type VARCHAR(100) NOT NULL,
         daily_price DECIMAL(6,2) NOT NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -150,7 +156,7 @@ CREATE TABLE IF NOT EXISTS place (
 CREATE TABLE IF NOT EXISTS event_reservation (
         id_event_reservation BIGINT AUTO_INCREMENT PRIMARY KEY,
         id_client BIGINT,
-        event ENUM('MARIAGE', 'FETE', 'ANNIVERSAIRE', 'ENTERREMENT', 'REUNION', 'AUTRE') NOT NULL,
+        event VARCHAR(100) NOT NULL,
         start_date DATETIME NOT NULL,
         end_date DATETIME NOT NULL,
         total_price DECIMAL(6,2) NOT NULL,
@@ -192,6 +198,14 @@ VALUES
         ('COORDINATEUR'),
         ('BAGAGISTE'),
         ('CHEF_CUISINIER');
+
+
+INSERT INTO standing (name)
+VALUES
+    ('SUPERIEURE'),
+    ('DE_LUXE'),
+    ('SUPERBE_VUE'),
+    ('SIMPLE');
 
 INSERT INTO place_type (name)
 VALUES
@@ -245,18 +259,18 @@ VALUES
         ('Vidal', 'Inès', 'ines.vidal@example.com', 4, 'saltE10', 'passE10');
 
 
-INSERT INTO room (number, capacity, description, standing, type, night_price)
+INSERT INTO room (number, capacity, description, id_standing, type, night_price)
 VALUES
-        (101, 2, 'Double room with garden view', 'SUPERIEURE', 'DOUBLE', 120.00),
-        (102, 1, 'Single room with city view', 'SIMPLE', 'SIMPLE', 80.00),
-        (103, 2, 'Double room with balcony', 'DE_LUXE', 'DOUBLE', 150.00),
-        (104, 2, 'Superb view of the lake', 'SUPERBE_VUE', 'DOUBLE', 200.00),
-        (105, 1, 'Cozy single room', 'SIMPLE', 'SIMPLE', 75.00),
-        (106, 3, 'Family room', 'SUPERIEURE', 'DOUBLE', 180.00),
-        (107, 2, 'Double room with JACUZZI', 'DE_LUXE', 'DOUBLE', 220.00),
-        (108, 1, 'Economy single room', 'SIMPLE', 'SIMPLE', 70.00),
-        (109, 2, 'Superior double room', 'SUPERIEURE', 'DOUBLE', 130.00),
-        (110, 2, 'Deluxe double with terrace', 'DE_LUXE', 'DOUBLE', 170.00);
+        (101, 2, 'Double room with garden view', 1, 'DOUBLE', 120.00),
+        (102, 1, 'Single room with city view', 4, 'SIMPLE', 80.00),
+        (103, 2, 'Double room with balcony', 2, 'DOUBLE', 150.00),
+        (104, 2, 'Superb view of the lake', 3, 'DOUBLE', 200.00),
+        (105, 1, 'Cozy single room', 4, 'SIMPLE', 75.00),
+        (106, 3, 'Family room', 1, 'DOUBLE', 180.00),
+        (107, 2, 'Double room with JACUZZI', 2, 'DOUBLE', 220.00),
+        (108, 1, 'Economy single room', 4, 'SIMPLE', 70.00),
+        (109, 2, 'Superior double room', 1, 'DOUBLE', 130.00),
+        (110, 2, 'Deluxe double with terrace', 2, 'DOUBLE', 170.00);
 
 
 INSERT INTO fidelity (id_client, value) VALUES
