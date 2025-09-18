@@ -113,7 +113,7 @@ public class EmployeeController {
             this.focusedEmployee = employeeService.findById(id);
 
             if (this.focusedEmployee != null) {
-                this.focusedField.setId(this.focusedEmployee.getId().longValue());
+                this.focusedField.setId(this.focusedEmployee.getId());
                 this.focusedField.setLastname(this.focusedEmployee.getLastname());
                 this.focusedField.setFirstname(this.focusedEmployee.getFirstname());
                 this.focusedField.setEmail(this.focusedEmployee.getEmail());
