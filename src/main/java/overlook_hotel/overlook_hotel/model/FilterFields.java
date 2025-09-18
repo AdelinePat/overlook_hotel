@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FilterFields {
+    private Long id;
     private String lastname;
     private String firstname;
     private String email;

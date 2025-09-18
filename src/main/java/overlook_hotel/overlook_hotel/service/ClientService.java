@@ -42,4 +42,7 @@ public class ClientService {
 
         return clientRepository.findAll(spec);
     }
+    public Client findById(Long id) {
+        return clientRepository.findById(Math.toIntExact(id)).orElse(null);
+    }
 }
