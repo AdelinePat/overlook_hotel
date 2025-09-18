@@ -87,6 +87,10 @@
 </div>
 <form id="focusForm" th:action="@{/clients}" method="post">
     <input type="hidden" name="id" id="focus-id">
+    <input type="hidden" name="lastname" th:value="${filterField.lastname}">
+    <input type="hidden" name="firstname" th:value="${filterField.firstname}">
+    <input type="hidden" name="email" th:value="${filterField.email}">
+    <input type="hidden" name="phone" th:value="${filterField.phone}">
 </form>
 </body>
 </html>

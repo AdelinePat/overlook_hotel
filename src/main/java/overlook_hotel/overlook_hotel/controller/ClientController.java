@@ -16,62 +16,16 @@ import java.util.List;
 @Controller
 public class ClientController {
     private final ClientService clientService;
-    // private List<Client> clients;
     private FilterFields filterFields;
+    private FilterFields focusedField;
+    private Client focusedClient;
 
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
         this.filterFields = new FilterFields();
+        this.focusedField = new FilterFields();
+        this.focusedClient = new Client();
     }
-
-    // @RequestMapping(value = "/clients", method = {RequestMethod.GET, RequestMethod.POST})
-    // public String clients(@RequestParam(required = false) String lastname,
-    //                       @RequestParam(required = false) String firstname,
-    //                       @RequestParam(required = false) String email,
-    //                       @RequestParam(required = false) String phone,
-    //                       @RequestParam(required = false) Long id,
-    //                       Model model) {
-    //     model.addAttribute("testBlabla", "les gens. coucou florence et thibault");
-
-    //     lastname = lastname == null ? "" : lastname.trim();
-    //     firstname = firstname == null ? "" : firstname.trim();
-    //     email = email == null ? "" : email.toLowerCase().trim();
-    //     phone = phone == null ? "" : phone.trim();
-
-    //     FilterFields clientFilter = new FilterFields();
-    //     FilterFields focus = new FilterFields();
-    //     focus.setId(id);
-
-    //     Client focusedClient = clientService.findById(id != null ? id : -1L);
-    //     if (focusedClient != null) {
-    //         focus.setId(focusedClient.getId().longValue());
-    //         focus.setLastname(focusedClient.getLastname());
-    //         focus.setFirstname(focusedClient.getFirstname());
-    //         focus.setEmail(focusedClient.getEmail());
-    //         focus.setPhone(focusedClient.getPhone());
-    //     }
-
-    //     model.addAttribute("filterField", clientFilter);
-    //     model.addAttribute("focusedClient", focusedClient);
-    //     List<Client> clients = clientService.findAllFiltered(lastname, firstname, email, phone);
-    //     model.addAttribute("clients", clients);
-        
-    //     clientFilter.setLastname(lastname);
-    //     clientFilter.setFirstname(firstname);
-    //     clientFilter.setEmail(email);
-    //     clientFilter.setPhone(phone);
-
-
-        
-        
-    //     model.addAttribute("focusField", focus);
-    //     model.addAttribute("title", "Clients");
-    //     model.addAttribute("columns", List.of("ID", "Nom", "Prénom", "Email", "Téléphone"));
-    //     model.addAttribute("rows", clients);
-    //     model.addAttribute("entityType", "client");
-    //     return "table";
-    // }
-
 
         @RequestMapping(value = "/clients", method = {RequestMethod.GET, RequestMethod.POST})
     public String clients(
@@ -98,25 +52,19 @@ public class ClientController {
             this.filterFields.getPhone()
             );
 
-        // FilterFields filterField = new FilterFields();
-        FilterFields focusField = new FilterFields();
-        focusField.setId(id);
-
+        
         // ---- FOCUS ----
-        Client focusedClient = null;
-        if (id != null) {
-            focusedClient = clientService.findById(id);
-            focusField.setId(focusedClient.getId().longValue());
-            focusField.setLastname(focusedClient.getLastname());    
-            focusField.setFirstname(focusedClient.getFirstname());
-            focusField.setEmail(focusedClient.getEmail());
-            focusField.setPhone(focusedClient.getPhone());
+        this.populateFocusField(id);
+        if (this.focusedField.getId() != null) {
+            this.focusedClient = clientService.findById(this.focusedField.getId());
+        } else {
+            this.resetFocusedField();
         }
 
         // ---- MODEL ----
         model.addAttribute("clients", clients);
         model.addAttribute("focusedClient", focusedClient);
-        model.addAttribute("focusField", focusField);
+        model.addAttribute("focusField", this.focusedField);
         model.addAttribute("filterField", this.filterFields);
         model.addAttribute("title", "Clients");
         model.addAttribute("columns", List.of("ID", "Nom", "Prénom", "Email", "Téléphone"));
@@ -127,29 +75,41 @@ public class ClientController {
     }
 
     private void populateFilterFields(String lastname, String firstname, String email, String phone) {
-        if (lastname != null && !lastname.isBlank()) {
-            this.filterFields.setLastname(lastname);
-        } 
-        if (firstname != null && !firstname.isBlank()) {
-            this.filterFields.setFirstname(firstname);
-        }
-        if (email != null && !email.isBlank()) {
-            this.filterFields.setEmail(email);
-        }
-        if (phone != null && !phone.isBlank()) {
-            this.filterFields.setPhone(phone);
-        }
-
-        if ((lastname == null || lastname.isBlank()) &&
-            (firstname == null || firstname.isBlank()) &&
-            (email == null || email.isBlank()) &&
-            (phone == null || phone.isBlank())) {
-                this.resetFilterFields();
-        }
+        if (lastname != null) this.filterFields.setLastname(lastname.trim());
+        if (firstname != null) this.filterFields.setFirstname(firstname.trim());
+        if (email != null) this.filterFields.setEmail(email.toLowerCase().trim());
+        if (phone != null) this.filterFields.setPhone(phone.trim());
     }
 
-    private void resetFilterFields() {
-        this.filterFields = new FilterFields();
+    private void resetFocusedField() {
+        this.focusedField.setId(null);
+        this.focusedField.setLastname(null);
+        this.focusedField.setFirstname(null);
+        this.focusedField.setEmail(null);
+        this.focusedField.setPhone(null);
+        this.focusedField.setPassword(null);
+        this.focusedField.setJob(null);
+        this.focusedField.setPriceRange(null);
+    }
+
+    private void populateFocusField(Long id) {
+        if (id != null) {
+            this.focusedField.setId(id);
+            this.focusedClient = clientService.findById(id);
+
+            if (this.focusedClient != null) {
+                this.focusedField.setId(this.focusedClient.getId().longValue());
+                this.focusedField.setLastname(this.focusedClient.getLastname());    
+                this.focusedField.setFirstname(this.focusedClient.getFirstname());
+                this.focusedField.setEmail(this.focusedClient.getEmail());
+                this.focusedField.setPhone(this.focusedClient.getPhone());
+                
+            } else {
+                this.resetFocusedField();
+            }
+        } else {
+            this.resetFocusedField();
+        }
     }
 
 }

@@ -40,4 +40,8 @@ public class EmployeeService {
 
         return employeeRepository.findAll(spec);
     }
+
+    public Employee findById(Long id) {
+        return employeeRepository.findById(Math.toIntExact(id)).orElse(null);
+    }
 }
