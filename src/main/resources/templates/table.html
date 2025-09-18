@@ -39,15 +39,7 @@
 
 
 
-        <!-- Debug -->
-        <p>entityType = <span th:text="${entityType}">?</span></p>
-        <p>type de rows[0] =
-            <span th:text="${#lists.isEmpty(rows) ? 'vide' : rows.get(0).getClass().getSimpleName()}">?</span>
-        </p>
-        <p>entityType = <span th:text="${entityType}">?</span></p>
-        <p>rows size = <span th:text="${rows == null ? 'null' : rows.size()}">?</span></p>
 
-        <!-- Fin debug -->
 
         <div class="my20"
              th:replace="~{'fragments/' + ${entityType} + '-table' :: table}">
