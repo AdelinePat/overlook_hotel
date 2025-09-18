@@ -41,8 +41,22 @@
 
 
 
-        <div class="my20"
+        <a class="my20"
              th:replace="~{'fragments/' + ${entityType} + '-table' :: table}">
+        </a>
+
+        <!-- Boutons pour basculer -->
+        <div class="my20 nav-switch">
+            <a class="btn"
+               th:href="@{/clients}"
+               th:classappend="${entityType} == 'client' ? ' btn-active' : ''">
+                Clients
+            </a>
+            <a class="btn"
+               th:href="@{/employees}"
+               th:classappend="${entityType} == 'employee' ? ' btn-active' : ''">
+                Employés
+            </a>
         </div>
 
 
