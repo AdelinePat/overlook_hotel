@@ -60,6 +60,31 @@ table thead tr td {
     padding: 50px;
 }
 
+.btn {
+    background: var(--secondary-bg-color);
+    color: black;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    border: 2px solid transparent;
+}
+
+a.btn {
+    text-decoration: none;
+}
+
+.my20 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+
+a.btn:hover {
+    background: none;
+    border: 2px solid var(--secondary-bg-color);
+    color: var(--secondary-bg-color);
+}
 .page {
     /*width: 80%;*/
     /*max-width: 1200px;*/
