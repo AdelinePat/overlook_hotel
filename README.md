@@ -61,3 +61,12 @@ docker compose exec mysql-db sh -c 'mysql -h localhost -u "$MYSQL_USER" -p"$MYSQ
 
 > Notes:
 `$MYSQL_USER`, `$MYSQL_PASSWORD` and `$MYSQL_DATABASE` are set in the mysql-db container environment variables
+
+
+
+### Spring Boot Actuator :  
+Link Navigator : 
+````
+curl http://localhost:8081/actuator/health
+
+````
