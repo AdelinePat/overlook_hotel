@@ -2,16 +2,16 @@
   <table>
     <thead>
     <tr>
-      <th>ID</th><th>Nom</th><th>Prénom</th><th>Email</th><th>Téléphone</th>
+      <th>ID</th><th>Nom</th><th>Prénom</th><th>Email</th><th>Telephone</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="c : ${rows}">
       <td th:text="${c.id}">1</td>
-      <td th:text="${c.lastname}">Doe</td>
-      <td th:text="${c.firstname}">John</td>
-      <td th:text="${c.email}">john@doe.com</td>
-      <td th:text="${c.phone}">06...</td>
+      <td th:text="${c.lastname}">Line</td>
+      <td th:text="${c.firstname}">Ade</td>
+      <td th:text="${c.email}">Adeline@Hehe.com</td>
+      <td th:text="${c.phone}">06....</td>
     </tr>
     </tbody>
   </table>

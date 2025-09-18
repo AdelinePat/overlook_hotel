@@ -36,41 +36,62 @@
             <button type="submit">rechercher</button>
         </form>
         <h1 th:text="${title}"></h1>
-<!--        <table>-->
-<!--            <thead>-->
-<!--            <tr>-->
-<!--                <th th:each="col : ${columns}" th:text="${col}"></th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr th:each="row : ${rows}">-->
-<!--                <td th:text="${row.id}"></td>-->
-<!--                <td th:text="${row.lastname}"></td>-->
-<!--                <td th:text="${row.firstname}"></td>-->
-<!--                <td th:text="${row.email}"></td>-->
-<!--                <td th:switch="${entityType}">-->
-<!--                    <span th:case="'client'" th:text="${row.phone}"></span>-->
-<!--                    <span th:case="'employee'" th:text="${row.job}"></span>-->
-<!--                </td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-        <div th:switch="${entityType}">
-            <div th:case="'client'"
-                 th:replace="~{fragments/client-table :: table}"
-                 th:remove="tag"></div>
-            <div th:case="'employee'"
-                 th:replace="~{fragments/employee-table :: table}"
-                 th:remove="tag"></div>
-            <div th:case="*">Type inconnu</div>
+
+
+
+        <!-- Debug -->
+        <p>entityType = <span th:text="${entityType}">?</span></p>
+        <p>type de rows[0] =
+            <span th:text="${#lists.isEmpty(rows) ? 'vide' : rows.get(0).getClass().getSimpleName()}">?</span>
+        </p>
+        <p>entityType = <span th:text="${entityType}">?</span></p>
+        <p>rows size = <span th:text="${rows == null ? 'null' : rows.size()}">?</span></p>
+
+        <!-- Fin debug -->
+
+        <div class="my20"
+             th:replace="~{'fragments/' + ${entityType} + '-table' :: table}">
         </div>
 
 
+        <!--                <table>-->
+        <!--            <thead>-->
+        <!--            <tr>-->
+        <!--                <th th:each="col : ${columns}" th:text="${col}"></th>-->
+        <!--            </tr>-->
+        <!--            </thead>-->
+        <!--            <tbody>-->
+        <!--            <tr th:each="row : ${rows}">-->
+        <!--                <td th:text="${row.id}"></td>-->
+        <!--                <td th:text="${row.lastname}"></td>-->
+        <!--                <td th:text="${row.firstname}"></td>-->
+        <!--                <td th:text="${row.email}"></td>-->
+        <!--                <td th:switch="${entityType}">-->
+        <!--                    <span th:case="'client'" th:text="${row.phone}"></span>-->
+        <!--                    <span th:case="'employee'" th:text="${row.job}"></span>-->
+        <!--                </td>-->
+        <!--            </tr>-->
+        <!--            </tbody>-->
+        <!--        </table>-->
 
-        <div class="my20" th:switch="${entityType}">
-            <a class="btn" th:case="'client'" th:href="@{/employees}">Employés</a>
-            <a class="btn" th:case="'employee'" th:href="@{/clients}">Clients</a>
-        </div>
+
+
+        <!--        <div class="my20" th:switch="${entityType}">-->
+        <!--            <a class="btn" th:case="'client'"-->
+        <!--                 th:replace="~{fragments/client-table :: table}"-->
+        <!--                 th:remove="tag">Employés</a>-->
+        <!--            <a clas="btn" th:case="'employee'"-->
+        <!--                 th:replace="~{fragments/employee-table :: table}"-->
+        <!--                 th:remove="tag"></a>-->
+        <!--
+                </div>
+
+
+
+                <div class="my20" th:switch="${entityType}">-->
+        <!--            <a class="btn" th:case="'client'" th:href="@{/employees}">Employés</a>-->
+        <!--            <a class="btn" th:case="'employee'" th:href="@{/clients}">Clients</a>-->
+        <!--        </div>-->
         <!--        <a th:href="@{/reservations}">Réservations</a>-->
         <!--        *<a th:href="@{/event}">Evénements</a>-->
     </div>
