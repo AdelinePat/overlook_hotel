@@ -98,6 +98,7 @@ public class EmployeeController {
         model.addAttribute("focusField", this.focusedField);
         model.addAttribute("filterField", this.filterFields);
         model.addAttribute("title", "Employés");
+         model.addAttribute("titlePage", "Gestion des employés");
         model.addAttribute("columns", List.of("ID", "Nom", "Prénom", "Email", "Job"));
         model.addAttribute("rows", employees);
         model.addAttribute("entityType", "employee");
