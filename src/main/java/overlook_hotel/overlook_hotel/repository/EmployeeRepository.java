@@ -7,5 +7,6 @@ import overlook_hotel.overlook_hotel.model.entity.Employee;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer>, JpaSpecificationExecutor<Employee> {
+    // Use DatabaseEnumService for enum fetching instead of a hardcoded query here.
 }
 

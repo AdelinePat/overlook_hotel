@@ -7,15 +7,20 @@ import overlook_hotel.overlook_hotel.model.entity.Employee;
 import overlook_hotel.overlook_hotel.specification.EmployeeSpecification;
 import overlook_hotel.overlook_hotel.model.enumList.Job;
 import overlook_hotel.overlook_hotel.repository.EmployeeRepository;
+import overlook_hotel.overlook_hotel.util.DatabaseEnumService;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final DatabaseEnumService databaseEnumService;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, DatabaseEnumService databaseEnumService) {
         this.employeeRepository = employeeRepository;
+        this.databaseEnumService = databaseEnumService;
     }
 
     public List<Employee> findAllFiltered(String lastname,
@@ -43,5 +48,9 @@ public class EmployeeService {
 
     public Employee findById(Long id) {
         return employeeRepository.findById(Math.toIntExact(id)).orElse(null);
+    }
+
+    public List<String> getJobEnumValues() {
+        return databaseEnumService.listEnums("employee", "job");
     }
 }
