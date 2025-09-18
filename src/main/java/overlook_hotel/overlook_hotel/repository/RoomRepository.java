@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import overlook_hotel.overlook_hotel.model.entity.Room;
 
 @Repository
-public interface RoomRepository extends JpaRepository<Room, Integer>, JpaSpecificationExecutor<Room> {
+public interface RoomRepository extends JpaRepository<Room, Long>, JpaSpecificationExecutor<Room> {
 }

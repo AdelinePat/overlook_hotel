@@ -6,15 +6,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 import overlook_hotel.overlook_hotel.model.entity.Employee;
-import overlook_hotel.overlook_hotel.model.enumList.Job;
-import overlook_hotel.overlook_hotel.service.ClientService;
+import overlook_hotel.overlook_hotel.model.entity.Job;
 import overlook_hotel.overlook_hotel.service.EmployeeService;
+import overlook_hotel.overlook_hotel.service.JobService;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -23,8 +22,11 @@ import static org.mockito.Mockito.when;
 public class EmployeeControllerTest {
 
     private final EmployeeService mockEmployeeService = mock(EmployeeService.class);
-    private final EmployeeController employeeController = new EmployeeController(mockEmployeeService);
-    private final Job job = Job.AGENT_ENTRETIEN;;
+    private final JobService mockJobService = mock(JobService.class);
+    private final EmployeeController employeeController = new EmployeeController(mockEmployeeService, mockJobService);
+    Job job1 = new Job(1L, "RECEPTIONNISTE");
+    Job job2 = new Job(2L, "AGENT_ENTRETIEN");
+    Job job3 = new Job(3L, "HOTE");
 
     @Test
     public void testEmployeeService() {
@@ -32,14 +34,14 @@ public class EmployeeControllerTest {
         System.out.println("\n\n\n\t\t\t ############## TestEmployeeService début");
 
         List<Employee> employeesList = Arrays.asList(
-                new Employee(1L, "AAAAAAAAH", "Doe", "johndoe@gmail.com", Job.AGENT_ENTRETIEN, "pass","salt1"),
-                new Employee(2L, "flo", "LEEEEEEEEEEED", "florence@gmail.com", Job.BAGAGISTE, "ssap","salt2"),
-                new Employee(3L, "thibault", "noname", "thibaultnoname@gmail.com", Job.CHEF_CUISINIER, "password","salt3"));
+                new Employee(1L, "AAAAAAAAH", "Doe", "johndoe@gmail.com", job1 , "pass","salt1"),
+                new Employee(2L, "flo", "LEEEEEEEEEEED", "florence@gmail.com", job2 , "ssap","salt2"),
+                new Employee(3L, "thibault", "noname", "thibaultnoname@gmail.com", job3 , "password","salt3"));
 
         when(mockEmployeeService.findAllFiltered(eq(""), eq(""), eq(""), eq(null)))
                 .thenReturn(employeesList);
 
-        String employeePage = employeeController.employees("", "", "", null, model);
+        String employeePage = employeeController.employees("", "", "", null, null, model);
 
         List<Employee> employees = (List<Employee>) model.getAttribute("rows");
 

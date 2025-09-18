@@ -2,16 +2,13 @@ package overlook_hotel.overlook_hotel.service;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import overlook_hotel.overlook_hotel.model.entity.Client;
 import overlook_hotel.overlook_hotel.model.entity.Employee;
+import overlook_hotel.overlook_hotel.model.entity.Job;
 import overlook_hotel.overlook_hotel.specification.EmployeeSpecification;
-import overlook_hotel.overlook_hotel.model.enumList.Job;
 import overlook_hotel.overlook_hotel.repository.EmployeeRepository;
 import overlook_hotel.overlook_hotel.util.DatabaseEnumService;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class EmployeeService {
@@ -47,10 +44,7 @@ public class EmployeeService {
     }
 
     public Employee findById(Long id) {
-        return employeeRepository.findById(Math.toIntExact(id)).orElse(null);
+        return employeeRepository.findById(id).orElse(null);
     }
 
-    public List<String> getJobEnumValues() {
-        return databaseEnumService.listEnums("employee", "job");
-    }
 }

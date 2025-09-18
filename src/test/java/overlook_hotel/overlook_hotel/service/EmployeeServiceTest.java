@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import overlook_hotel.overlook_hotel.model.entity.Employee;
-import overlook_hotel.overlook_hotel.model.enumList.Job;
+import overlook_hotel.overlook_hotel.model.entity.Job;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class EmployeeServiceTest {
     @Autowired
     private EmployeeService employeeService;
 
-    private Job job = Job.BAGAGISTE;
+    private final Job job = new Job(1L, "RECEPTIONNISTE");
 
     @Test
     public void findAllEmployees() {

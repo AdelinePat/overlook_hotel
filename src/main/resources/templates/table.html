@@ -37,8 +37,20 @@
             <div class="filter-input">
             </div>
             <div class="filter-input">
-                <label>Téléphone:</label>
-                <input type="text" id="phone" name="phone" th:field="*{phone}" />
+                <label th:if="${entityType == 'client'}">Téléphone:</label>
+                <input type="text" id="phone" name="phone" th:field="*{phone}" th:if="${entityType == 'client'}" />
+
+                <label th:if="${entityType == 'employee'}">Job:</label>
+                <select id="job" name="jobParam" th:field="*{job}" th:if="${entityType == 'employee'}">
+                    <option value="" th:text="'-- Sélectionnez un job --'"
+                            th:selected="${filterField.job == null}">
+                    </option>
+                    <option th:each="job : ${jobEnumValues}"
+                            th:value="${job.id}"
+                            th:text="${job.title}"
+                            th:selected="${filterField.job != null and filterField.job.id == job.id}">
+                    </option>
+                </select>
             </div>
             <button type="submit">rechercher</button>
         </form>
@@ -58,7 +70,7 @@
                 <td th:text="${row.email}"></td>
                 <td th:switch="${entityType}">
                     <span th:case="'client'" th:text="${row.phone}"></span>
-                    <span th:case="'employee'" th:text="${row.job}"></span>
+                    <span th:case="'employee'" th:text="${row.job.getTitle()}"></span>
                 </td>
             </tr>
             </tbody>
@@ -80,11 +92,16 @@
             <input type="text" name="email" id="focus-email"
                 placeholder="email"
                 th:value="${focusedClient != null ? focusedClient.email : ''}">
-            
-                <select name="job" id="focus-job" th:if="${entityType == 'employee'}">
-                    <option th:each="job : ${jobEnumValues}" th:value="${job}" th:text="${job}"
-                        th:selected="${focusedClient != null and focusedClient.job != null and focusedClient.job.name() == job}"></option>
-                </select>
+
+            <select name="job" id="focus-job" th:if="${entityType == 'employee'}">
+                <option value="" th:text="'-- Sélectionnez un job --'"></option>
+                <option th:each="job : ${jobEnumValues}"
+                        th:value="${job.id}"
+                        th:text="${job.title}"
+                        th:selected="${focusedClient != null and focusedClient.job != null and focusedClient.job.id == job.id}">
+                </option>
+            </select>
+            </select>
                 <input type="text" name="phone" id="focus-phone"
                     placeholder="telephone"
                     th:value="${focusedClient != null ? focusedClient.phone : ''}" th:if="${entityType == 'client'}">
@@ -96,8 +113,8 @@
     <input type="hidden" name="lastname" th:value="${filterField.lastname}">
     <input type="hidden" name="firstname" th:value="${filterField.firstname}">
     <input type="hidden" name="email" th:value="${filterField.email}">
-
-    <input type="hidden" name="job" th:value="${filterField.job}" th:if="${entityType == 'employee'}">
+<!--    <input type="hidden" name="job" th:value="${filterField.job != null ? filterField.job : ''}" th:if="${entityType == 'employee'}">-->
+    <input type="hidden" name="jobParam" th:value="${filterField.job != null ? filterField.job.id : ''}" th:if="${entityType == 'employee'}">
     <input type="hidden" name="phone" th:value="${filterField.phone}" th:if="${entityType == 'client'}">
     
 </form>

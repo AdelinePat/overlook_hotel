@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import overlook_hotel.overlook_hotel.model.enumList.Job;
+import overlook_hotel.overlook_hotel.model.entity.Job;
 
 import java.util.List;
 
