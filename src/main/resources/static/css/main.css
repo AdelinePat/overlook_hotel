@@ -12,6 +12,7 @@
     --purple: #A17899;
     --secondary-bg-color: #E6AADB;
     --main-dark-bg-color: #2A2532;
+    --grey: #E0E0E0;
 }
 
 nav {
@@ -30,9 +31,10 @@ nav ul {
     gap: 20px;
     align-content: center;
 }
-nav ul li {
 
-}
+/*nav ul li {*/
+/*}*/
+
 nav a {
     color: white;
 }
@@ -41,8 +43,8 @@ body {
 }
 
 .page {
-    width: 80%;
-    max-width: 1200px;
+    width: 90%;
+    max-width: 1400px;
     min-width: 500px;
     margin: auto;
     min-height: 100vh;
@@ -58,11 +60,12 @@ h1, h2 {
     font-weight: 600;
     letter-spacing: 0.2rem;
     margin: 20px 10px;
+    display: inline-block;
 }
+
 .main-bg {
     background: var(--main-bg-color);
 }
-
 
 p10 {
     padding: 10px;
@@ -113,27 +116,18 @@ a.btn {
     margin-bottom: 20px;
 }
 
-
-
 a.btn:hover {
     background: none;
     border: 2px solid var(--secondary-bg-color);
     color: var(--secondary-bg-color);
 }
-.page {
-    /*width: 80%;*/
-    /*max-width: 1200px;*/
-    /*min-width: 500px;*/
-    /*margin: auto;*/
-    /*min-height: 100vh;*/
-}
 
 .container {
     display: flex;
+    gap: 40px;
     width: 100%;
     height: 100%;
     justify-content: space-around;
-    align-content: center;
 }
 
 .display-table {
@@ -145,12 +139,63 @@ a.btn:hover {
     justify-content: flex-start;
 }
 
+.filter-bar {
+    width: 100% !important;
+    display: flex;
+    justify-content: stretch;
+    /*justify-content: center;*/
+    /*flex-flow: row wrap;*/
+    margin-bottom: 20px;
+    line-height: 1.2rem;
+}
+
+.filter-bar input {
+    flex: 1;
+    min-width: 50px;
+    border: none;
+    background: var(--grey);
+    color: black;
+    /*justify-content: center;*/
+    text-align: center;
+    border-right: 1px solid black;
+    padding: 8px 8px;
+}
+
+.filter-bar select {
+    flex: 1;
+    min-width: 50px;
+    background: var(--grey);
+    border: none;
+    color: black;
+    padding: 8px 8px;
+}
+
+/*.filter-back, input::placeholder {*/
+/*    color: red;*/
+/*}*/
+
+.filter-bar button {
+    flex: 1;
+    min-width: 50px;
+    border: none;
+    padding: 8px 8px;
+}
+
+.filter-bar input:first-child {
+    border-radius: 15px 0px 0px 15px;
+}
+
+.filter-bar button:last-child {
+    border-radius: 0px 15px 15px 0px;
+}
+
 .display-focus {
     flex-basis: 1;
     background: var(--main-bg-color);
     width: 40%;
+    /*background: red;*/
     border-radius: 20px;
-    align-self: center;
+    align-self: start;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;

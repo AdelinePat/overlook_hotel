@@ -25,29 +25,27 @@
     </li>
 </ul><a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a></nav>
 <div class="page">
-    <p th:text="${testBlabla}">texte par défaut</p>
+        <h1 th:text="${title}"></h1>
     <div class="container">
         <div class="display-table">
-            <form th:action="${entityType == 'client' ? '/clients' : '/employees'}" th:object="${filterField}" method="post">
-                <div class="filter-input">
-                    <label for="lastname">Nom de famille:</label>
-                    <input type="text" id="lastname"  name="lastname" th:field="*{lastname}" />
-                </div>
-                <div class="filter-input">
-                    <label for="firstname">Prénom:</label>
-                    <input type="text" id="firstname" name="firstname" th:field="*{firstname}" />
-                </div>
-                <div class="filter-input">
-                    <label for="email">Email:</label>
-                    <input type="text" id="email" name="email" th:field="*{email}" />
-                </div>
-                <div class="filter-input">
-                </div>
-                <div class="filter-input">
-                    <label th:if="${entityType == 'client'}">Téléphone:</label>
-                    <input type="text" id="phone" name="phone" th:field="*{phone}" th:if="${entityType == 'client'}" />
+            <p th:text="${testBlabla}">texte par défaut</p>
+            <form class="filter-bar" th:action="${entityType == 'client' ? '/clients' : '/employees'}" th:object="${filterField}" method="post">
 
-                    <label th:if="${entityType == 'employee'}">Job:</label>
+<!--                    <label for="lastname">Nom de famille:</label>-->
+                    <input type="text" id="lastname"  name="lastname" th:field="*{lastname}" placeholder="Nom"/>
+
+
+<!--                    <label for="firstname">Prénom:</label>-->
+                    <input type="text" id="firstname" name="firstname" th:field="*{firstname}" placeholder="Prénom" />
+
+
+<!--                    <label for="email">Email:</label>-->
+                    <input type="text" id="email" name="email" th:field="*{email}" placeholder="Email"/>
+
+<!--                    <label th:if="${entityType == 'client'}">Téléphone:</label>-->
+                    <input type="text" id="phone" name="phone" th:field="*{phone}" th:if="${entityType == 'client'}" placeholder="Téléphone" />
+
+<!--                    <label th:if="${entityType == 'employee'}">Job:</label>-->
                     <select id="job" name="jobParam" th:if="${entityType == 'employee'}">
                         <option value="" th:text="'-- Sélectionnez un job --'"
                                 th:selected="${filterField.job == null}">
@@ -58,10 +56,9 @@
                                 th:selected="${filterField.job != null and filterField.job.id == job.id}">
                         </option>
                     </select>
-                </div>
-                <button type="submit">rechercher</button>
+
+                <button class="btn" type="submit">rechercher</button>
             </form>
-            <h1 th:text="${title}"></h1>
             <table>
                 <thead>
                 <tr>
