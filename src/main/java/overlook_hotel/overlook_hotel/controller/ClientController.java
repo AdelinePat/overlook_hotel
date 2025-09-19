@@ -5,12 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import overlook_hotel.overlook_hotel.model.FilterFields;
 import overlook_hotel.overlook_hotel.model.entity.Client;
-import overlook_hotel.overlook_hotel.model.entity.Employee;
-import overlook_hotel.overlook_hotel.model.enumList.Job;
 import overlook_hotel.overlook_hotel.service.ClientService;
-import overlook_hotel.overlook_hotel.service.EmployeeService;
-
-import java.nio.file.DirectoryStream.Filter;
 import java.util.List;
 
 @Controller
