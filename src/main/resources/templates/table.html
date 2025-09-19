@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
     <script>
         function selectRow(id) {
             document.getElementById("focus-id").value = id;
@@ -25,29 +26,42 @@
     </li>
 </ul><a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a></nav>
 <div class="page">
-        <h1 th:text="${title}"></h1>
+    <h1 th:text="${title}"></h1>
     <div class="container">
         <div class="display-table">
             <p th:text="${testBlabla}">texte par défaut</p>
             <form class="filter-bar" th:action="${entityType == 'client' ? '/clients' : '/employees'}" th:object="${filterField}" method="post">
 
-<!--                    <label for="lastname">Nom de famille:</label>-->
-                    <input type="text" id="lastname"  name="lastname" th:field="*{lastname}" placeholder="Nom"/>
+<!--                    -->
+                    <div class="filter-input">
+                        <label for="lastname"><i class="fa-solid fa-user"></i></label>
+
+                        <input type="text" id="lastname"  name="lastname" th:field="*{lastname}" placeholder="Nom"/>
+                    </div>
 
 
-<!--                    <label for="firstname">Prénom:</label>-->
-                    <input type="text" id="firstname" name="firstname" th:field="*{firstname}" placeholder="Prénom" />
+
+                    <div class="filter-input">
+                        <label for="firstname"><i class="fa-solid fa-user"></i></label>
+                        <input type="text" id="firstname" name="firstname" th:field="*{firstname}" placeholder="Prénom" />
+                    </div>
 
 
-<!--                    <label for="email">Email:</label>-->
+
+                <div class="filter-input">
+                <label for="email"><i class="fa-solid fa-envelope"></i></label>
+
+
                     <input type="text" id="email" name="email" th:field="*{email}" placeholder="Email"/>
+                </div>
 
-<!--                    <label th:if="${entityType == 'client'}">Téléphone:</label>-->
+                <div class="filter-input">
+                    <label th:if="${entityType == 'client'}"><i class="fa-solid fa-phone"></i></label>
                     <input type="text" id="phone" name="phone" th:field="*{phone}" th:if="${entityType == 'client'}" placeholder="Téléphone" />
 
-<!--                    <label th:if="${entityType == 'employee'}">Job:</label>-->
-                    <select id="job" name="jobParam" th:if="${entityType == 'employee'}">
-                        <option value="" th:text="'-- Sélectionnez un job --'"
+                   <label th:if="${entityType == 'employee'}"><i class="fa-solid fa-briefcase"></i></label>
+                    <select class="dark-grey" id="job" name="jobParam" th:if="${entityType == 'employee'}">
+                        <option value="" th:text="'Travail'"
                                 th:selected="${filterField.job == null}">
                         </option>
                         <option th:each="job : ${jobEnumValues}"
@@ -56,10 +70,10 @@
                                 th:selected="${filterField.job != null and filterField.job.id == job.id}">
                         </option>
                     </select>
-
+                </div>
                 <button class="btn" type="submit">rechercher</button>
             </form>
-            <table>
+            <table class="my20">
                 <thead>
                 <tr>
                     <th th:each="col : ${columns}" th:text="${col}"></th>
@@ -68,7 +82,7 @@
                 <tbody>
                 <tr th:each="row : ${rows}"
                      th:onclick="|selectRow([[${row.id}]])|">
-                    <td th:text="${row.id}"></td>
+<!--                    <td th:text="${row.id}"></td>-->
                     <td th:text="${row.lastname}"></td>
                     <td th:text="${row.firstname}"></td>
                     <td th:text="${row.email}"></td>
@@ -98,7 +112,7 @@
                     th:value="${focusedClient != null ? focusedClient.email : ''}">
 
                 <select name="job" id="focus-job" th:if="${entityType == 'employee'}">
-                    <option value="" th:text="'-- Sélectionnez un job --'"></option>
+                    <option value="" th:text="'-- Sélectionnez un travail --'"></option>
                     <option th:each="job : ${jobEnumValues}"
                             th:value="${job.id}"
                             th:text="${job.title}"

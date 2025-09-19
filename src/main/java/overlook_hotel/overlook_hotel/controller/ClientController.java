@@ -63,7 +63,7 @@ public class ClientController {
         model.addAttribute("filterField", this.filterFields);
         model.addAttribute("title", "Clients");
         model.addAttribute("titlePage", "Gestion des clients");
-        model.addAttribute("columns", List.of("ID", "Nom", "Prénom", "Email", "Téléphone"));
+        model.addAttribute("columns", List.of("Nom", "Prénom", "Email", "Téléphone"));
         model.addAttribute("rows", clients);
         model.addAttribute("entityType", "client");
 

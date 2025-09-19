@@ -13,10 +13,14 @@
     --secondary-bg-color: #E6AADB;
     --main-dark-bg-color: #2A2532;
     --grey: #E0E0E0;
+    --ultra-light-grey: #ECECEC;
+    --light-grey: #E3E3E3;
+    --dark-grey: #323232;
 }
 
 nav {
     background: var(--main-dark-bg-color);
+    /*background: red;*/
     /*width: 100%;*/
     display: flex;
     justify-content: space-between;
@@ -36,6 +40,10 @@ nav ul {
 /*}*/
 
 nav a {
+    color: white;
+}
+
+nav ul {
     color: white;
 }
 
@@ -71,17 +79,20 @@ p10 {
     padding: 10px;
 }
 
+
 table td {
     padding: 3px 7px;
+    line-height: 1.4rem;
     word-break: break-word;
 }
 
 table tbody tr:nth-child(odd) {
-    background: #eee;
+    /*background: #eee;*/
+    background: var(--ultra-light-grey);
 }
 
 table tbody tr:nth-child(even) {
-    background: #ddd;
+    /*background: #ddd;*/
 }
 
 table thead tr {
@@ -118,6 +129,10 @@ a.btn {
     margin-bottom: 20px;
 }
 
+.dark-grey {
+    color: var(--dark-grey);
+    }
+
 a.btn:hover {
     background: none;
     border: 2px solid var(--secondary-bg-color);
@@ -146,49 +161,43 @@ a.btn:hover {
     display: flex;
     justify-content: stretch;
     /*justify-content: center;*/
-    /*flex-flow: row wrap;*/
+    flex-flow: row wrap;
     margin-bottom: 20px;
+}
+
+.filter-input {
+    flex: 1;
+    min-width: 150px;
+    /*border-right: 1px solid black;*/
+    display: flex;
     line-height: 1.2rem;
-}
-
-.filter-bar input {
-    flex: 1;
-    min-width: 50px;
-    border: none;
-    background: var(--grey);
-    color: black;
-    /*justify-content: center;*/
-    text-align: center;
-    border-right: 1px solid black;
     padding: 8px 8px;
+    gap: 8px;
+    align-items: center;
 }
 
-.filter-bar select {
-    flex: 1;
-    min-width: 50px;
-    background: var(--grey);
-    border: none;
-    color: black;
-    padding: 8px 8px;
+.filter-input i {
+    padding: 4px;
+    color: var(--dark-grey);
 }
-
-/*.filter-back, input::placeholder {*/
-/*    color: red;*/
-/*}*/
 
 .filter-bar button {
-    flex: 1;
-    min-width: 50px;
+    flex: 2;
+    min-width: 150px;
     border: none;
-    padding: 8px 8px;
 }
 
-.filter-bar input:first-child {
-    border-radius: 15px 0px 0px 15px;
+.filter-input input, .filter-input select {
+    width: 100%;
+    padding: 4px 8px;
+    background: none;
+    border: none;
+    color: var(--dark-grey);
+    border-bottom: 1px solid var(--grey);
 }
 
-.filter-bar button:last-child {
-    border-radius: 0px 15px 15px 0px;
+.filter-input input::placeholder {
+    color: var(--dark-grey);
 }
 
 .display-focus {
@@ -203,6 +212,7 @@ a.btn:hover {
     justify-content: center;
     align-content: center;
     padding: 20px;
+    padding-top: 0px;
 }
 
 .display-focus form {
@@ -213,8 +223,21 @@ a.btn:hover {
     gap: 20px;
 }
 
-.display-focus form input {
+/*.display-focus form input {
+}*/
+
+
+.display-focus input, .display-focus select {
     padding: 5px 10px;
     border-radius: 5px;
+    line-height: 1.4rem;
     border: none;
+    background: white;
+    color: var(--dark-grey);
+    border-bottom: 1px solid var(--grey);
 }
+
+.display-focus input::placeholder {
+    color: var(--dark-grey);
+}
+
