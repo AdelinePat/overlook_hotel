@@ -36,10 +36,13 @@ public class Room {
     @Column(name="description", length = 500)
     private String description;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name="standing", length = 15)
-    private RoomStanding standing;
+//    @NotNull
+//    @Enumerated(EnumType.STRING)
+//    @Column(name="standing", length = 15)
+//    private RoomStanding standing;
+    @ManyToOne
+    @JoinColumn(name = "id_standing", nullable = false)
+    private Standing standing;
 
     @NotNull
     @Enumerated(EnumType.STRING)
