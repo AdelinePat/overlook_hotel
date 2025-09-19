@@ -93,7 +93,8 @@ public class EmployeeController {
         if (lastname != null) this.filterFields.setLastname(lastname.trim());
         if (firstname != null) this.filterFields.setFirstname(firstname.trim());
         if (email != null) this.filterFields.setEmail(email.toLowerCase().trim());
-        if (job != null) this.filterFields.setJob(job);
+//        if (job != null) this.filterFields.setJob(job);
+        this.filterFields.setJob(job);
     }
 
     private void resetFocusedField() {

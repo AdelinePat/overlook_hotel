@@ -1,16 +1,46 @@
 * {
- margin: 0px;
- padding: 0px;
- box-sizing: border-box;
- font-family: "Inter", sans-serif;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+    list-style-position: inside;
+    list-style: none;
 }
 
 :root {
     --main-bg-color: #EBE0E9;
+    --purple: #A17899;
     --secondary-bg-color: #E6AADB;
+    --main-dark-bg-color: #2A2532;
+}
+
+nav {
+    background: var(--main-dark-bg-color);
+    /*width: 100%;*/
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    padding: 10px;
+    line-height: 2rem;
+    /*position: fixed;*/
+}
+
+nav ul {
+    display: flex;
+    gap: 20px;
+    align-content: center;
+}
+nav ul li {
+
+}
+nav a {
+    color: white;
 }
 
 body {
+}
+
+.page {
     width: 80%;
     max-width: 1200px;
     min-width: 500px;
@@ -32,6 +62,7 @@ h1, h2 {
 .main-bg {
     background: var(--main-bg-color);
 }
+
 
 p10 {
     padding: 10px;
@@ -71,6 +102,10 @@ table thead tr td {
 
 a.btn {
     text-decoration: none;
+}
+
+.bg-purple {
+    background: var(--purple);
 }
 
 .my20 {
