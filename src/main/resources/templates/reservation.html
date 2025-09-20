@@ -18,9 +18,9 @@
         Gestion Réservation
     </li>
 </ul><a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a></nav>
-<div class="page">
-    <h1 th:text="${title}"></h1>
-        <form class="filter-bar" th:action="@{/room-reservation}" method="post" th:object="${filterFields}">
+<div class="page ">
+<!--    <h1 th:text="${title}"></h1>-->
+        <form class="filter-bar mt50" th:action="@{/room-reservation}" method="post" th:object="${filterFields}">
 
             <div class="filter-input reservation-input">
                 <label><i class="fa-solid fa-hashtag"></i></label>
@@ -79,14 +79,25 @@
 
             <button class="btn lh12" type="submit">Rechercher</button>
         </form>
-        <p>Liste des chambres disponible: <span th:text="${#lists.size(roomList)}"></span></p>
-        <ul>
-            <li th:each="room : ${roomList}">
-                <span th:text="${room.number}"></span> -
-                <span th:text="${room.capacity}"></span> -
-                <span th:text="${room.description}"></span>
-            </li>
-        </ul>
+        <h1>Résultats: <span th:text="${#lists.size(roomList)}"></span></h1>
+        <div class="booking-content">
+            <div class="book-card" th:each="room : ${roomList}">
+                <div class="booking-img"
+                     th:classappend="${room.standing.name.toLowerCase()}">
+                    <p class="price" th:text="${room.nightPrice}"</p>
+
+                </div>
+
+                <div class="card-description">
+                    <h3 th:text="${room.number} + ' ' + ${room.standing.name}"></h3>
+                    <p>lit <span th:text="${room.type.name().toLowerCase()}"></span></p>
+<!--                    <p class="price"><span th:text="${room.nightPrice}"></span>€/nuit</p>-->
+                    <a class="btn m10"
+                       th:href="@{/room-reservation/{id}(id=${room.id})}">Réserver</a>
+                </div>
+            </div>
+        </div>
+
 </div>
 </body>
 </html>
