@@ -309,8 +309,25 @@ a.btn:hover {
 .card-description p {
     width: 100%;
 }
- .card-description p:last-of-type {
+
+.bonus-list {
+    width: 100%;
     margin-bottom: 32px;
+}
+
+.bonus-list ul {
+}
+
+.bonus-list li {
+    list-style: disc;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--dark-grey)
+}
+
+
+ .card-description p:last-of-type {
+    margin-bottom: 12px;
  }
 
  .card-description .btn {
