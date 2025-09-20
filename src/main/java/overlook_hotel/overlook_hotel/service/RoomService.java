@@ -75,9 +75,9 @@ public class RoomService {
 
     private Specification<Room> filteredByPrice(Specification<Room> spec, List<Integer> priceRange) {
         if (priceRange.get(1) == null) {
-            return spec.and(RoomSpecification.hasPriceLowerThanOrEqual(priceRange.get(0)));
+            return spec.and(RoomSpecification.hasPriceGreaterThan(priceRange.get(0)));
         } else if (priceRange.get(0) == null) {
-            return spec.and(RoomSpecification.hasPriceGreaterThan(priceRange.get(1)));
+            return spec.and(RoomSpecification.hasPriceLowerThanOrEqual(priceRange.get(1)));
         } else {
             return spec.and(RoomSpecification.hasPriceBetween(priceRange));
         }

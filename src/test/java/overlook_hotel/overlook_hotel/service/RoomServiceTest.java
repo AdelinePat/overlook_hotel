@@ -88,8 +88,9 @@ public class RoomServiceTest {
     public void findByLowerThan() {
         List<Room> rooms = roomService.findAllFiltered(null, null, null, null, null, null, null, night_price_lower, null);
 
-        assertEquals(3, rooms.size());
+        assertEquals(7, rooms.size());
         System.out.println("\t\t #### 5.1 #### liste des chambres prix LOWER");
+        System.out.println(this.night_price_lower);
         for (Room room : rooms) {
             System.out.println("\t" + room.getNumber() + " " + room.getStanding().getName() + " " + room.getNightPrice());
         }
@@ -99,7 +100,7 @@ public class RoomServiceTest {
     public void findByGreaterThan() {
         List<Room> rooms = roomService.findAllFiltered(null, null, null, null, null, null,null, night_price_greater, null);
 
-        assertEquals(2, rooms.size());
+        assertEquals(8, rooms.size());
         System.out.println("\t\t #### 5.2 #### liste des chambres prix GREATER");
         for (Room room : rooms) {
             System.out.println("\t" + room.getNumber() + " " + room.getStanding().getName() + " " + room.getNightPrice());

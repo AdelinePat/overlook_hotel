@@ -25,6 +25,8 @@ public class RoomReservationController {
     @RequestMapping(value = "/room-reservation", method = {RequestMethod.GET, RequestMethod.POST})
     public String reservation(@ModelAttribute FilterFields filterFields,
                               Model model) {
+        System.out.println("\n\n\n\n\n\n\n\t\t\t\t\t\t\tpricerange: " + filterFields.getPriceRange());
+
         model.addAttribute("standingList", standingService.getFullStandingList());
         model.addAttribute("bedTypeList", BedType.values());
 
