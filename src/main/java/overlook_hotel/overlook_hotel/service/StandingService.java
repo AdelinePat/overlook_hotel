@@ -14,11 +14,11 @@ public class StandingService {
         this.standingRepository = standingRepository;
     }
 
-    public Standing findJobById(Long id) {
+    public Standing findStandingById(Long id) {
         return standingRepository.findById(id).orElse(null);
     }
 
-    public List<Standing> getFullJobList() {
+    public List<Standing> getFullStandingList() {
         return standingRepository.findAll();
     }
 

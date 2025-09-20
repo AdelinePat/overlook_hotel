@@ -29,6 +29,17 @@ WHERE NOT EXISTS (
     AND rr.end_date >= '2025-09-06'
 );
 
+
+SELECT * FROM room AS r
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM room_link_reservation rlr
+    LEFT JOIN room_reservation rr USING (id_room_reservation)
+    WHERE rlr.id_room = r.id_room
+    AND rr.start_date <= '2025-09-08'
+    AND rr.end_date >= '2025-09-06'
+);
+
 -- CHAMBRE DISPO AVEC NOM CLIENT EN PLUS
 SELECT cl.lastname, r.id_room AS numero_chambre, s.name AS standing, rr.start_date AS debut, rr.end_date AS fin
 FROM room AS r

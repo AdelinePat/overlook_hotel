@@ -17,6 +17,7 @@ import java.util.List;
 public class RoomServiceTest {
     private final Standing roomStanding = new Standing(1L, "DE_LUXE");;
     private final BedType type = BedType.SIMPLE;
+    private final List<Integer> night_price_null = Arrays.asList(null, null);
     private final List<Integer> night_price_lower = Arrays.asList(100, null);
     private final List<Integer> night_price_greater = Arrays.asList(null, 180);
     private final List<Integer> night_price_between = Arrays.asList(100, 180);
@@ -28,7 +29,7 @@ public class RoomServiceTest {
 
     @Test
     public void findAllRooms() {
-        List<Room> rooms = roomService.findAllFiltered(null, null, null, null, null, null, null, null);
+        List<Room> rooms = roomService.findAllFiltered(null, null, null, null, null, null, null, this.night_price_null);
 
         assertEquals(10, rooms.size());
         System.out.println("\t\t #### 1 #### liste des chambres");

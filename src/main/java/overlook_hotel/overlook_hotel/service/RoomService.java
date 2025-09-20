@@ -55,7 +55,9 @@ public class RoomService {
 
 //        TODO NIGHT_PRICE ONLY LOWER THAN !!!!!!
         if (night_price != null) {
-            spec = this.filteredByPrice(spec, night_price);
+            if ((night_price.get(0) != null || night_price.get(1) != null)) {
+                spec = this.filteredByPrice(spec, night_price);
+            }
         }
 
         if (startDate != null && endDate != null) {
