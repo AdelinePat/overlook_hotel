@@ -8,6 +8,7 @@ import overlook_hotel.overlook_hotel.model.enumList.BedType;
 import overlook_hotel.overlook_hotel.specification.RoomSpecification;
 import overlook_hotel.overlook_hotel.repository.RoomRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -23,6 +24,8 @@ public class RoomService {
                                       String description,
                                       Standing standing,
                                       BedType type,
+                                      LocalDate startDate,
+                                      LocalDate endDate,
                                       List<Integer> night_price) {
 
         Specification<Room> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
@@ -52,7 +55,13 @@ public class RoomService {
 
 //        TODO NIGHT_PRICE ONLY LOWER THAN !!!!!!
         if (night_price != null) {
-            spec = this.filteredByPrice(spec, night_price);
+            if ((night_price.get(0) != null || night_price.get(1) != null)) {
+                spec = this.filteredByPrice(spec, night_price);
+            }
+        }
+
+        if (startDate != null && endDate != null) {
+            spec = spec.and(RoomSpecification.isAvailableBetween(startDate, endDate));
         }
 
         return roomRepository.findAll(spec);

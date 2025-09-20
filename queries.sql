@@ -15,6 +15,45 @@ FROM room_reservation as rr
 WHERE NOT (rr.start_date <= '2025-09-08'
     AND rr.end_date >= '2025-09-06');
 
+--- !:!!!!!!!!!!!!!!!!! VERITABLE QUERY POUR AVOIR LES CHAMBRES DISPONIBLES !!!
+SELECT r.id_room, s.name, rr.start_date, rr.end_date FROM room AS r
+LEFT JOIN standing AS s USING(id_standing)
+LEFT JOIN room_link_reservation AS rlr USING(id_room)
+LEFT JOIN room_reservation AS rr USING(id_room_reservation)
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM room_link_reservation rlr
+    LEFT JOIN room_reservation rr USING (id_room_reservation)
+    WHERE rlr.id_room = r.id_room
+    AND rr.start_date <= '2025-09-08'
+    AND rr.end_date >= '2025-09-06'
+);
+
+
+SELECT * FROM room AS r
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM room_link_reservation rlr
+    LEFT JOIN room_reservation rr USING (id_room_reservation)
+    WHERE rlr.id_room = r.id_room
+    AND rr.start_date <= '2025-09-08'
+    AND rr.end_date >= '2025-09-06'
+);
+
+-- CHAMBRE DISPO AVEC NOM CLIENT EN PLUS
+SELECT cl.lastname, r.id_room AS numero_chambre, s.name AS standing, rr.start_date AS debut, rr.end_date AS fin
+FROM room AS r
+LEFT JOIN room_link_reservation AS rlr
+    USING(id_room)
+LEFT JOIN room_reservation AS rr
+    USING(id_room_reservation)
+LEFT JOIN standing AS s
+    USING(id_standing)
+LEFT JOIN client as cl
+    USING (id_client)
+WHERE NOT (rr.start_date <= '2025-09-08'
+    AND rr.end_date >= '2025-09-06');
+
 
 -- LISTE TOTAL RESERVATION PAR CLIENT + PRIX TOTAL
 -- récupère total d'une réservation d'un client (attention peut être doit changer le WHERE)
@@ -61,6 +100,27 @@ FROM room_reservation AS resa
               USING(id_room)
 WHERE resa.id_room_reservation = 2
 GROUP BY resa.id_client, resa.id_room_reservation, room.id_room, resa.start_date, resa.end_date;
+
+
+-- une resa avec le nom du client en plus
+  SELECT resa.id_client,
+           c.lastname,
+           c.firstname,
+           resa.id_room_reservation,
+           resa.start_date,
+           resa.end_date,
+           (SUM(night_price) * DATEDIFF(resa.end_date, resa.start_date))
+               AS total_price
+    FROM room_reservation AS resa
+             JOIN room_link_reservation AS link
+                  USING(id_room_reservation)
+             JOIN room
+                  USING(id_room)
+             JOIN client AS c
+                  USING(id_client)
+    WHERE resa.id_room_reservation = 2
+    GROUP BY resa.id_client, resa.id_room_reservation, resa.start_date, resa.end_date, c.lastname, c.firstname;
+
 
 -- liste des employés avec leur job
 SELECT e.id_employee, e.firstname, e.lastname, j.job_name

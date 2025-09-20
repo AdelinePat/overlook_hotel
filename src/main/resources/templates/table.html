@@ -136,7 +136,6 @@
         <input type="hidden" name="email" th:value="${filterField.email}">
         <input type="hidden" name="jobParam" th:value="${filterField.job != null ? filterField.job.id : ''}" th:if="${entityType == 'employee'}">
         <input type="hidden" name="phone" th:value="${filterField.phone}" th:if="${entityType == 'client'}">
-
     </form>
 </div>
 </body>
