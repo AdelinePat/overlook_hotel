@@ -29,7 +29,58 @@ public class ClientController {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) Long id,
+            @RequestParam(required = false) Boolean reset,
+            @RequestParam(required = false) String action,
             Model model) {
+
+        // Handle reset button
+        if (reset != null && reset) {
+            this.resetFocusedField();
+            this.filterFields = new FilterFields();
+            List<Client> clients = clientService.findAllFiltered("", "", "", "");
+            model.addAttribute("clients", clients);
+            model.addAttribute("focusedClient", null);
+            model.addAttribute("focusField", new FilterFields());
+            model.addAttribute("filterField", new FilterFields());
+            model.addAttribute("title", "Clients");
+            model.addAttribute("titlePage", "Gestion des clients");
+            model.addAttribute("columns", List.of("Nom", "Prénom", "Email", "Téléphone"));
+            model.addAttribute("rows", clients);
+            model.addAttribute("entityType", "client");
+            this.focusedClient = null;
+            return "table";
+        }
+
+        // Handle add, update, delete actions
+        if (action != null) {
+            if (action.equals("add")) {
+                Client newClient = new Client();
+                newClient.setLastname(lastname);
+                newClient.setFirstname(firstname);
+                newClient.setEmail(email);
+                newClient.setPhone(phone);
+                newClient.setSalt("defaultSalt"); // Set a default or generated salt
+                newClient.setPassword("defaultPassword"); // Set a default or generated password
+                clientService.save(newClient);
+                this.resetFocusedField();
+                this.filterFields = new FilterFields();
+            } else if (action.equals("update") && id != null) {
+                Client clientToUpdate = clientService.findById(id);
+                if (clientToUpdate != null) {
+                    clientToUpdate.setLastname(lastname);
+                    clientToUpdate.setFirstname(firstname);
+                    clientToUpdate.setEmail(email);
+                    clientToUpdate.setPhone(phone);
+                    clientService.save(clientToUpdate);
+                    this.resetFocusedField();
+                    this.filterFields = new FilterFields();
+                }
+            } else if (action.equals("delete") && id != null) {
+                clientService.deleteById(id);
+                this.resetFocusedField();
+                this.filterFields = new FilterFields();
+            }
+        }
 
         // ---- FILTRE ----
         lastname = lastname == null ? "" : lastname.trim();
@@ -47,7 +98,6 @@ public class ClientController {
             this.filterFields.getPhone()
             );
 
-        
         // ---- FOCUS ----
         this.populateFocusField(id);
         if (this.focusedField.getId() != null) {

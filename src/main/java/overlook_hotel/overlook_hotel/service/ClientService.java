@@ -45,4 +45,12 @@ public class ClientService {
     public Client findById(Long id) {
         return clientRepository.findById(id).orElse(null);
     }
+
+    public Client save(Client client) {
+        return clientRepository.save(client);
+    }
+
+    public void deleteById(Long id) {
+        clientRepository.deleteById(id);
+    }
 }

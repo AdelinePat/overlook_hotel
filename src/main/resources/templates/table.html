@@ -100,7 +100,7 @@
         </div>
         <div class="display-focus">
         <h2>Focus</h2>
-            <form th:action="${entityType == 'client' ? '/clients' : '/employees'}" method="post">
+            <form th:action="${entityType == 'client' ? '/clients' : '/employees'}" method="post" id="displayedFocusForm">
                 <input type="text" name="lastname" id="focus-lastname"
                     placeholder="nom de famille"
                     th:value="${focusedClient != null ? focusedClient.lastname : ''}">
@@ -122,6 +122,10 @@
                     <input type="text" name="phone" id="focus-phone"
                         placeholder="telephone"
                         th:value="${focusedClient != null ? focusedClient.phone : ''}" th:if="${entityType == 'client'}">
+                <button type="submit" name="reset" value="true" class="btn">Réinitialiser</button>
+                <button type="submit" name="action" value="add" class="btn bg-green">Ajouter</button>
+                <button type="submit" name="action" value="update" class="btn bg-blue" th:if="${focusedClient != null}">Mettre à jour</button>
+                <button type="submit" name="action" value="delete" class="btn bg-red" th:if="${focusedClient != null}">Supprimer</button>
             </form>
         </div>
     </div>
