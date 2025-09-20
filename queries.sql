@@ -61,3 +61,16 @@ FROM room_reservation AS resa
               USING(id_room)
 WHERE resa.id_room_reservation = 2
 GROUP BY resa.id_client, resa.id_room_reservation, room.id_room, resa.start_date, resa.end_date;
+
+-- liste des employés avec leur job
+SELECT e.id_employee, e.firstname, e.lastname, j.job_name
+FROM employee AS e
+         JOIN job AS j
+              USING(id_job);
+
+-- liste des eclients avec le nombre de réservations
+SELECT c.id_client, c.firstname, c.lastname, COUNT(r.id_room_reservation) AS total_resa
+FROM client AS c
+         LEFT JOIN room_reservation AS r
+                   USING(id_client)
+GROUP BY c.id_client, c.firstname, c.lastname;

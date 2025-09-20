@@ -30,6 +30,7 @@ public class ClientController {
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) Boolean reset,
+            @RequestParam(required = false) String action,
             Model model) {
 
         // Handle reset button
@@ -48,6 +49,37 @@ public class ClientController {
             model.addAttribute("entityType", "client");
             this.focusedClient = null;
             return "table";
+        }
+
+        // Handle add, update, delete actions
+        if (action != null) {
+            if (action.equals("add")) {
+                Client newClient = new Client();
+                newClient.setLastname(lastname);
+                newClient.setFirstname(firstname);
+                newClient.setEmail(email);
+                newClient.setPhone(phone);
+                newClient.setSalt("defaultSalt"); // Set a default or generated salt
+                newClient.setPassword("defaultPassword"); // Set a default or generated password
+                clientService.save(newClient);
+                this.resetFocusedField();
+                this.filterFields = new FilterFields();
+            } else if (action.equals("update") && id != null) {
+                Client clientToUpdate = clientService.findById(id);
+                if (clientToUpdate != null) {
+                    clientToUpdate.setLastname(lastname);
+                    clientToUpdate.setFirstname(firstname);
+                    clientToUpdate.setEmail(email);
+                    clientToUpdate.setPhone(phone);
+                    clientService.save(clientToUpdate);
+                    this.resetFocusedField();
+                    this.filterFields = new FilterFields();
+                }
+            } else if (action.equals("delete") && id != null) {
+                clientService.deleteById(id);
+                this.resetFocusedField();
+                this.filterFields = new FilterFields();
+            }
         }
 
         // ---- FILTRE ----
