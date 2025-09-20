@@ -36,7 +36,27 @@ public class EmployeeController {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String jobParam,
             @RequestParam(required = false) Long id,
+            @RequestParam(required = false) Boolean reset,
             Model model) {
+
+        // Handle reset button
+        if (reset != null && reset) {
+            this.resetFocusedField();
+            this.filterFields = new FilterFields();
+            List<Employee> employees = employeeService.findAllFiltered("", "", "", null);
+            model.addAttribute("clients", employees);
+            model.addAttribute("focusedClient", null);
+            model.addAttribute("focusField", new FilterFields());
+            model.addAttribute("filterField", new FilterFields());
+            model.addAttribute("title", "Employés");
+            model.addAttribute("titlePage", "Gestion des employés");
+            model.addAttribute("columns", List.of("Nom", "Prénom", "Email", "Job"));
+            model.addAttribute("rows", employees);
+            model.addAttribute("entityType", "employee");
+            model.addAttribute("jobEnumValues", jobService.getFullJobList());
+            this.focusedEmployee = null;
+            return "table";
+        }
 
         // ---- FILTRE ----
         lastname = lastname == null ? "" : lastname.trim();

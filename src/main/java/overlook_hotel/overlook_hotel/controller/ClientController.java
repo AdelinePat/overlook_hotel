@@ -29,7 +29,26 @@ public class ClientController {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) Long id,
+            @RequestParam(required = false) Boolean reset,
             Model model) {
+
+        // Handle reset button
+        if (reset != null && reset) {
+            this.resetFocusedField();
+            this.filterFields = new FilterFields();
+            List<Client> clients = clientService.findAllFiltered("", "", "", "");
+            model.addAttribute("clients", clients);
+            model.addAttribute("focusedClient", null);
+            model.addAttribute("focusField", new FilterFields());
+            model.addAttribute("filterField", new FilterFields());
+            model.addAttribute("title", "Clients");
+            model.addAttribute("titlePage", "Gestion des clients");
+            model.addAttribute("columns", List.of("Nom", "Prénom", "Email", "Téléphone"));
+            model.addAttribute("rows", clients);
+            model.addAttribute("entityType", "client");
+            this.focusedClient = null;
+            return "table";
+        }
 
         // ---- FILTRE ----
         lastname = lastname == null ? "" : lastname.trim();
@@ -47,7 +66,6 @@ public class ClientController {
             this.filterFields.getPhone()
             );
 
-        
         // ---- FOCUS ----
         this.populateFocusField(id);
         if (this.focusedField.getId() != null) {
