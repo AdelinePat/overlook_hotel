@@ -79,6 +79,9 @@ p10 {
     padding: 10px;
 }
 
+.lh12 {
+    line-height: 1.2rem;
+}
 
 table td {
     padding: 3px 7px;
@@ -110,7 +113,7 @@ table thead tr td {
 .btn {
     background: var(--secondary-bg-color);
     color: black;
-    padding: 2px 8px;
+    padding: 8px 16px;
     border-radius: 10px;
     text-transform: uppercase;
     border: 2px solid transparent;
@@ -163,14 +166,17 @@ a.btn:hover {
     /*justify-content: center;*/
     flex-flow: row wrap;
     margin-bottom: 20px;
+    gap: 16px;
 }
 
 .filter-input {
-    flex: 1;
-    min-width: 150px;
-    /*border-right: 1px solid black;*/
+    flex: 1 1 auto;
+   /* flex-grow: 1;       *//* can grow *//*
+    flex-shrink: 1;     *//* can shrink if needed *//*
+    flex-basis: auto;*/
     display: flex;
-    line-height: 1.2rem;
+    justify-self: stretch;
+    /*line-height: 1.2rem;*/
     padding: 8px 8px;
     gap: 8px;
     align-items: center;
@@ -198,6 +204,13 @@ a.btn:hover {
 
 .filter-input input::placeholder {
     color: var(--dark-grey);
+}
+
+.reservation-input {
+    background: var(--grey);
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 8px 12px;
 }
 
 .display-focus {
