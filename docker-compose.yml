@@ -10,6 +10,9 @@ services:
         source: ./src/main/resources
         target: /app/src/main/resources
       - type: bind
+        source: ./src/test
+        target: /app/src/test
+      - type: bind
         source: ./target
         target: /app/target
       - type: bind

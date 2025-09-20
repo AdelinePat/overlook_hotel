@@ -1,11 +1,9 @@
 package overlook_hotel.overlook_hotel.specification;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
-import overlook_hotel.overlook_hotel.model.entity.Room;
-import overlook_hotel.overlook_hotel.model.entity.RoomLinkReservation;
-import overlook_hotel.overlook_hotel.model.entity.RoomReservation;
-import overlook_hotel.overlook_hotel.model.entity.Standing;
+import overlook_hotel.overlook_hotel.model.entity.*;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
+import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -97,6 +95,17 @@ public class RoomSpecification {
             return criteriaBuilder.not(criteriaBuilder.exists(sub));
         };
     }
+
+    public static Specification<Room> hasBonus(RoomBonusEnum bonus) {
+        return (root, query, criteriaBuilder) -> {
+//            Join<Room, RoomBonus> bonusJoin = root.join("bonuses", JoinType.LEFT);
+//            return criteriaBuilder.equal(bonusJoin.get("type"), bonus);
+            query.distinct(true);
+            Join<Room, RoomBonus> bonusJoin = root.join("bonuses", JoinType.INNER);
+            return criteriaBuilder.equal(bonusJoin.get("type"), bonus.name());
+        };
+    }
+
 
 
 }

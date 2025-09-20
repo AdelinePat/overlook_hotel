@@ -7,6 +7,7 @@ import lombok.Setter;
 import overlook_hotel.overlook_hotel.model.entity.Job;
 import overlook_hotel.overlook_hotel.model.entity.Standing;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
+import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,4 +34,5 @@ public class FilterFields {
     private LocalDate startDate;
     private LocalDate endDate;
     private BedType bedType;
+    private RoomBonusEnum bonus;
 }

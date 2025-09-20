@@ -1,6 +1,6 @@
 package overlook_hotel.overlook_hotel.model.enumList;
 
-public enum RoomBonus {
+public enum RoomBonusEnum {
     TV,
     SECHOIR,
     MINI_BAR,

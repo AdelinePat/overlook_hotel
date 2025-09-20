@@ -134,3 +134,9 @@ FROM client AS c
          LEFT JOIN room_reservation AS r
                    USING(id_client)
 GROUP BY c.id_client, c.firstname, c.lastname;
+
+-- RECUPERER CHAMBRE AVEC BONUS DE BASE
+SELECT * FROM room AS r
+LEFT JOIN room_link_bonus AS rlb USING(id_room)
+LEFT JOIN room_bonus AS rb USING(id_room_bonus)
+WHERE rb.type = 'SECHOIR';

@@ -27,9 +27,20 @@
                 <input type="number" th:field="*{roomNumber}" placeholder="Numéro de chambre"/>
             </div>
 
+<!--            <div class="filter-input reservation-input">-->
+<!--                <label><i class="fa-solid fa-user-group"></i></label>-->
+<!--                <input type="number" th:field="*{capacity}" placeholder="Nombre d'invité/chambre" />-->
+<!--            </div>-->
             <div class="filter-input reservation-input">
-                <label><i class="fa-solid fa-user-group"></i></label>
-                <input type="number" th:field="*{capacity}" placeholder="Nombre d'invité/chambre" />
+                <label><i class="fa-solid fa-boxes-packing"></i></label>
+                <select th:field="*{bonus}">
+                    <option value="">-- Bonus --</option>
+                    <option th:each="bonus : ${bonusList}"
+                            th:value="${bonus.name()}"
+                            th:text="${@displayText.capitalize(bonus.name())}"
+                            th:selected="${filterFields.bonus != null and filterFields.bonus == bonus.name()}">
+                    </option>
+                </select>
             </div>
 
             <div class="filter-input reservation-input">
@@ -43,7 +54,7 @@
                     <option value="">-- Standing --</option>
                     <option th:each="stand : ${standingList}"
                             th:value="${stand.id}"
-                            th:text="${stand.name}"
+                            th:text="${@displayText.capitalize(stand.name)}"
                             th:selected="${filterFields.standing != null and filterFields.standing.id == stand.id}">
                     </option>
                 </select>
@@ -58,7 +69,7 @@
                     </option>
                     <option th:each="type : ${bedTypeList}"
                             th:value="${type}"
-                            th:text="${type}"
+                            th:text="${@displayText.capitalize(type)}"
                             th:selected="${filterFields.bedType == type}">
                     </option>
                 </select>
@@ -84,7 +95,7 @@
             <div class="book-card" th:each="room : ${roomList}">
                 <div class="booking-img"
                      th:classappend="${room.standing.name.toLowerCase()}">
-                    <p class="price" th:text="${room.nightPrice}"</p>
+                    <p class="price" th:text="${room.nightPrice}"></p>
 
                 </div>
 

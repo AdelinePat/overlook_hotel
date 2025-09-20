@@ -52,4 +52,12 @@ public class Room {
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<RoomLinkReservation> roomReservationsList;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "room_link_bonus",
+            joinColumns = @JoinColumn(name = "id_room"),
+            inverseJoinColumns = @JoinColumn(name = "id_room_bonus")
+    )
+    private List<RoomBonus> bonuses;
+
 }
