@@ -8,9 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
-import overlook_hotel.overlook_hotel.model.enumList.RoomStanding;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "room")
@@ -36,10 +36,6 @@ public class Room {
     @Column(name="description", length = 500)
     private String description;
 
-//    @NotNull
-//    @Enumerated(EnumType.STRING)
-//    @Column(name="standing", length = 15)
-//    private RoomStanding standing;
     @ManyToOne
     @JoinColumn(name = "id_standing", nullable = false)
     private Standing standing;
@@ -52,4 +48,8 @@ public class Room {
     @NotNull
     @Column(name="night_price")
     private BigDecimal nightPrice;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<RoomLinkReservation> roomReservationsList;
+
 }

@@ -48,7 +48,7 @@ public class RoomReservation {
     @Column(name="payment_date")
     private LocalDateTime paymentDate;
 
-    @OneToMany(mappedBy = "roomReservation", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "roomReservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RoomLinkReservation> roomLinks = new ArrayList<>();
 
     @Transient
