@@ -43,7 +43,7 @@ public class RoomSpecification {
 
     public static Specification<Room> hasPriceGreaterThan(final Integer night_price) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThan(root.get("nightPrice"), night_price);
+                criteriaBuilder.greaterThanOrEqualTo(root.get("nightPrice"), night_price);
     }
 
     public static Specification<Room> hasPriceBetween(final List<Integer> night_price) {
