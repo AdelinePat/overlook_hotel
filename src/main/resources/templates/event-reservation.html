@@ -29,7 +29,9 @@
         <option value="">-- Type d'espace --</option>
         <option th:each="pt : ${placeTypeList}"
                 th:value="${pt.id}"
-                th:text="${pt.name}">
+                th:text="${@displayText.capitalize(pt.name)}">
+
+
         </option>
       </select>
     </div>
@@ -53,9 +55,9 @@
   <div class="booking-content">
     <div class="book-card" th:each="place : ${placeList}">
       <div class="card-description">
-        <h3 th:text="${place.placeType != null ? place.placeType.name : 'Espace'}"></h3>
-        <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>
-        <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>
+        <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
+        <p>Capacité : <span th:text="${@displayText.capitalize(place.capacity + ' pers.')}"></span></p>
+        <p class="price"><span th:text="${@displayText.capitalize(place.hourlyPrice + ' €/heure')}"></span></p>
         <a class="btn m10"
            th:href="@{/event-reservation/{id}(id=${place.id})}">Réserver</a>
       </div>
