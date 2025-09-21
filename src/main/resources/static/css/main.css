@@ -21,6 +21,7 @@
 
 nav {
     background: var(--main-dark-bg-color);
+    background: red;
     /*background: red;*/
     /*width: 100%;*/
     display: flex;
