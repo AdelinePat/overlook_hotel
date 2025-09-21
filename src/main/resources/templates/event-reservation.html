@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${titlePage}">Overlook Hotel - Réservation événement</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav>
+  <a th:href="@{/index.html}">Overlook Hotel</a>
+  <ul>
+    <li>Dashboard</li>
+    <li>Gestion Événements</li>
+  </ul>
+  <a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a>
+</nav>
+
+<div class="page">
+  <!-- FILTRE -->
+  <form class="filter-bar mt50" th:action="@{/event-reservation}" method="post" th:object="${filterFields}">
+
+    <div class="filter-input reservation-input">
+      <label><i class="fa-solid fa-tags"></i></label>
+      <select th:field="*{placeTypeId}">
+        <option value="">-- Type d'espace --</option>
+        <option th:each="pt : ${placeTypeList}"
+                th:value="${pt.id}"
+                th:text="${pt.name}">
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-input reservation-input">
+      <label><i class="fa-solid fa-user-group"></i></label>
+      <input type="number" th:field="*{minCapacity}" placeholder="Capacité minimale"/>
+    </div>
+
+    <div class="filter-input reservation-input">
+      <label><i class="fa-solid fa-calendar-days"></i></label>
+      <input type="datetime-local" th:field="*{startDate}"/>
+      <input type="datetime-local" th:field="*{endDate}"/>
+    </div>
+
+    <button class="btn lh12" type="submit">Rechercher</button>
+  </form>
+
+
+  <h1>Résultats: <span th:text="${#lists.size(placeList)}"></span></h1>
+  <div class="booking-content">
+    <div class="book-card" th:each="place : ${placeList}">
+      <div class="card-description">
+        <h3 th:text="${place.placeType != null ? place.placeType.name : 'Espace'}"></h3>
+        <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>
+        <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>
+        <a class="btn m10"
+           th:href="@{/event-reservation/{id}(id=${place.id})}">Réserver</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
