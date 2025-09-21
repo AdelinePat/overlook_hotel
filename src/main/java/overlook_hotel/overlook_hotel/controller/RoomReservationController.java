@@ -3,7 +3,7 @@ package overlook_hotel.overlook_hotel.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import overlook_hotel.overlook_hotel.model.FilterFields;
+import overlook_hotel.overlook_hotel.model.RoomReservationFields;
 import overlook_hotel.overlook_hotel.model.entity.Room;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
 import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
@@ -23,7 +23,7 @@ public class RoomReservationController {
     }
 
     @RequestMapping(value = "/room-reservation", method = {RequestMethod.GET, RequestMethod.POST})
-    public String reservation(@ModelAttribute FilterFields filterFields,
+    public String reservation(@ModelAttribute RoomReservationFields filterFields,
                               Model model) {
         System.out.println("\n\n\n\n\n\n\n\t\t\t\t\t\t\tpricerange: " + filterFields.getPriceRange());
 
@@ -39,7 +39,7 @@ public class RoomReservationController {
                 filterFields.getStartDate(),
                 filterFields.getEndDate(),
                 filterFields.getPriceRange(),
-                filterFields.getBonus());
+                filterFields.getBonuses());
 
         model.addAttribute("filterFields", filterFields);
         model.addAttribute("roomList", rooms);

@@ -28,7 +28,7 @@ public class RoomService {
                                       LocalDate startDate,
                                       LocalDate endDate,
                                       List<Integer> night_price,
-                                      RoomBonusEnum bonus) {
+                                      List<RoomBonusEnum> bonuses) {
 
         Specification<Room> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
 
@@ -55,8 +55,13 @@ public class RoomService {
             spec = spec.and(RoomSpecification.hasBedType(type));
         }
 
-        if (bonus != null) {
-            spec = spec.and(RoomSpecification.hasBonus(bonus));
+        if (bonuses != null && !bonuses.isEmpty()) {
+            Specification<Room> bonusSpec = null;
+            for (RoomBonusEnum bonus : bonuses) {
+                Specification<Room> singleBonusSpec = RoomSpecification.hasBonus(bonus);
+                bonusSpec = (bonusSpec == null) ? singleBonusSpec : bonusSpec.and(singleBonusSpec);
+            }
+            spec = spec.and(bonusSpec);
         }
 
 //        TODO NIGHT_PRICE ONLY LOWER THAN !!!!!!

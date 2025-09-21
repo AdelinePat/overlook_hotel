@@ -98,8 +98,6 @@ public class RoomSpecification {
 
     public static Specification<Room> hasBonus(RoomBonusEnum bonus) {
         return (root, query, criteriaBuilder) -> {
-//            Join<Room, RoomBonus> bonusJoin = root.join("bonuses", JoinType.LEFT);
-//            return criteriaBuilder.equal(bonusJoin.get("type"), bonus);
             query.distinct(true);
             Join<Room, RoomBonus> bonusJoin = root.join("bonuses", JoinType.INNER);
             return criteriaBuilder.equal(bonusJoin.get("type"), bonus.name());

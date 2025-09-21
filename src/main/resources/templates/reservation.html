@@ -8,6 +8,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.dropdown-toggle').forEach(function(button) {
+            button.addEventListener('click', function() {
+                // Toggle the "show" class on parent .dropdown
+                this.parentElement.classList.toggle('show');
+            });
+        });
+
+            document.addEventListener('click', function(event) {
+                document.querySelectorAll('.dropdown').forEach(function(dropdown) {
+                    if (!dropdown.contains(event.target)) {
+                        dropdown.classList.remove('show');
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <nav><a th:href="@{/index.html}">Overlook Hotel</a><ul>
@@ -28,19 +46,48 @@
             </div>
 
 <!--            <div class="filter-input reservation-input">-->
-<!--                <label><i class="fa-solid fa-user-group"></i></label>-->
-<!--                <input type="number" th:field="*{capacity}" placeholder="Nombre d'invité/chambre" />-->
+<!--                <label><i class="fa-solid fa-boxes-packing"></i></label>-->
+<!--                <select th:field="*{bonus}">-->
+<!--                    <option value="">&#45;&#45; Bonus &#45;&#45;</option>-->
+<!--                    <option th:each="bonus : ${bonusList}"-->
+<!--                            th:value="${bonus.name()}"-->
+<!--                            th:text="${@displayText.capitalize(bonus.name())}"-->
+<!--                            th:selected="${filterFields.bonus != null and filterFields.bonus == bonus.name()}">-->
+<!--                    </option>-->
+<!--                </select>-->
 <!--            </div>-->
-            <div class="filter-input reservation-input">
+
+<!--            <div class="filter-input reservation-input bonus-dropdown">-->
+<!--                <label><i class="fa-solid fa-boxes-packing"></i></label>-->
+<!--                <div class="dropdown">-->
+<!--                    <button type="button" class="dropdown-toggle">&#45;&#45; Bonus &#45;&#45;</button>-->
+<!--                    <div th:each="bonus : ${bonusList}">-->
+<!--                        <input type="checkbox"-->
+<!--                               th:field="*{bonuses}"-->
+<!--                               th:value="${bonus.name()}"/>-->
+<!--                        <label th:text="${@displayText.capitalize(bonus.name())}"></label>-->
+
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <div class="filter-input reservation-input bonus-dropdown">
                 <label><i class="fa-solid fa-boxes-packing"></i></label>
-                <select th:field="*{bonus}">
-                    <option value="">-- Bonus --</option>
-                    <option th:each="bonus : ${bonusList}"
-                            th:value="${bonus.name()}"
-                            th:text="${@displayText.capitalize(bonus.name())}"
-                            th:selected="${filterFields.bonus != null and filterFields.bonus == bonus.name()}">
-                    </option>
-                </select>
+
+                <div class="dropdown">
+                    <button type="button" class="dropdown-toggle">-- Bonus --</button>
+
+                    <div class="dropdown-menu">
+                        <div class="dropdown-items" th:each="bonus : ${bonusList}">
+                            <label>
+                                <input type="checkbox"
+                                       th:field="*{bonuses}"
+                                       th:value="${bonus.name()}"/>
+                                <span th:text="${@displayText.capitalize(bonus.name())}"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="filter-input reservation-input">
