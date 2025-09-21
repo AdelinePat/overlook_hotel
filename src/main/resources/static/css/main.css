@@ -271,6 +271,24 @@ a.btn:hover {
     color: var(--dark-grey);
 }
 
+.display-focus-room {
+    flex-basis: 1;
+    background: var(--main-bg-color);
+    width: 40%;
+    border-radius: 20px;
+    align-self: start;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-content: center;
+    padding-top: 0px;
+}
+
+.focus-room-content {
+padding: 20px;
+padding-top: 0px;
+}
+
 /* IMG ROOM PAR DEFAUT */
 .booking-content {
     display: flex;

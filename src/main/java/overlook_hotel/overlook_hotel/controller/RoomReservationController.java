@@ -6,11 +6,16 @@ import org.springframework.web.bind.annotation.*;
 import overlook_hotel.overlook_hotel.model.RoomReservationFields;
 import overlook_hotel.overlook_hotel.model.entity.Feedback;
 import overlook_hotel.overlook_hotel.model.entity.Room;
+import overlook_hotel.overlook_hotel.model.entity.RoomBonus;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
 import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
 import overlook_hotel.overlook_hotel.service.RoomService;
 import overlook_hotel.overlook_hotel.service.StandingService;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,32 +57,44 @@ public class RoomReservationController {
         return "reservation";
     }
 
-    @GetMapping("/room-reservation/{id}")
-    public String roomDetails(@PathVariable Long id, Model model) {
+//    @GetMapping("/room-reservation/{id}")
+    @RequestMapping(value = "/room-reservation/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    public String roomDetails(@PathVariable Long id,
+                              @RequestParam(required = false) List<String> selectedBonuses,
+                              @ModelAttribute RoomReservationFields filterFields,
+                              Model model) {
         // 1. Get room by id
         Room room = roomService.findById(id);
         model.addAttribute("room", room);
 
+        LocalDate startDate = filterFields.getStartDate();
+        LocalDate endDate = filterFields.getEndDate();
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+
+        int nights = 0;
+        if (startDate != null && endDate != null) {
+            nights = (int) ChronoUnit.DAYS.between(startDate, endDate);
+            if (nights < 0) nights = 0;
+        }
+        model.addAttribute("nights", nights);
+
+        BigDecimal baseTotalPerNight = room.getTotalNightPrice();
+
         // 2. Get default bonuses for the room
         List<RoomBonusEnum> bonusList = List.of(RoomBonusEnum.values());
-        model.addAttribute("bonusList", bonusList);
+
+        List<RoomBonusEnum> filteredBonuses = bonusList.stream()
+                .filter(bonus -> room.getBonuses().stream()
+                        .noneMatch(rb -> rb.getType() == bonus))
+                .toList();
+        model.addAttribute("bonusList", filteredBonuses);
 
         // 3. Get feedback for this room (through room_reservation -> feedback)
         List<Feedback> feedbackList = roomService.getRoomFeedback(id);
         model.addAttribute("feedbackList", feedbackList);
-
+        model.addAttribute("totalPerNight", baseTotalPerNight);
         model.addAttribute("titlePage", "Détails de la chambre " + room.getNumber());
         return "room-detail";
-    }
-
-    @PostMapping("/room-reservation/{id}")
-    public String createReservation(@PathVariable Long id,
-                                    @RequestParam(required = false) List<String> selectedBonuses,
-                                    @ModelAttribute RoomReservationFields filterFields) {
-        // 1. Create a RoomReservation object
-//        roomService.createReservation(id, selectedBonuses);
-
-        // 2. Redirect back to reservation list or confirmation page
-        return "redirect:/room-reservation";
     }
 }

@@ -45,32 +45,6 @@
                 <input type="number" th:field="*{roomNumber}" placeholder="Numéro de chambre"/>
             </div>
 
-<!--            <div class="filter-input reservation-input">-->
-<!--                <label><i class="fa-solid fa-boxes-packing"></i></label>-->
-<!--                <select th:field="*{bonus}">-->
-<!--                    <option value="">&#45;&#45; Bonus &#45;&#45;</option>-->
-<!--                    <option th:each="bonus : ${bonusList}"-->
-<!--                            th:value="${bonus.name()}"-->
-<!--                            th:text="${@displayText.capitalize(bonus.name())}"-->
-<!--                            th:selected="${filterFields.bonus != null and filterFields.bonus == bonus.name()}">-->
-<!--                    </option>-->
-<!--                </select>-->
-<!--            </div>-->
-
-<!--            <div class="filter-input reservation-input bonus-dropdown">-->
-<!--                <label><i class="fa-solid fa-boxes-packing"></i></label>-->
-<!--                <div class="dropdown">-->
-<!--                    <button type="button" class="dropdown-toggle">&#45;&#45; Bonus &#45;&#45;</button>-->
-<!--                    <div th:each="bonus : ${bonusList}">-->
-<!--                        <input type="checkbox"-->
-<!--                               th:field="*{bonuses}"-->
-<!--                               th:value="${bonus.name()}"/>-->
-<!--                        <label th:text="${@displayText.capitalize(bonus.name())}"></label>-->
-
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
             <div class="filter-input reservation-input bonus-dropdown">
                 <label><i class="fa-solid fa-boxes-packing"></i></label>
 
@@ -159,8 +133,21 @@
                         </ul>
                     </div>
 <!--                    <p class="price"><span th:text="${room.nightPrice}"></span>€/nuit</p>-->
-                    <a class="btn m10"
-                       th:href="@{/room-reservation/{id}(id=${room.id})}">Réserver</a>
+                    <form th:action="@{/room-reservation/{id}(id=${room.id})}" method="get" th:object="${filterFields}">
+                        <input type="hidden" th:field="*{startDate}" />
+                        <input type="hidden" th:field="*{endDate}" />
+                        <input type="hidden" th:field="*{roomNumber}" />
+                        <input type="hidden" th:field="*{capacity}" />
+                        <input type="hidden" th:field="*{description}" />
+                        <input type="hidden" th:field="*{standing}" />
+                        <input type="hidden" th:field="*{bedType}" />
+                        <input type="hidden" th:field="*{priceRange[0]}" />
+                        <input type="hidden" th:field="*{priceRange[1]}" />
+                        <input type="hidden" th:field="*{bonuses}" />
+                        <button type="submit" class="btn m10">
+                            Réserver
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
