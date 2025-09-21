@@ -90,91 +90,78 @@ public class RoomSpecification {
     }
     public static Specification<Room> hasTotalPriceLowerThanOrEqual(final Integer night_price) {
         return (root, query, criteriaBuilder) -> {
-            Subquery<BigDecimal> bonusSub = query.subquery(BigDecimal.class);
+            query.distinct(true);
 
-            Root<RoomBonus> bonusRoot = bonusSub.from(RoomBonus.class);
-
-            Join<RoomBonus, Room> bonusRoom = bonusRoot.join("rooms", JoinType.LEFT);
-
-            bonusSub.select(
-                    criteriaBuilder.sum(
+            Join<Room, RoomBonus> bonusJoin = root.join("bonuses", JoinType.LEFT);
+            Expression<BigDecimal> totalBonus = criteriaBuilder
+                    .sum(
                             criteriaBuilder.coalesce(
-                                    bonusRoot.get("dailyPrice"), BigDecimal.ZERO))
-                            )
-                    .where(
-                            criteriaBuilder.equal(
-                                    bonusRoom.get("id"), root.get("id"))
-                            );
+                                    bonusJoin.get("dailyPrice"), BigDecimal.ZERO)
+                    );
 
-            Expression<BigDecimal> totalPrice = criteriaBuilder.sum(
-                    root.get("nightPrice"),
-                    criteriaBuilder.coalesce(
-                            bonusSub.getSelection(), BigDecimal.ZERO
-                            ));
+            Expression<BigDecimal> totalPrice = criteriaBuilder
+                    .sum(
+                    root.get("nightPrice"), totalBonus);
 
-            return criteriaBuilder.lessThanOrEqualTo(totalPrice, BigDecimal.valueOf(night_price));
+            query.groupBy(root.get("id"));
+
+            query.having(
+                    criteriaBuilder
+                            .lessThanOrEqualTo(totalPrice, BigDecimal.valueOf(night_price)));
+            return criteriaBuilder.conjunction();
 
         };  
     }
 
     public static Specification<Room> hasTotalPriceGreaterThan(final Integer night_price) {
         return (root, query, criteriaBuilder) -> {
-            Subquery<BigDecimal> bonusSub = query.subquery(BigDecimal.class);
-
-            Root<RoomBonus> bonusRoot = bonusSub.from(RoomBonus.class);
-
-            Join<RoomBonus, Room> bonusRoom = bonusRoot.join("rooms", JoinType.LEFT);
-
-            bonusSub.select(
-                            criteriaBuilder.sum(
-                                    criteriaBuilder.coalesce(
-                                            bonusRoot.get("dailyPrice"), BigDecimal.ZERO))
-                    )
-                    .where(
-                            criteriaBuilder.equal(
-                                    bonusRoom.get("id"), root.get("id"))
+            query.distinct(true);
+            Join<Room, RoomBonus> bonusJoin = root.join("bonuses", JoinType.LEFT);
+            Expression<BigDecimal> totalBonus = criteriaBuilder
+                    .sum(
+                            criteriaBuilder.coalesce(
+                                    bonusJoin.get("dailyPrice"), BigDecimal.ZERO)
                     );
 
-            Expression<BigDecimal> totalPrice = criteriaBuilder.sum(
-                    root.get("nightPrice"),
-                    criteriaBuilder.coalesce(
-                            bonusSub.getSelection(), BigDecimal.ZERO
-                    ));
+            Expression<BigDecimal> totalPrice = criteriaBuilder
+                    .sum(
+                            root.get("nightPrice"), totalBonus);
 
-            return criteriaBuilder.greaterThanOrEqualTo(totalPrice, BigDecimal.valueOf(night_price));
+            query.groupBy(root.get("id"));
+
+            query.having(criteriaBuilder.greaterThanOrEqualTo(totalPrice, BigDecimal.valueOf(night_price)));
+
+
+
+            return criteriaBuilder.conjunction();
 
         };
     }
 
     public static Specification<Room> hasTotalPriceBetween(final List<Integer> night_price) {
         return (root, query, criteriaBuilder) -> {
-            Subquery<BigDecimal> bonusSub = query.subquery(BigDecimal.class);
+            query.distinct(true);
 
-            Root<RoomBonus> bonusRoot = bonusSub.from(RoomBonus.class);
-
-            Join<RoomBonus, Room> bonusRoom = bonusRoot.join("rooms", JoinType.LEFT);
-
-            bonusSub.select(
-                            criteriaBuilder.sum(
-                                    criteriaBuilder.coalesce(
-                                            bonusRoot.get("dailyPrice"), BigDecimal.ZERO))
-                    )
-                    .where(
-                            criteriaBuilder.equal(
-                                    bonusRoom.get("id"), root.get("id"))
+            Join<Room, RoomBonus> bonusJoin = root.join("bonuses", JoinType.LEFT);
+            Expression<BigDecimal> totalBonus = criteriaBuilder
+                    .sum(
+                            criteriaBuilder.coalesce(
+                                    bonusJoin.get("dailyPrice"), BigDecimal.ZERO)
                     );
 
-            Expression<BigDecimal> totalPrice = criteriaBuilder.sum(
-                    root.get("nightPrice"),
-                    criteriaBuilder.coalesce(
-                            bonusSub.getSelection(), BigDecimal.ZERO
-                    ));
+            Expression<BigDecimal> totalPrice = criteriaBuilder
+                    .sum(
+                            root.get("nightPrice"), totalBonus);
 
-            return criteriaBuilder
+            query.groupBy(root.get("id"));
+
+            query.having(criteriaBuilder
                     .between(totalPrice,
                             BigDecimal.valueOf(night_price.get(0)),
                             BigDecimal.valueOf(night_price.get(1))
-                    );
+                    ));
+
+            return criteriaBuilder.conjunction();
 
         };
     }
