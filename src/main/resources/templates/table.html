@@ -101,6 +101,8 @@
         <div class="display-focus">
         <h2>Focus</h2>
             <form th:action="${entityType == 'client' ? '/clients' : '/employees'}" method="post" id="displayedFocusForm">
+                <input type="hidden" name="id" id="focus-id-hidden"
+                    th:value="${focusedClient != null ? focusedClient.id : ''}" />
                 <input type="text" name="lastname" id="focus-lastname"
                     placeholder="nom de famille"
                     th:value="${focusedClient != null ? focusedClient.lastname : ''}">
@@ -130,7 +132,8 @@
         </div>
     </div>
     <form id="focusForm" th:action="${entityType == 'client' ? '/clients' : '/employees'}" method="post">
-        <input type="hidden" name="id" id="focus-id">
+        <input type="hidden" name="id" id="focus-id"
+               th:value="${focusedClient != null ? focusedClient.id : ''}" />
         <input type="hidden" name="lastname" th:value="${filterField.lastname}">
         <input type="hidden" name="firstname" th:value="${filterField.firstname}">
         <input type="hidden" name="email" th:value="${filterField.email}">
