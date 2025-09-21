@@ -54,6 +54,13 @@
   <h1>Résultats: <span th:text="${#lists.size(placeList)}"></span></h1>
   <div class="booking-content">
     <div class="book-card" th:each="place : ${placeList}">
+
+      <div class="booking-img"
+           th:classappend="${place.placeType != null ? place.placeType.name.toLowerCase() : 'default'}">
+        <p class="price" th:text="${place.hourlyPrice + ' €/heure'}"></p>
+      </div>
+
+
       <div class="card-description">
         <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
         <p>Capacité : <span th:text="${@displayText.capitalize(place.capacity + ' pers.')}"></span></p>
