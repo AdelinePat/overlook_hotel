@@ -37,6 +37,7 @@ public class EmployeeController {
             @RequestParam(required = false) String jobParam,
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) Boolean reset,
+            @RequestParam(required = false) String action,
             Model model) {
 
         // Handle reset button
@@ -58,23 +59,52 @@ public class EmployeeController {
             return "table";
         }
 
+        // ---- CRUD ACTIONS ----
+        Job job = null;
+        Long jobId = null;
+        if (jobParam != null && !jobParam.isBlank()) {
+            try {
+                jobId = Long.parseLong(jobParam);
+            } catch (NumberFormatException ignored) {}
+        }
+        if (jobId != null) {
+            job = jobService.findJobById(jobId);
+        }
+
+        if (action != null) {
+            if (action.equals("add")) {
+                Employee newEmployee = new Employee();
+                newEmployee.setLastname(lastname);
+                newEmployee.setFirstname(firstname);
+                newEmployee.setEmail(email);
+                newEmployee.setJob(job);
+                newEmployee.setSalt("defaultSalt");
+                newEmployee.setPassword("defaultPassword");
+                employeeService.save(newEmployee);
+                this.resetFocusedField();
+                this.filterFields = new FilterFields();
+            } else if (action.equals("update") && id != null) {
+                Employee employeeToUpdate = employeeService.findById(id);
+                if (employeeToUpdate != null) {
+                    employeeToUpdate.setLastname(lastname);
+                    employeeToUpdate.setFirstname(firstname);
+                    employeeToUpdate.setEmail(email);
+                    employeeToUpdate.setJob(job);
+                    employeeService.save(employeeToUpdate);
+                    this.resetFocusedField();
+                    this.filterFields = new FilterFields();
+                }
+            } else if (action.equals("delete") && id != null) {
+                employeeService.deleteById(id);
+                this.resetFocusedField();
+                this.filterFields = new FilterFields();
+            }
+        }
+
         // ---- FILTRE ----
         lastname = lastname == null ? "" : lastname.trim();
         firstname = firstname == null ? "" : firstname.trim();
         email = email == null ? "" : email.toLowerCase().trim();
-        Long jobId = null;
-        id = id;
-
-        if (jobParam != null && !jobParam.isBlank()) {
-         try {
-             jobId = Long.parseLong(jobParam);
-         } catch (NumberFormatException ignored) {}
-        }
-
-         Job job = null;
-         if (jobId != null) {
-             job = jobService.findJobById(jobId);
-         }
 
         this.populateFilterFields(lastname, firstname, email, job);
 
@@ -83,7 +113,7 @@ public class EmployeeController {
             this.filterFields.getFirstname(),
             this.filterFields.getEmail(),
             this.filterFields.getJob()
-            );
+        );
 
         // ---- FOCUS ----
         this.populateFocusField(id);
@@ -103,8 +133,7 @@ public class EmployeeController {
         model.addAttribute("columns", List.of("Nom", "Prénom", "Email", "Job"));
         model.addAttribute("rows", employees);
         model.addAttribute("entityType", "employee");
-//        model.addAttribute("jobEnumValues", employeeService.getJobEnumValues());
-         model.addAttribute("jobEnumValues", jobService.getFullJobList());
+        model.addAttribute("jobEnumValues", jobService.getFullJobList());
 
         return "table";
     }
