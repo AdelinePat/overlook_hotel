@@ -348,7 +348,6 @@ a.btn:hover {
     content: "€/Nuit";
  }
 
-/*IMG ROOM*/
 .booking-img {
     transition: all 0.3s ease-in-out;
     border-radius: 16px 16px 0px 0px;
@@ -361,6 +360,7 @@ a.btn:hover {
 }
 
 
+/*IMG ROOM*/
 .superieure {
     background: url("../img/superieure.jpg");
     background-size: cover;
@@ -455,4 +455,35 @@ a.btn:hover {
 .dropdown-items label:last-child {
     margin-bottom: 0;
     border-bottom: none;
+}
+
+
+/*IMG EVENT PLACE*/
+.piscine {
+    background: url("../img/piscine.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+}
+
+.spa {
+ background: url("../img/spa.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+
+}
+
+.salle_de_reunion {
+    background: url("../img/salle_de_reunion.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+}
+
+.tennis {
+    background: url("../img/tennis.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
 }
