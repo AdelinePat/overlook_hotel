@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import overlook_hotel.overlook_hotel.model.RoomReservationFields;
+import overlook_hotel.overlook_hotel.model.entity.Feedback;
 import overlook_hotel.overlook_hotel.model.entity.Room;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
 import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
@@ -11,6 +12,7 @@ import overlook_hotel.overlook_hotel.service.RoomService;
 import overlook_hotel.overlook_hotel.service.StandingService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class RoomReservationController {
@@ -50,4 +52,32 @@ public class RoomReservationController {
         return "reservation";
     }
 
+    @GetMapping("/room-reservation/{id}")
+    public String roomDetails(@PathVariable Long id, Model model) {
+        // 1. Get room by id
+        Room room = roomService.findById(id);
+        model.addAttribute("room", room);
+
+        // 2. Get default bonuses for the room
+        List<RoomBonusEnum> bonusList = List.of(RoomBonusEnum.values());
+        model.addAttribute("bonusList", bonusList);
+
+        // 3. Get feedback for this room (through room_reservation -> feedback)
+        List<Feedback> feedbackList = roomService.getRoomFeedback(id);
+        model.addAttribute("feedbackList", feedbackList);
+
+        model.addAttribute("titlePage", "Détails de la chambre " + room.getNumber());
+        return "room-detail";
+    }
+
+    @PostMapping("/room-reservation/{id}")
+    public String createReservation(@PathVariable Long id,
+                                    @RequestParam(required = false) List<String> selectedBonuses,
+                                    @ModelAttribute RoomReservationFields filterFields) {
+        // 1. Create a RoomReservation object
+//        roomService.createReservation(id, selectedBonuses);
+
+        // 2. Redirect back to reservation list or confirmation page
+        return "redirect:/room-reservation";
+    }
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Chambre ' + ${room.number} + ' - ' + ${room.standing.name}"></title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<nav>
+    <a th:href="@{/room-reservation}">Retour à la liste</a>
+</nav>
+
+<div class="page">
+    <h1>Chambre <span th:text="${room.number}"></span> - <span th:text="${room.standing.name}"></span></h1>
+    <p>Type: <span th:text="${room.type}"></span></p>
+    <p>Prix par nuit: <span th:text="${room.nightPrice}"></span> €</p>
+
+    <div class="bonus-list">
+        <h3>Bonus par défaut:</h3>
+        <ul>
+            <li th:each="bonus : ${room.bonuses}">
+                <span th:text="${bonus.type}"></span> - <span th:text="${bonus.dailyPrice}"></span> €/jour
+            </li>
+        </ul>
+    </div>
+
+    <form th:action="@{/room-reservation/{id}(id=${room.id})}" method="post">
+        <h3>Ajouter des bonus pour cette réservation :</h3>
+        <div th:each="bonus : ${bonusList}">
+            <label>
+                <input type="checkbox" name="selectedBonuses" th:value="${bonus.name()}"/>
+                <span th:text="${bonus.name()}"></span>
+            </label>
+        </div>
+
+        <button type="submit" class="btn">Réserver</button>
+    </form>
+
+    <div class="feedback-list">
+        <h3>Avis précédents :</h3>
+        <div th:each="fb : ${feedbackList}">
+            <p>Note: <span th:text="${fb.rate}"></span>/5</p>
+            <p th:text="${fb.comment}"></p>
+            <hr/>
+        </div>
+    </div>
+</div>
+</body>
+</html>

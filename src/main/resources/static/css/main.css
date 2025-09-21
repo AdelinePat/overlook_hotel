@@ -21,14 +21,13 @@
 
 nav {
     background: var(--main-dark-bg-color);
-    background: red;
-    /*background: red;*/
-    /*width: 100%;*/
     display: flex;
     justify-content: space-between;
-    align-content: center;
+    align-items: center;
     padding: 10px;
     line-height: 2rem;
+    vertical-align: center;
+
     /*position: fixed;*/
 }
 
@@ -486,4 +485,18 @@ a.btn:hover {
     background-size: cover;
     background-position: center;
     filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+}
+
+.placard_a_balais {
+    background: url("../img/placard_balai.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3);
+}
+
+.salle_sur_demande {
+    background: url("../img/salle_sur_demande.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3);
 }

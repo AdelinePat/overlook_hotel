@@ -2,22 +2,27 @@ package overlook_hotel.overlook_hotel.service;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import overlook_hotel.overlook_hotel.model.entity.Feedback;
 import overlook_hotel.overlook_hotel.model.entity.Room;
 import overlook_hotel.overlook_hotel.model.entity.Standing;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
 import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
+import overlook_hotel.overlook_hotel.repository.FeedbackRepository;
 import overlook_hotel.overlook_hotel.specification.RoomSpecification;
 import overlook_hotel.overlook_hotel.repository.RoomRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoomService {
     private final RoomRepository roomRepository;
+    private final FeedbackRepository feedbackRepository;
 
-    public RoomService(RoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository, FeedbackRepository feedbackRepository) {
         this.roomRepository = roomRepository;
+        this.feedbackRepository = feedbackRepository;
     }
 
     public List<Room> findAllFiltered(Integer number,
@@ -87,4 +92,12 @@ public class RoomService {
             return spec.and(RoomSpecification.hasTotalPriceBetween(priceRange));
         }
     }
+
+    public Room findById(Long id) {
+        return roomRepository.findById(id).orElseThrow(() -> new RuntimeException("Room not found with id: " + id));
+    }
+    public List<Feedback> getRoomFeedback(Long roomId) {
+        return feedbackRepository.findAllByRoomId(roomId);
+    }
+
 }
