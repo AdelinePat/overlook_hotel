@@ -24,7 +24,7 @@ public class RoomServiceTest {
     private final List<Integer> night_price_between = Arrays.asList(100, 180);
     private final LocalDate startDate = LocalDate.of(2025, 9, 6);
     private final LocalDate endDate = LocalDate.of(2025, 9, 8);
-    private final RoomBonusEnum bonus = RoomBonusEnum.MINI_BAR;
+    private final List<RoomBonusEnum> bonuses = List.of(RoomBonusEnum.MINI_BAR);
 
     @Autowired
     private RoomService roomService;
@@ -142,7 +142,7 @@ public class RoomServiceTest {
 
     @Test
     public void findByBonus() {
-        List<Room> rooms = roomService.findAllFiltered(null, null, null, null, null, null, null, null, this.bonus);
+        List<Room> rooms = roomService.findAllFiltered(null, null, null, null, null, null, null, null, this.bonuses);
 
         assertEquals(2, rooms.size());
         System.out.println("\t\t #### 8 #### liste des chambres SECHOIR");

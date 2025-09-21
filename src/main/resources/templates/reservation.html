@@ -142,19 +142,19 @@
             <div class="book-card" th:each="room : ${roomList}">
                 <div class="booking-img"
                      th:classappend="${room.standing.name.toLowerCase()}">
-                    <p class="price" th:text="${room.nightPrice}"></p>
-
+                    <p class="price" th:text="${room.totalNightPrice}"></p>
                 </div>
 
                 <div class="card-description">
                     <h3 th:text="${room.number} + ' ' + ${room.standing.name}"></h3>
                     <p>lit <span th:text="${room.type.name().toLowerCase()}"></span></p>
+                    <p><span th:text="${room.nightPrice}"></span>€/Nuit</p>
                     <div class="bonus-list" th:if="${room.bonuses != null and #lists.size(room.bonuses) > 0}">
                         <p>Extra:</p>
                         <ul>
                             <li th:each="bonus : ${room.bonuses}">
                                 <span th:text="${@displayText.capitalize(bonus.type.name())}"></span>
-                                <span th:text="${bonus.daily_price}"></span>€/Jour
+                                <span th:text="${bonus.dailyPrice}"></span>€/Jour
                             </li>
                         </ul>
                     </div>
