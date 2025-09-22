@@ -21,7 +21,7 @@ services:
       - type: volume
         source: maven-repo
         target: /root/.m2
-    command: mvn -Dmaven.test.skip=true spring-boot:run -Dspring-boot.run.fork=false -Dspring-boot.run.jvmArguments='-Dspring.devtools.restart.poll-interval=1000'
+    command: mvn spring-boot:run -Dspring-boot.run.fork=false -Dspring-boot.run.jvmArguments='-Dspring.devtools.restart.poll-interval=1000'
     environment:
       MAVEN_OPTS: -Dmaven.test.skip=false
       SPRING_DEVTOOLS_RESTART_POLL_INTERVAL: 1000
