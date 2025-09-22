@@ -29,7 +29,7 @@ public class EmployeeController {
     }
 
 
-     @RequestMapping(value = "/employees", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/employees", method = {RequestMethod.GET, RequestMethod.POST})
     public String employees(
             @RequestParam(required = false) String lastname,
             @RequestParam(required = false) String firstname,
@@ -72,7 +72,9 @@ public class EmployeeController {
         }
 
         if (action != null) {
-            if (action.equals("add") && id == null) {
+            if (action.equals("search")) {
+                this.populateFilterFields(lastname, firstname, email, job);
+            } else if (action.equals("add") && id == null) {
                 Employee newEmployee = new Employee();
                 newEmployee.setLastname(lastname);
                 newEmployee.setFirstname(firstname);
@@ -92,8 +94,8 @@ public class EmployeeController {
                     employeeToUpdate.setJob(job);
                     employeeService.save(employeeToUpdate);
                     this.resetFocusedField();
-                    this.filterFields = new FilterFields();
                 }
+                this.filterFields = new FilterFields();
             } else if (action.equals("delete") && id != null) {
                 employeeService.deleteById(id);
                 this.resetFocusedField();
@@ -106,7 +108,7 @@ public class EmployeeController {
         firstname = firstname == null ? "" : firstname.trim();
         email = email == null ? "" : email.toLowerCase().trim();
 
-        this.populateFilterFields(lastname, firstname, email, job);
+        // this.populateFilterFields(lastname, firstname, email, job);
 
         List<Employee> employees = employeeService.findAllFiltered(
             this.filterFields.getLastname(),
@@ -142,8 +144,7 @@ public class EmployeeController {
         if (lastname != null) this.filterFields.setLastname(lastname.trim());
         if (firstname != null) this.filterFields.setFirstname(firstname.trim());
         if (email != null) this.filterFields.setEmail(email.toLowerCase().trim());
-//        if (job != null) this.filterFields.setJob(job);
-        this.filterFields.setJob(job);
+        if (job != null) this.filterFields.setJob(job);
     }
 
     private void resetFocusedField() {

@@ -22,16 +22,16 @@ public class ClientController {
         this.focusedClient = new Client();
     }
 
-        @RequestMapping(value = "/clients", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/clients", method = {RequestMethod.GET, RequestMethod.POST})
     public String clients(
-            @RequestParam(required = false) String lastname,
-            @RequestParam(required = false) String firstname,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String phone,
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) Boolean reset,
-            @RequestParam(required = false) String action,
-            Model model) {
+        @RequestParam(required = false) String lastname,
+        @RequestParam(required = false) String firstname,
+        @RequestParam(required = false) String email,
+        @RequestParam(required = false) String phone,
+        @RequestParam(required = false) Long id,
+        @RequestParam(required = false) Boolean reset,
+        @RequestParam(required = false) String action,
+        Model model) {
 
         // Handle reset button
         if (reset != null && reset) {
@@ -53,7 +53,10 @@ public class ClientController {
 
         // Handle add, update, delete actions
         if (action != null) {
-            if (action.equals("add") && id == null) {
+            if (action.equals("search")) {
+                this.populateFilterFields(lastname, firstname, email, phone);
+            }
+            else if (action.equals("add") && id == null) {
                 Client newClient = new Client();
                 newClient.setLastname(lastname);
                 newClient.setFirstname(firstname);
@@ -62,6 +65,7 @@ public class ClientController {
                 newClient.setSalt("defaultSalt"); // Set a default or generated salt
                 newClient.setPassword("defaultPassword"); // Set a default or generated password
                 clientService.save(newClient);
+                this.focusedClient = null;
                 this.resetFocusedField();
                 this.filterFields = new FilterFields();
             } else if (action.equals("update") && id != null) {
@@ -72,11 +76,13 @@ public class ClientController {
                     clientToUpdate.setEmail(email);
                     clientToUpdate.setPhone(phone);
                     clientService.save(clientToUpdate);
+                    this.focusedClient = null;
                     this.resetFocusedField();
-                    this.filterFields = new FilterFields();
                 }
+                this.filterFields = new FilterFields();
             } else if (action.equals("delete") && id != null) {
                 clientService.deleteById(id);
+                this.focusedClient = null;
                 this.resetFocusedField();
                 this.filterFields = new FilterFields();
             }
@@ -89,7 +95,7 @@ public class ClientController {
         phone = phone == null ? "" : phone.trim();
         id = id == null ? null : id;
 
-        this.populateFilterFields(lastname, firstname, email, phone);
+        // this.populateFilterFields(lastname, firstname, email, phone);
 
         List<Client> clients = clientService.findAllFiltered(
             this.filterFields.getLastname(),
