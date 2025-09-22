@@ -29,5 +29,5 @@ public class RoomReservationFields {
     private LocalDate endDate;
     private BedType bedType;
     List<RoomBonusEnum> bonuses;
-//    private RoomBonusEnum bonus;
+    List<RoomBonusEnum> additionalBonuses;
 }

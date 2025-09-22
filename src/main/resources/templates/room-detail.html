@@ -85,7 +85,9 @@
             <div class="booking-img"
                  th:classappend="${room.standing.name.toLowerCase()}">
             </div>
-            <form class="focus-room-content">
+            <form class="focus-room-content"
+                th:action="@{/room-reservation/{id}/cart(id=${room.id})}"
+                method="post">
                 <h2>Votre séjour</h2>
                 <p><i class="fa-solid fa-calendar-days"></i>
                     <span th:text="${startDate}"></span> -
@@ -105,7 +107,7 @@
                 <button type="submit" class="btn bg-purple">Réserver</button>
                 <input type="hidden" name="startDate" th:value="${startDate}">
                 <input type="hidden" name="endDate" th:value="${endDate}">
-<!--                <input type="hidden" name="selectedBonuses" th:value="${selectedBonuses}">-->
+                <input type="hidden" name="additionalBonuses" th:value="${selectedBonuses}">
                 <input type="hidden" name="totalPrice" id="hidden-total-price">
             </form>
 
@@ -170,7 +172,7 @@
 
         // Event listener for checkbox change
         selectBonuses.addEventListener("change", () => {
-        const checkedBoxes = selectBonuses.querySelectorAll("input[name='selectedBonuses']:checked");
+        const checkedBoxes = selectBonuses.querySelectorAll("input[name='additionalBonuses']:checked");
 
             selectedBonuses = Array.from(checkedBoxes).map(box => ({
                 value: box.value,
@@ -183,6 +185,25 @@
 
         // Initialize display when page loads
         refreshUI();
+
+        focusRoomForm.addEventListener("submit", (event) => {
+        focusRoomForm.querySelectorAll("input[name='additionalBonuses']")
+            .forEach(el => el.remove());
+
+        // Collect checked boxes from bonus form
+        const checkedBoxes = bonusForm.querySelectorAll("input[name='additionalBonuses']:checked");
+
+        checkedBoxes.forEach(box => {
+            const hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.name = "additionalBonuses";
+            hidden.value = box.value;
+            focusRoomForm.appendChild(hidden);
+        });
+
+        // Optionally also update hidden total price field
+        document.getElementById("hidden-total-price").value = calculateTotalPrice().toFixed(2);
+});
 
 </script>
 </html>
