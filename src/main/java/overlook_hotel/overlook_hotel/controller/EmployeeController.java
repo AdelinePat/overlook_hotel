@@ -72,7 +72,7 @@ public class EmployeeController {
         }
 
         if (action != null) {
-            if (action.equals("add")) {
+            if (action.equals("add") && id == null) {
                 Employee newEmployee = new Employee();
                 newEmployee.setLastname(lastname);
                 newEmployee.setFirstname(firstname);
