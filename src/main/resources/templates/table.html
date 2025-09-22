@@ -88,7 +88,8 @@
                     <td th:text="${row.email}"></td>
                     <td th:switch="${entityType}">
                         <span th:case="'client'" th:text="${row.phone}"></span>
-                        <span th:case="'employee'" th:text="${row.job != null ? row.job.title : ''}"></span>
+                        <!-- <span th:case="'employee'" th:text="${row.job != null ? row.job.title : ''}"></span> -->
+                        <span th:case="'employee'" th:text="${@displayText.capitalize(row.job.title)}"></span>
                     </td>
                 </tr>
                 </tbody>
@@ -117,7 +118,7 @@
                     <option value="" th:text="'-- Sélectionnez un travail --'"></option>
                     <option th:each="job : ${jobEnumValues}"
                             th:value="${job.id}"
-                            th:text="${job.title}"
+                            th:text="${@displayText.capitalize(job.title)}"
                             th:selected="${focusedClient != null and focusedClient.job != null and focusedClient.job.id == job.id}">
                     </option>
                 </select>
@@ -125,7 +126,7 @@
                         placeholder="telephone"
                         th:value="${focusedClient != null ? focusedClient.phone : ''}" th:if="${entityType == 'client'}">
                 <button type="submit" name="reset" value="true" class="btn">Réinitialiser</button>
-                <button type="submit" name="action" value="add" class="btn bg-green">Ajouter</button>
+                <button type="submit" name="action" value="add" class="btn bg-green" th:if="${focusedClient == null}">Ajouter</button>
                 <button type="submit" name="action" value="update" class="btn bg-blue" th:if="${focusedClient != null}">Mettre à jour</button>
                 <button type="submit" name="action" value="delete" class="btn bg-red" th:if="${focusedClient != null}">Supprimer</button>
             </form>

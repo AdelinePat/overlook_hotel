@@ -53,7 +53,7 @@ public class ClientController {
 
         // Handle add, update, delete actions
         if (action != null) {
-            if (action.equals("add")) {
+            if (action.equals("add") && id == null) {
                 Client newClient = new Client();
                 newClient.setLastname(lastname);
                 newClient.setFirstname(firstname);
