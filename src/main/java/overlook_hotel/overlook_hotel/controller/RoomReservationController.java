@@ -57,7 +57,7 @@ public class RoomReservationController {
         return "reservation";
     }
 
-//    @GetMapping("/room-reservation/{id}")
+    //    @GetMapping("/room-reservation/{id}")
     @RequestMapping(value = "/room-reservation/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     public String roomDetails(@PathVariable Long id,
                               @RequestParam(required = false) List<String> selectedBonuses,

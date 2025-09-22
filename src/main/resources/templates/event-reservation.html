@@ -65,11 +65,58 @@
         <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
         <p>Capacité : <span th:text="${@displayText.capitalize(place.capacity + ' pers.')}"></span></p>
         <p class="price"><span th:text="${@displayText.capitalize(place.hourlyPrice + ' €/heure')}"></span></p>
-        <a class="btn m10"
-           th:href="@{/event-reservation/{id}(id=${place.id})}">Réserver</a>
+
+
+<!--        <a class="btn m10"-->
+<!--           th:href="@{/event-reservation/{id}(id=${place.id})}">Réserver</a>-->
+
+        <form th:action="@{/event-reservation/{id}(id=${place.id})}"
+              method="post" th:object="${filterFields}">
+          <input type="hidden" th:field="*{placeTypeId}"/>
+          <input type="hidden" th:field="*{minCapacity}"/>
+          <input type="hidden" th:field="*{startDate}"/>
+          <input type="hidden" th:field="*{endDate}"/>
+          <button type="submit" class="btn m10">Réserver</button>
+        </form>
+
       </div>
     </div>
   </div>
+
+  <div class="display-focus" th:if="${selectedPlace != null}">
+    <div class="booking-img"
+         th:classappend="${selectedPlace.placeType != null ? selectedPlace.placeType.name.toLowerCase() : 'default'}">
+    </div>
+
+    <div class="focus-room-content">
+      <h2>Votre événement</h2>
+
+      <p>Lieu :
+        <strong th:text="${@displayText.capitalize(#strings.replace(selectedPlace.placeType.name, '_', ' '))}"></strong>
+      </p>
+
+      <p><i class="fa-solid fa-calendar-days"></i>
+        <span th:text="${filterFields.startDate}"></span> –
+        <span th:text="${filterFields.endDate}"></span>
+      </p>
+
+      <p>Durée : <span th:text="${hours}"></span> h</p>
+      <p>Tarif horaire : <span th:text="${selectedPlace.hourlyPrice}"></span> €</p>
+
+      <p><strong>Total : <span th:text="${total}"></span> €</strong></p>
+
+      <!-- (optionnel) confirmation -->
+      <form th:action="@{/event-reservation/confirm/{id}(id=${selectedPlace.id})}"
+            method="post" th:object="${filterFields}">
+        <input type="hidden" th:field="*{startDate}"/>
+        <input type="hidden" th:field="*{endDate}"/>
+        <button class="btn">Confirmer la réservation</button>
+      </form>
+    </div>
+  </div>
+
+
+
 
 </div>
 </body>

@@ -3,6 +3,7 @@ package overlook_hotel.overlook_hotel.service;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import overlook_hotel.overlook_hotel.model.entity.Place;
+import overlook_hotel.overlook_hotel.model.entity.PlaceType;
 import overlook_hotel.overlook_hotel.repository.PlaceRepository;
 import overlook_hotel.overlook_hotel.specification.PlaceSpecification;
 
@@ -49,5 +50,12 @@ public class PlaceService {
         return placeRepository.findAll(spec);
 
     }
+
+    public Place findById(Long id) {
+
+        return placeRepository.findById(id).orElse((null));
+
+    }
+
 
 }
