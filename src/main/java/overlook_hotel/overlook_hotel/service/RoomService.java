@@ -2,21 +2,27 @@ package overlook_hotel.overlook_hotel.service;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import overlook_hotel.overlook_hotel.model.entity.Feedback;
 import overlook_hotel.overlook_hotel.model.entity.Room;
 import overlook_hotel.overlook_hotel.model.entity.Standing;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
+import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
+import overlook_hotel.overlook_hotel.repository.FeedbackRepository;
 import overlook_hotel.overlook_hotel.specification.RoomSpecification;
 import overlook_hotel.overlook_hotel.repository.RoomRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoomService {
     private final RoomRepository roomRepository;
+    private final FeedbackRepository feedbackRepository;
 
-    public RoomService(RoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository, FeedbackRepository feedbackRepository) {
         this.roomRepository = roomRepository;
+        this.feedbackRepository = feedbackRepository;
     }
 
     public List<Room> findAllFiltered(Integer number,
@@ -26,7 +32,8 @@ public class RoomService {
                                       BedType type,
                                       LocalDate startDate,
                                       LocalDate endDate,
-                                      List<Integer> night_price) {
+                                      List<Integer> night_price,
+                                      List<RoomBonusEnum> bonuses) {
 
         Specification<Room> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
 
@@ -53,6 +60,15 @@ public class RoomService {
             spec = spec.and(RoomSpecification.hasBedType(type));
         }
 
+        if (bonuses != null && !bonuses.isEmpty()) {
+            Specification<Room> bonusSpec = null;
+            for (RoomBonusEnum bonus : bonuses) {
+                Specification<Room> singleBonusSpec = RoomSpecification.hasBonus(bonus);
+                bonusSpec = (bonusSpec == null) ? singleBonusSpec : bonusSpec.and(singleBonusSpec);
+            }
+            spec = spec.and(bonusSpec);
+        }
+
 //        TODO NIGHT_PRICE ONLY LOWER THAN !!!!!!
         if (night_price != null) {
             if ((night_price.get(0) != null || night_price.get(1) != null)) {
@@ -69,11 +85,19 @@ public class RoomService {
 
     private Specification<Room> filteredByPrice(Specification<Room> spec, List<Integer> priceRange) {
         if (priceRange.get(1) == null) {
-            return spec.and(RoomSpecification.hasPriceLowerThanOrEqual(priceRange.get(0)));
+            return spec.and(RoomSpecification.hasTotalPriceGreaterThan(priceRange.get(0)));
         } else if (priceRange.get(0) == null) {
-            return spec.and(RoomSpecification.hasPriceGreaterThan(priceRange.get(1)));
+            return spec.and(RoomSpecification.hasTotalPriceLowerThanOrEqual(priceRange.get(1)));
         } else {
-            return spec.and(RoomSpecification.hasPriceBetween(priceRange));
+            return spec.and(RoomSpecification.hasTotalPriceBetween(priceRange));
         }
     }
+
+    public Room findById(Long id) {
+        return roomRepository.findById(id).orElseThrow(() -> new RuntimeException("Room not found with id: " + id));
+    }
+    public List<Feedback> getRoomFeedback(Long roomId) {
+        return feedbackRepository.findAllByRoomId(roomId);
+    }
+
 }

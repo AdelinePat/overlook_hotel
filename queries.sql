@@ -134,3 +134,34 @@ FROM client AS c
          LEFT JOIN room_reservation AS r
                    USING(id_client)
 GROUP BY c.id_client, c.firstname, c.lastname;
+
+-- RECUPERER CHAMBRE AVEC BONUS DE BASE
+SELECT * FROM room AS r
+LEFT JOIN room_link_bonus AS rlb USING(id_room)
+LEFT JOIN room_bonus AS rb USING(id_room_bonus)
+WHERE rb.type = 'SECHOIR';
+
+-- FILTRE PAR PRIX
+SELECT r.*
+FROM room r
+WHERE r.night_price + COALESCE(
+    (
+        SELECT SUM(rb.daily_price)
+        FROM room_bonus rb
+        INNER JOIN room_link_bonus rlb
+            ON rb.id_room_bonus = rlb.id_room_bonus
+        WHERE rlb.id_room = r.id_room
+    ),
+    0
+) >= 150;
+
+
+SELECT
+    r.id_room,
+    r.night_price,
+    (r.night_price + COALESCE(SUM(rb.daily_price), 0)) AS total_price
+FROM room AS r
+LEFT JOIN room_link_bonus AS rlb USING(id_room)
+LEFT JOIN room_bonus AS rb USING(id_room_bonus)
+GROUP BY r.id_room, r.night_price
+HAVING (r.night_price + COALESCE(SUM(rb.daily_price), 0)) >= 150;

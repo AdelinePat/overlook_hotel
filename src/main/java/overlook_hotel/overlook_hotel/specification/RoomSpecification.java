@@ -1,12 +1,11 @@
 package overlook_hotel.overlook_hotel.specification;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
-import overlook_hotel.overlook_hotel.model.entity.Room;
-import overlook_hotel.overlook_hotel.model.entity.RoomLinkReservation;
-import overlook_hotel.overlook_hotel.model.entity.RoomReservation;
-import overlook_hotel.overlook_hotel.model.entity.Standing;
+import overlook_hotel.overlook_hotel.model.entity.*;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
+import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class RoomSpecification {
 
     public static Specification<Room> hasPriceGreaterThan(final Integer night_price) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.greaterThan(root.get("nightPrice"), night_price);
+                criteriaBuilder.greaterThanOrEqualTo(root.get("nightPrice"), night_price);
     }
 
     public static Specification<Room> hasPriceBetween(final List<Integer> night_price) {
@@ -60,22 +59,6 @@ public class RoomSpecification {
                                 .get("description")
                                 .as(String.class), "%" + words + "%");
     }
-
-//    public static Specification<Room> isAvailableBetween(LocalDate start, LocalDate end) {
-//        return (root, query, criteriaBuilder) -> {
-//            Join<Object, Object> linkJoin = root.join("roomReservationsList", JoinType.LEFT);
-//            Join<Object, Object> reservationJoin = linkJoin.join("roomReservation", JoinType.LEFT);
-//
-//            Predicate overlap = criteriaBuilder.and(
-//                    criteriaBuilder.lessThanOrEqualTo(reservationJoin.get("startDate"), end),
-//                    criteriaBuilder.greaterThanOrEqualTo(reservationJoin.get("endDate"), start)
-//            );
-//
-//            assert query != null;
-//            query.distinct(true);
-//            return criteriaBuilder.not(overlap);
-//        };
-//    }
 
     public static Specification<Room> isAvailableBetween(LocalDate start, LocalDate end) {
         return (root, query, criteriaBuilder) -> {
@@ -97,6 +80,92 @@ public class RoomSpecification {
             return criteriaBuilder.not(criteriaBuilder.exists(sub));
         };
     }
+
+    public static Specification<Room> hasBonus(RoomBonusEnum bonus) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            Join<Room, RoomBonus> bonusJoin = root.join("bonuses", JoinType.INNER);
+            return criteriaBuilder.equal(bonusJoin.get("type"), bonus.name());
+        };
+    }
+    public static Specification<Room> hasTotalPriceLowerThanOrEqual(final Integer night_price) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+
+            Join<Room, RoomBonus> bonusJoin = root.join("bonuses", JoinType.LEFT);
+            Expression<BigDecimal> totalBonus = criteriaBuilder
+                    .sum(
+                            criteriaBuilder.coalesce(
+                                    bonusJoin.get("dailyPrice"), BigDecimal.ZERO)
+                    );
+
+            Expression<BigDecimal> totalPrice = criteriaBuilder
+                    .sum(
+                    root.get("nightPrice"), totalBonus);
+
+            query.groupBy(root.get("id"));
+
+            query.having(
+                    criteriaBuilder
+                            .lessThanOrEqualTo(totalPrice, BigDecimal.valueOf(night_price)));
+            return criteriaBuilder.conjunction();
+
+        };  
+    }
+
+    public static Specification<Room> hasTotalPriceGreaterThan(final Integer night_price) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            Join<Room, RoomBonus> bonusJoin = root.join("bonuses", JoinType.LEFT);
+            Expression<BigDecimal> totalBonus = criteriaBuilder
+                    .sum(
+                            criteriaBuilder.coalesce(
+                                    bonusJoin.get("dailyPrice"), BigDecimal.ZERO)
+                    );
+
+            Expression<BigDecimal> totalPrice = criteriaBuilder
+                    .sum(
+                            root.get("nightPrice"), totalBonus);
+
+            query.groupBy(root.get("id"));
+
+            query.having(criteriaBuilder.greaterThanOrEqualTo(totalPrice, BigDecimal.valueOf(night_price)));
+
+
+
+            return criteriaBuilder.conjunction();
+
+        };
+    }
+
+    public static Specification<Room> hasTotalPriceBetween(final List<Integer> night_price) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+
+            Join<Room, RoomBonus> bonusJoin = root.join("bonuses", JoinType.LEFT);
+            Expression<BigDecimal> totalBonus = criteriaBuilder
+                    .sum(
+                            criteriaBuilder.coalesce(
+                                    bonusJoin.get("dailyPrice"), BigDecimal.ZERO)
+                    );
+
+            Expression<BigDecimal> totalPrice = criteriaBuilder
+                    .sum(
+                            root.get("nightPrice"), totalBonus);
+
+            query.groupBy(root.get("id"));
+
+            query.having(criteriaBuilder
+                    .between(totalPrice,
+                            BigDecimal.valueOf(night_price.get(0)),
+                            BigDecimal.valueOf(night_price.get(1))
+                    ));
+
+            return criteriaBuilder.conjunction();
+
+        };
+    }
+
 
 
 }

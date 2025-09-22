@@ -18,15 +18,9 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FilterFields {
+public class RoomReservationFields {
     private Long id;
-    private String lastname;
-    private String firstname;
-    private String email;
-    private String phone;
     private List<Integer> priceRange = new ArrayList<>(Arrays.asList(null, null));
-    private String password;
-    private Job job;
     private Integer roomNumber;
     private Integer capacity;
     private String description;
@@ -34,5 +28,6 @@ public class FilterFields {
     private LocalDate startDate;
     private LocalDate endDate;
     private BedType bedType;
-    private RoomBonusEnum bonus;
+    List<RoomBonusEnum> bonuses;
+//    private RoomBonusEnum bonus;
 }
