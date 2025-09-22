@@ -111,7 +111,9 @@
 
             <button class="btn lh12" type="submit">Rechercher</button>
         </form>
+
         <h1>Résultats: <span th:text="${#lists.size(roomList)}"></span></h1>
+
         <div class="booking-content">
             <div class="book-card" th:each="room : ${roomList}">
                 <div class="booking-img"
@@ -133,7 +135,7 @@
                         </ul>
                     </div>
 <!--                    <p class="price"><span th:text="${room.nightPrice}"></span>€/nuit</p>-->
-                    <form th:action="@{/room-reservation/{id}(id=${room.id})}" method="get" th:object="${filterFields}">
+                    <form th:action="@{/room-reservation/{id}(id=${room.id})}" method="post" th:object="${filterFields}">
                         <input type="hidden" th:field="*{startDate}" />
                         <input type="hidden" th:field="*{endDate}" />
                         <input type="hidden" th:field="*{roomNumber}" />
