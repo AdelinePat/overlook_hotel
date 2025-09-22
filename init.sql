@@ -118,6 +118,7 @@ CREATE TABLE IF NOT EXISTS room_reservation (
         start_date DATE NOT NULL,
         end_date DATE NOT NULL,
         status BOOLEAN NOT NULL,
+        used_fidelity INT,
         payment_date DATETIME,
         total_price DECIMAL(6,2) NULL,
         FOREIGN KEY (id_client) REFERENCES client(id_client) ON DELETE SET NULL
@@ -168,6 +169,7 @@ CREATE TABLE IF NOT EXISTS event_reservation (
         event VARCHAR(100) NOT NULL,
         start_date DATETIME NOT NULL,
         end_date DATETIME NOT NULL,
+        used_fidelity INT,
         total_price DECIMAL(6,2) NOT NULL,
         FOREIGN KEY (id_client) REFERENCES client(id_client) ON DELETE SET NULL
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -382,14 +382,14 @@ padding-top: 0px;
     background: url("../img/superieure.jpg");
     background-size: cover;
     background-position: center;
-    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3);
 }
 
 .de_luxe {
  background: url("../img/de_luxe.jpg");
     background-size: cover;
     background-position: center;
-    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3);
 
 }
 
@@ -397,14 +397,14 @@ padding-top: 0px;
     background: url("../img/superbe_vue.jpg");
     background-size: cover;
     background-position: center;
-    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3);
 }
 
 .simple {
     background: url("../img/simple.jpg");
     background-size: cover;
     background-position: center;
-    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3);
 }
 
 /*DROPDOWN MENU*/
@@ -479,14 +479,14 @@ padding-top: 0px;
     background: url("../img/piscine.jpg");
     background-size: cover;
     background-position: center;
-    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3);
 }
 
 .spa {
  background: url("../img/spa.jpg");
     background-size: cover;
     background-position: center;
-    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3);
 
 }
 
@@ -494,18 +494,18 @@ padding-top: 0px;
     background: url("../img/salle_de_reunion.jpg");
     background-size: cover;
     background-position: center;
-    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3)
 }
 
 .tennis {
     background: url("../img/tennis.jpg");
     background-size: cover;
     background-position: center;
-    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3);
 }
 
 .placard_a_balais {
-    background: url("../img/placard_balai.jpg");
+    background: url("../img/placard_a_balais.jpg");
     background-size: cover;
     background-position: center;
     filter: brightness(0.5) contrast(1.1) grayscale(0.3);

@@ -41,6 +41,8 @@ public class EventReservation {
     @Column(name="end_date")
     private LocalDate endDate;
 
+    @Column(name="used_fidelity")
+    private Integer usedFidelity;
 
     @OneToMany(mappedBy = "eventReservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<EventLinkReservation> placeLinks = new ArrayList<>();
