@@ -21,13 +21,13 @@
 
 nav {
     background: var(--main-dark-bg-color);
-    /*background: red;*/
-    /*width: 100%;*/
     display: flex;
     justify-content: space-between;
-    align-content: center;
+    align-items: center;
     padding: 10px;
     line-height: 2rem;
+    vertical-align: center;
+
     /*position: fixed;*/
 }
 
@@ -271,6 +271,24 @@ a.btn:hover {
     color: var(--dark-grey);
 }
 
+.display-focus-room {
+    flex-basis: 1;
+    background: var(--main-bg-color);
+    width: 40%;
+    border-radius: 20px;
+    align-self: start;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-content: center;
+    padding-top: 0px;
+}
+
+.focus-room-content {
+padding: 20px;
+padding-top: 0px;
+}
+
 /* IMG ROOM PAR DEFAUT */
 .booking-content {
     display: flex;
@@ -347,7 +365,6 @@ a.btn:hover {
     content: "€/Nuit";
  }
 
-/*IMG ROOM*/
 .booking-img {
     transition: all 0.3s ease-in-out;
     border-radius: 16px 16px 0px 0px;
@@ -360,6 +377,7 @@ a.btn:hover {
 }
 
 
+/*IMG ROOM*/
 .superieure {
     background: url("../img/superieure.jpg");
     background-size: cover;
@@ -389,3 +407,113 @@ a.btn:hover {
     filter: brightness(0.5), contrast(1.1), grayscale(0.8);
 }
 
+/*DROPDOWN MENU*/
+/* Container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Button styling */
+.dropdown-toggle {
+    cursor: pointer;
+    text-align: left;
+    background: var(--grey);
+}
+
+/* Dropdown menu (hidden by default) */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%; /* below the button */
+    left: 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    padding: 8px;
+    z-index: 1;
+}
+
+/* Show menu when active */
+.dropdown.show .dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    background: var(--ultra-light-grey);
+}
+
+/* Checkbox labels for better spacing */
+.dropdown-items {
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--grey);
+    margin-bottom: 8px;
+    display: flex;
+}
+
+.dropdown-items label {
+    flex: 1 1 auto;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+}
+
+.dropdown-items input {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+.dropdown-items:last-child {
+    border-bottom: none;
+}
+
+.dropdown-items label:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+
+/*IMG EVENT PLACE*/
+.piscine {
+    background: url("../img/piscine.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+}
+
+.spa {
+ background: url("../img/spa.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+
+}
+
+.salle_de_reunion {
+    background: url("../img/salle_de_reunion.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+}
+
+.tennis {
+    background: url("../img/tennis.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5), contrast(1.1), grayscale(0.8);
+}
+
+.placard_a_balais {
+    background: url("../img/placard_balai.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3);
+}
+
+.salle_sur_demande {
+    background: url("../img/salle_sur_demande.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5) contrast(1.1) grayscale(0.3);
+}

@@ -60,4 +60,20 @@ public class Room {
     )
     private List<RoomBonus> bonuses;
 
+
+    @Transient
+    public BigDecimal getTotalNightPrice() {
+        BigDecimal base = (nightPrice != null) ? nightPrice : BigDecimal.ZERO;
+        if (bonuses == null || bonuses.isEmpty()) {
+            return base;
+        }
+        BigDecimal total = base;
+        for (RoomBonus bonus : bonuses) {
+            if (bonus.getDailyPrice() != null) {
+                total = total.add(bonus.getDailyPrice());
+            }
+        }
+        return total;
+    }
+
 }

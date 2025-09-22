@@ -29,7 +29,7 @@ public class RoomBonus {
 
     @NotNull
     @Column(name="daily_price")
-    private BigDecimal daily_price;
+    private BigDecimal dailyPrice;
 
     @ManyToMany(mappedBy = "bonuses")
     private List<Room> rooms;
