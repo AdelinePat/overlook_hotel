@@ -54,7 +54,9 @@
 
             <form class="form-select-bonus" th:action="@{/room-reservation/{id}(id=${room.id})}" method="post">
                 <h3>Ajouter des bonus pour cette réservation :</h3>
-                <div th:each="bonus : ${roomBonusList}">
+                <div class="form-select-bonus-content">
+                <div class="input-add-bonus"
+                     th:each="bonus : ${roomBonusList}">
                     <label>
                         <input
                                 th:value="${bonus.type.name()}"
@@ -66,7 +68,7 @@
                     </label>
                 </div>
 
-                <button type="submit" class="btn">Réserver</button>
+                </div>
             </form>
 
             <div class="feedback-list">
@@ -83,7 +85,7 @@
             <div class="booking-img"
                  th:classappend="${room.standing.name.toLowerCase()}">
             </div>
-            <div class="focus-room-content">
+            <form class="focus-room-content">
                 <h2>Votre séjour</h2>
                 <p><i class="fa-solid fa-calendar-days"></i>
                     <span th:text="${startDate}"></span> -
@@ -99,59 +101,88 @@
 
                     </li>
                 </ul>
-                <p>Total <span th:text="${totalPerNight}"></span>€</p>
-            </div>
+                <h3>Total <span id="total-price" th:text="${totalPerNight}"></span>€</h3>
+                <button type="submit" class="btn bg-purple">Réserver</button>
+                <input type="hidden" name="startDate" th:value="${startDate}">
+                <input type="hidden" name="endDate" th:value="${endDate}">
+<!--                <input type="hidden" name="selectedBonuses" th:value="${selectedBonuses}">-->
+                <input type="hidden" name="totalPrice" id="hidden-total-price">
+            </form>
 
         </div>
     </div>
 </div>
 
 </body>
-    <script>
+<script th:inline="javascript">
+    const nights = [[${nights}]];
+    const roomNightPrice = [[${room.nightPrice}]];
+</script>
+
+<script>
         const selectBonuses = document.querySelector(".form-select-bonus");
 
-
+        // Default bonuses (base bonuses for the room)
         const basicBonusList = Array.from(document.querySelectorAll("#base-bonus li"))
             .map(li => ({
-                value: li.dataset.value,
-                text: li.dataset.text,
-                price: li.dataset.price
-            }));
-
-
-        console.log(basicBonusList);
+            value: li.dataset.value,
+            text: li.dataset.text,
+            price: parseFloat(li.dataset.price)
+        }));
 
         const focusSelectBonusList = document.querySelector("#selected-bonuses");
-        console.log("helloworld", selectBonuses);
+        const totalPriceDisplay = document.querySelector("#total-price");
 
-        let bonusList = [];
+        let selectedBonuses = [];
 
+        // Function to calculate total price
+        function calculateTotalPrice() {
+        // Start with base room price
+        let total = roomNightPrice;
 
-        // EVENT
+        // Add all default bonuses
+        basicBonusList.forEach(bonus => total += bonus.price);
+
+        // Add selected extra bonuses
+        selectedBonuses.forEach(bonus => total += bonus.price);
+
+        // Multiply by number of nights
+        total *= nights;
+
+        return total;
+    }
+
+        // Function to refresh UI
+        function refreshUI() {
+        // Clear displayed selected bonuses
+        focusSelectBonusList.innerHTML = "";
+
+        const allBonuses = [...basicBonusList, ...selectedBonuses];
+            allBonuses.forEach(bonus => {
+            const li = document.createElement("li");
+            li.textContent = `${bonus.text} (${bonus.price}€/jour)`;
+            focusSelectBonusList.appendChild(li);
+        });
+
+        // Update total price
+        totalPriceDisplay.textContent = calculateTotalPrice().toFixed(2);
+    }
+
+        // Event listener for checkbox change
         selectBonuses.addEventListener("change", () => {
-            bonusList = [];
+        const checkedBoxes = selectBonuses.querySelectorAll("input[name='selectedBonuses']:checked");
 
-            focusSelectBonusList.innerHTML = "";
-
-            const checkedBoxes = selectBonuses.querySelectorAll("input[name='selectedBonuses']:checked");
-
-            checkedBoxes.forEach(checkedBox => bonusList.push(checkedBox.value));
-
-            console.log("Selected bonuses:", bonusList);
-
-            bonusList = Array.from(checkedBoxes).map(box => ({
+            selectedBonuses = Array.from(checkedBoxes).map(box => ({
                 value: box.value,
                 text: box.dataset.text,
                 price: parseFloat(box.dataset.price)
             }));
 
-            const allBonuses = [...basicBonusList, ...bonusList];
-            allBonuses.forEach(bonus => {
-                const li = document.createElement("li");
-                li.textContent = `${bonus.text} (${bonus.price}€/jour)`;
-                focusSelectBonusList.appendChild(li);
-            });
+            refreshUI();
+        });
 
-        })
-    </script>
+        // Initialize display when page loads
+        refreshUI();
+
+</script>
 </html>

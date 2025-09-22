@@ -141,13 +141,14 @@ CREATE TABLE IF NOT EXISTS room_link_bonus (
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS room_reservation_bonus (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    id_room_reservation BIGINT NOT NULL,
-    id_room_bonus BIGINT NOT NULL,
-    FOREIGN KEY (id_room_reservation) REFERENCES room_reservation(id_room_reservation) ON DELETE CASCADE,
-    FOREIGN KEY (id_room_bonus) REFERENCES room_bonus(id_room_bonus) ON DELETE CASCADE
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
+        id_room_reservation_bonus BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_room_reservation BIGINT NOT NULL,
+        id_room BIGINT,
+        id_room_bonus BIGINT,
+        FOREIGN KEY (id_room_reservation) REFERENCES room_reservation(id_room_reservation) ON DELETE CASCADE,
+        FOREIGN KEY (id_room) REFERENCES room(id_room) ON DELETE CASCADE,
+        FOREIGN KEY (id_room_bonus) REFERENCES room_bonus(id_room_bonus) ON DELETE CASCADE
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- event
 CREATE TABLE IF NOT EXISTS place_type (
