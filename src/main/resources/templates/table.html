@@ -113,7 +113,7 @@
                     placeholder="email"
                     th:value="${focusedClient != null ? focusedClient.email : ''}">
 
-                <select name="job" id="focus-job" th:if="${entityType == 'employee'}">
+                <select name="jobParam" id="focus-job" th:if="${entityType == 'employee'}">
                     <option value="" th:text="'-- Sélectionnez un travail --'"></option>
                     <option th:each="job : ${jobEnumValues}"
                             th:value="${job.id}"
