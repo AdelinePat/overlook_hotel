@@ -20,9 +20,9 @@
 </nav>
 
 <div class="page">
+
   <!-- FILTRE -->
   <form class="filter-bar mt50" th:action="@{/event-reservation}" method="post" th:object="${filterFields}">
-
     <div class="filter-input reservation-input">
       <label><i class="fa-solid fa-tags"></i></label>
       <select th:field="*{placeTypeId}">
@@ -30,8 +30,6 @@
         <option th:each="pt : ${placeTypeList}"
                 th:value="${pt.id}"
                 th:text="${@displayText.capitalize(pt.name)}">
-
-
         </option>
       </select>
     </div>
@@ -50,73 +48,50 @@
     <button class="btn lh12" type="submit">Rechercher</button>
   </form>
 
-
+  <!-- Résultats -->
   <h1>Résultats: <span th:text="${#lists.size(placeList)}"></span></h1>
   <div class="booking-content">
     <div class="book-card" th:each="place : ${placeList}">
-
       <div class="booking-img"
            th:classappend="${place.placeType != null ? place.placeType.name.toLowerCase() : 'default'}">
         <p class="price" th:text="${place.hourlyPrice + ' €/heure'}"></p>
       </div>
 
-
       <div class="card-description">
         <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
-        <p>Capacité : <span th:text="${@displayText.capitalize(place.capacity + ' pers.')}"></span></p>
-        <p class="price"><span th:text="${@displayText.capitalize(place.hourlyPrice + ' €/heure')}"></span></p>
+        <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>
+        <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>
 
-
-<!--        <a class="btn m10"-->
-<!--           th:href="@{/event-reservation/{id}(id=${place.id})}">Réserver</a>-->
-
-        <form th:action="@{/event-reservation/{id}(id=${place.id})}"
-              method="post" th:object="${filterFields}">
+        <!-- Ajouter au panier -->
+        <form th:action="@{/event-reservation/{id}(id=${place.id})}" method="post" th:object="${filterFields}">
           <input type="hidden" th:field="*{placeTypeId}"/>
           <input type="hidden" th:field="*{minCapacity}"/>
           <input type="hidden" th:field="*{startDate}"/>
           <input type="hidden" th:field="*{endDate}"/>
-          <button type="submit" class="btn m10">Réserver</button>
+          <button type="submit" class="btn m10">Ajouter au panier</button>
         </form>
-
       </div>
     </div>
   </div>
 
-  <div class="display-focus" th:if="${selectedPlace != null}">
-    <div class="booking-img"
-         th:classappend="${selectedPlace.placeType != null ? selectedPlace.placeType.name.toLowerCase() : 'default'}">
-    </div>
+  <!-- Panier -->
+  <div class="display-focus" th:if="${session.eventCart != null}">
+    <h2>Votre panier d’événements</h2>
+    <ul>
+      <li th:each="place : ${session.eventCart}">
+        <p>
+          <strong th:text="${@displayText.capitalize(place.placeType.name)}"></strong>
+          — Capacité : <span th:text="${place.capacity}"></span>
+          — Prix : <span th:text="${place.hourlyPrice}"></span> €/h
+        </p>
+        <hr/>
+      </li>
+    </ul>
 
-    <div class="focus-room-content">
-      <h2>Votre événement</h2>
-
-      <p>Lieu :
-        <strong th:text="${@displayText.capitalize(#strings.replace(selectedPlace.placeType.name, '_', ' '))}"></strong>
-      </p>
-
-      <p><i class="fa-solid fa-calendar-days"></i>
-        <span th:text="${filterFields.startDate}"></span> –
-        <span th:text="${filterFields.endDate}"></span>
-      </p>
-
-      <p>Durée : <span th:text="${hours}"></span> h</p>
-      <p>Tarif horaire : <span th:text="${selectedPlace.hourlyPrice}"></span> €</p>
-
-      <p><strong>Total : <span th:text="${total}"></span> €</strong></p>
-
-      <!-- (optionnel) confirmation -->
-      <form th:action="@{/event-reservation/confirm/{id}(id=${selectedPlace.id})}"
-            method="post" th:object="${filterFields}">
-        <input type="hidden" th:field="*{startDate}"/>
-        <input type="hidden" th:field="*{endDate}"/>
-        <button class="btn">Confirmer la réservation</button>
-      </form>
-    </div>
+    <form th:action="@{/event-reservation/confirm}" method="post">
+      <button class="btn">Confirmer toutes les réservations</button>
+    </form>
   </div>
-
-
-
 
 </div>
 </body>
