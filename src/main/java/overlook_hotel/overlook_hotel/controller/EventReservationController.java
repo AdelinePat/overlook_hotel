@@ -25,18 +25,18 @@ public class EventReservationController {
         this.placeTypeService = placeTypeService;
     }
 
-    /** LISTE + FILTRES */
+    /** LIST + FILTERS */
     @RequestMapping(value = "/event-reservation", method = {RequestMethod.GET, RequestMethod.POST})
     public String reservation(@ModelAttribute EventFilterFields filterFields,
                               Model model,
                               HttpSession session) {
 
-        // données pour les selects
+        // data for select inputs
         List<PlaceType> placeTypes = placeTypeService.getAll();
         model.addAttribute("placeTypeList", placeTypes);
         model.addAttribute("eventTypes", EventType.values());
 
-        // liste filtrée
+        // filtered list
         List<Place> places = placeService.findAllFiltered(
                 filterFields.getPlaceTypeId() != null ? placeTypeService.findById(filterFields.getPlaceTypeId()).getName() : null,
                 filterFields.getMinCapacity(),
@@ -51,7 +51,7 @@ public class EventReservationController {
         model.addAttribute("title", "Réservation d'événement");
         model.addAttribute("titlePage", "Overlook Hotel - Réservation événement");
 
-        // Panier : init si absent
+        // Cart: initialize if absent
         if (session.getAttribute("eventCart") == null) {
             session.setAttribute("eventCart", new ArrayList<Place>());
         }
@@ -59,7 +59,7 @@ public class EventReservationController {
         return "event-reservation";
     }
 
-    /** AJOUT AU PANIER (simple, sans calculs serveur) */
+    /** ADD TO CART (simple, without server-side calculations) */
     @PostMapping("/event-reservation/{id}")
     public String addToCart(@PathVariable Long id,
                             @ModelAttribute EventFilterFields filterFields,
@@ -68,17 +68,17 @@ public class EventReservationController {
 
         Place selectedPlace = placeService.findById(id);
 
-        // Récupérer panier existant
+        // Retrieve existing cart
         List<Place> cart = (List<Place>) session.getAttribute("eventCart");
         if (cart == null) {
             cart = new ArrayList<>();
         }
 
-        // Ajouter la salle
+        // Add the selected room
         cart.add(selectedPlace);
         session.setAttribute("eventCart", cart);
 
-        // Recharger liste + panier
+        // Reload list + cart
         return reservation(filterFields, model, session);
     }
 }

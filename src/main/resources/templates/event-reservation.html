@@ -21,8 +21,10 @@
 
 <div class="page">
 
-  <!-- FILTRE -->
+  <!-- FILTER SECTION -->
   <form class="filter-bar mt50" th:action="@{/event-reservation}" method="post" th:object="${filterFields}">
+
+    <!-- Space type filter -->
     <div class="filter-input reservation-input">
       <label><i class="fa-solid fa-tags"></i></label>
       <select th:field="*{placeTypeId}">
@@ -34,11 +36,13 @@
       </select>
     </div>
 
+    <!-- Minimum capacity filter -->
     <div class="filter-input reservation-input">
       <label><i class="fa-solid fa-user-group"></i></label>
       <input type="number" th:field="*{minCapacity}" placeholder="Capacité minimale"/>
     </div>
 
+    <!-- Date range filter -->
     <div class="filter-input reservation-input">
       <label><i class="fa-solid fa-calendar-days"></i></label>
       <input type="datetime-local" th:field="*{startDate}"/>
@@ -48,21 +52,24 @@
     <button class="btn lh12" type="submit">Rechercher</button>
   </form>
 
-  <!-- Résultats -->
+  <!-- SEARCH RESULTS -->
   <h1>Résultats: <span th:text="${#lists.size(placeList)}"></span></h1>
   <div class="booking-content">
     <div class="book-card" th:each="place : ${placeList}">
+
+      <!-- Image and price -->
       <div class="booking-img"
            th:classappend="${place.placeType != null ? place.placeType.name.toLowerCase() : 'default'}">
         <p class="price" th:text="${place.hourlyPrice + ' €/heure'}"></p>
       </div>
 
+      <!-- Description of the space -->
       <div class="card-description">
         <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
         <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>
         <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>
 
-        <!-- Ajouter au panier -->
+        <!-- Add to cart -->
         <form th:action="@{/event-reservation/{id}(id=${place.id})}" method="post" th:object="${filterFields}">
           <input type="hidden" th:field="*{placeTypeId}"/>
           <input type="hidden" th:field="*{minCapacity}"/>
@@ -74,7 +81,7 @@
     </div>
   </div>
 
-  <!-- Panier -->
+  <!-- EVENT CART -->
   <div class="display-focus" th:if="${session.eventCart != null}">
     <h2>Votre panier d’événements</h2>
     <ul>
@@ -88,6 +95,8 @@
       </li>
     </ul>
 
+
+    <!-- Confirm all reservations -->
     <form th:action="@{/event-reservation/confirm}" method="post">
       <button class="btn">Confirmer toutes les réservations</button>
     </form>
