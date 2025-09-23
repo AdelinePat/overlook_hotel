@@ -1,10 +1,12 @@
 package overlook_hotel.overlook_hotel.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import overlook_hotel.overlook_hotel.model.RoomReservationFields;
 import overlook_hotel.overlook_hotel.model.entity.Feedback;
+import overlook_hotel.overlook_hotel.model.entity.Place;
 import overlook_hotel.overlook_hotel.model.entity.Room;
 import overlook_hotel.overlook_hotel.model.entity.RoomBonus;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
@@ -57,7 +59,7 @@ public class RoomReservationController {
         return "reservation";
     }
 
-//    @GetMapping("/room-reservation/{id}")
+    //    @GetMapping("/room-reservation/{id}")
     @RequestMapping(value = "/room-reservation/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     public String roomDetails(@PathVariable Long id,
                               @RequestParam(required = false) List<String> selectedBonuses,
@@ -109,4 +111,6 @@ public class RoomReservationController {
         model.addAttribute("titlePage", "Détails de la chambre " + room.getNumber());
         return "room-detail";
     }
+
+
 }
