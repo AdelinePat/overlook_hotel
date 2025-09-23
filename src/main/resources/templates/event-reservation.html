@@ -34,10 +34,10 @@
       </select>
     </div>
 
-    <div class="filter-input reservation-input">
-      <label><i class="fa-solid fa-user-group"></i></label>
-      <input type="number" th:field="*{minCapacity}" placeholder="Capacité minimale"/>
-    </div>
+<!--    <div class="filter-input reservation-input">-->
+<!--      <label><i class="fa-solid fa-user-group"></i></label>-->
+<!--      <input type="number" th:field="*{minCapacity}" placeholder="Capacité minimale"/>-->
+<!--    </div>-->
 
     <div class="filter-input reservation-input">
       <label><i class="fa-solid fa-calendar-days"></i></label>
@@ -61,11 +61,11 @@
 
       <div class="card-description">
         <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
-        <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>
-        <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>
+<!--        <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>-->
+<!--        <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>-->
         <form th:action="@{/event-reservation/{id}(id=${place.id})}" method="post" th:object="${filterFields}">
           <input type="hidden" th:field="*{placeTypeId}"/>
-          <input type="hidden" th:field="*{minCapacity}"/>
+<!--          <input type="hidden" th:field="*{minCapacity}"/>-->
           <input type="hidden" th:field="*{startDate}"/>
           <input type="hidden" th:field="*{endDate}"/>
           <button type="submit" class="btn m10">Ajouter au panier</button>
@@ -83,7 +83,7 @@
           th:attr="data-hourly=${place.hourlyPrice}">
         <p>
           <strong th:text="${@displayText.capitalize(place.placeType.name)}"></strong>
-          — Capacité : <span th:text="${place.capacity}"></span>
+<!--          — Capacité : <span th:text="${place.capacity}"></span>-->
           — Prix : <span th:text="${place.hourlyPrice}"></span> €/h
           — <span class="calc-total" data-role="total">—</span>
 
@@ -176,14 +176,14 @@
       }
     }
 
-    // 👉 recalcul si on change les dates
+    // recalcul si on change les dates
     startInput && startInput.addEventListener('change', updateTotals);
     endInput   && endInput.addEventListener('change', updateTotals);
 
-    // 👉 recalcul initial
+    //recalcul initial
     updateTotals();
 
-    // 👉 suppression d’un item sans rechargement
+    // suppression d’un item sans rechargement
     document.querySelectorAll('.remove-form').forEach(form => {
       form.addEventListener('submit', e => {
         e.preventDefault(); // empêche le rechargement
