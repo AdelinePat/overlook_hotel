@@ -100,14 +100,14 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
         // ---- FOCUS ----
         this.populateFocusField(id, 
             employeeService::findById,
-            e -> {
-                FilterFields f = new FilterFields();
-                f.setId(e.getId().longValue());
-                f.setLastname(e.getLastname());
-                f.setFirstname(e.getFirstname());
-                f.setEmail(e.getEmail());
-                f.setJob(e.getJob());
-                return f;
+            employee -> {
+                FilterFields filter = new FilterFields();
+                filter.setId(employee.getId().longValue());
+                filter.setLastname(employee.getLastname());
+                filter.setFirstname(employee.getFirstname());
+                filter.setEmail(employee.getEmail());
+                filter.setJob(employee.getJob());
+                return filter;
             },
             f -> new FilterFields()
         );
