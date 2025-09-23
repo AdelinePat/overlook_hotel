@@ -91,15 +91,15 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
         this.populateFocusField(id,
             clientService::findById,
             client -> {
-                FilterFields filter = new FilterFields();
-                filter.setId(client.getId().longValue());
-                filter.setLastname(client.getLastname());
-                filter.setFirstname(client.getFirstname());
-                filter.setEmail(client.getEmail());
-                filter.setPhone(client.getPhone());
-                return filter;
+                FilterFields focusedField = new FilterFields();
+                focusedField.setId(client.getId().longValue());
+                focusedField.setLastname(client.getLastname());
+                focusedField.setFirstname(client.getFirstname());
+                focusedField.setEmail(client.getEmail());
+                focusedField.setPhone(client.getPhone());
+                return focusedField;
             },
-            f -> new FilterFields()
+            filter -> new FilterFields()
         );
 
         this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
