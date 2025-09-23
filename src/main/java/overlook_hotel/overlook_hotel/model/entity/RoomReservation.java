@@ -54,6 +54,9 @@ public class RoomReservation {
     @OneToMany(mappedBy = "roomReservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RoomLinkReservation> roomLinks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "roomReservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoomReservationBonus> additionalBonuses = new ArrayList<>();
+
     @Transient
     private BigDecimal totalPrice;
 

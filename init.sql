@@ -141,13 +141,14 @@ CREATE TABLE IF NOT EXISTS room_link_bonus (
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS room_reservation_bonus (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    id_room_reservation BIGINT NOT NULL,
-    id_room_bonus BIGINT NOT NULL,
-    FOREIGN KEY (id_room_reservation) REFERENCES room_reservation(id_room_reservation) ON DELETE CASCADE,
-    FOREIGN KEY (id_room_bonus) REFERENCES room_bonus(id_room_bonus) ON DELETE CASCADE
-) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
+        id_room_reservation_bonus BIGINT AUTO_INCREMENT PRIMARY KEY,
+        id_room_reservation BIGINT NOT NULL,
+        id_room BIGINT,
+        id_room_bonus BIGINT,
+        FOREIGN KEY (id_room_reservation) REFERENCES room_reservation(id_room_reservation) ON DELETE CASCADE,
+        FOREIGN KEY (id_room) REFERENCES room(id_room) ON DELETE CASCADE,
+        FOREIGN KEY (id_room_bonus) REFERENCES room_bonus(id_room_bonus) ON DELETE CASCADE
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- event
 CREATE TABLE IF NOT EXISTS place_type (
@@ -364,10 +365,7 @@ INSERT INTO room_bonus (type, daily_price) VALUES
         ('BOUILLOIRE', 3.00),
         ('FAUTEUIL_MASSANT', 15.00),
         ('PC_GAMING', 20.00),
-        ('JACUZZI', 25.00),
-        ('TV', 5.00),
-        ('MINI_BAR', 10.00),
-        ('FAUTEUIL_MASSANT', 15.00);
+        ('JACUZZI', 25.00);
 
 --
 -- INSERT INTO room_reservation (id_client, creation, start_date, end_date, status, payment_date, total_price) VALUES
@@ -415,8 +413,8 @@ INSERT INTO room_link_bonus (id_room_bonus, id_room) VALUES
          (5, 5),
          (6, 6),
          (7, 7),
-         (8, 8),
-         (9, 9),
+         (1, 8),
+         (2, 9),
          (4, 1);
 
 INSERT INTO place (id_place_type, capacity, hourly_price) VALUES

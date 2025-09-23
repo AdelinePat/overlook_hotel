@@ -67,14 +67,24 @@ public class RoomReservationController {
         Room room = roomService.findById(id);
         model.addAttribute("room", room);
 
-        LocalDate startDate = filterFields.getStartDate();
-        LocalDate endDate = filterFields.getEndDate();
-        model.addAttribute("startDate", startDate);
-        model.addAttribute("endDate", endDate);
+        RoomReservationFields roomReservationFields = new RoomReservationFields();
+        roomReservationFields.setIdRoom(room.getId());
+        roomReservationFields.setRoomNumber(room.getNumber());
+        roomReservationFields.setCapacity(room.getCapacity());
+        roomReservationFields.setDescription(room.getDescription());
+        roomReservationFields.setStandingString(room.getStanding().getName());
+        roomReservationFields.setStartDate(filterFields.getStartDate());
+        roomReservationFields.setEndDate(filterFields.getEndDate());
 
+//        LocalDate startDate = filterFields.getStartDate();
+//        LocalDate endDate = filterFields.getEndDate();
+        model.addAttribute("startDate", roomReservationFields.getStartDate());
+        model.addAttribute("endDate", roomReservationFields.getEndDate());
+
+        model.addAttribute("roomReservationFields", roomReservationFields); // for form
         int nights = 0;
-        if (startDate != null && endDate != null) {
-            nights = (int) ChronoUnit.DAYS.between(startDate, endDate);
+        if (roomReservationFields.getStartDate() != null &&  roomReservationFields.getEndDate() != null) {
+            nights = (int) ChronoUnit.DAYS.between(roomReservationFields.getStartDate(), roomReservationFields.getEndDate());
             if (nights < 0) nights = 0;
         }
         model.addAttribute("nights", nights);
