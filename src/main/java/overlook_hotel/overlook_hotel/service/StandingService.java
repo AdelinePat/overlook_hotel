@@ -18,6 +18,10 @@ public class StandingService {
         return standingRepository.findById(id).orElse(null);
     }
 
+    public Standing findStandingByName(String name) {
+        return standingRepository.findByName(name).orElse(null);
+    }
+
     public List<Standing> getFullStandingList() {
         return standingRepository.findAll();
     }

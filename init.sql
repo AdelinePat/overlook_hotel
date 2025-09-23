@@ -365,10 +365,7 @@ INSERT INTO room_bonus (type, daily_price) VALUES
         ('BOUILLOIRE', 3.00),
         ('FAUTEUIL_MASSANT', 15.00),
         ('PC_GAMING', 20.00),
-        ('JACUZZI', 25.00),
-        ('TV', 5.00),
-        ('MINI_BAR', 10.00),
-        ('FAUTEUIL_MASSANT', 15.00);
+        ('JACUZZI', 25.00);
 
 --
 -- INSERT INTO room_reservation (id_client, creation, start_date, end_date, status, payment_date, total_price) VALUES
@@ -416,8 +413,8 @@ INSERT INTO room_link_bonus (id_room_bonus, id_room) VALUES
          (5, 5),
          (6, 6),
          (7, 7),
-         (8, 8),
-         (9, 9),
+         (1, 8),
+         (2, 9),
          (4, 1);
 
 INSERT INTO place (id_place_type, capacity, hourly_price) VALUES

@@ -21,17 +21,35 @@
 <div class="page ">
     <div class="container">
         <h1>Votre panier</h1>
-        <div th:each="room : ${cartItems}">
-            <h2>Chambre [[${room.id}]]</h2>
-            <p>Dates: [[${room.startDate}]] - [[${room.endDate}]]</p>
-            <p>Bonus supplémentaires:
-                <span th:each="bonus : ${room.additionalBonuses}">
-            [[${bonus}]]<span th:if="${!${bonusStat.last}}">, </span>
-        </span>
-            </p>
+
+        <div th:if="${#lists.isEmpty(cartItems)}">
+            <p>Votre panier est vide.</p>
+            <a href="/room-reservation" class="btn bg-purple">Réserver une chambre</a>
         </div>
 
-        <a href="/checkout" class="btn bg-purple">Confirmer ma réservation</a>
+        <div th:if="${!#lists.isEmpty(cartItems)}">
+            <div class="cart-items">
+                <div class="cart-room" th:each="room : ${cartItems}">
+                    <h2>Chambre <span th:text="room.idRoom"></span></h2>
+
+                    <p>
+                        <i class="fa-solid fa-calendar-days"></i>
+                        Dates: [[${room.startDate}]] → [[${room.endDate}]]
+                    </p>
+
+                    <p>
+                        <strong>Bonus supplémentaires :</strong>
+                        <span th:if="${#lists.isEmpty(room.additionalBonuses)}">Aucun</span>
+                        <span th:each="bonus, bonusStat : ${room.additionalBonuses}">
+                            [[${bonus}]]<span th:if="${!bonusStat.last}">, </span>
+                        </span>
+                    </p>
+                    <p>Prix de la chambre : <span th:text="${room.getTotalPriceWithAdditional}"></span></p>
+
+                    <p><strong>Prix total de toutes les chambres : </strong> <span th:text="${totalCartPrice}"></span> €</p>
+                </div>
+            </div>
+
     </div>
 
 </div>

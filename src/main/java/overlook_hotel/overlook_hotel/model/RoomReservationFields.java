@@ -9,6 +9,7 @@ import overlook_hotel.overlook_hotel.model.entity.Standing;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
 import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,15 +20,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomReservationFields {
-    private Long id;
-    private List<Integer> priceRange = new ArrayList<>(Arrays.asList(null, null));
+    private Long idRoom;
     private Integer roomNumber;
+    private List<Integer> priceRange = new ArrayList<>(Arrays.asList(null, null));
     private Integer capacity;
     private String description;
     private Standing standing;
+    private String standingString;
     private LocalDate startDate;
     private LocalDate endDate;
     private BedType bedType;
+    private BigDecimal totalPriceWithAdditional;
     List<RoomBonusEnum> bonuses;
     List<RoomBonusEnum> additionalBonuses;
 }
