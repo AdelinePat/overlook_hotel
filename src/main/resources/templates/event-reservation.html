@@ -100,6 +100,9 @@
               style="display:inline-block;margin-left:.5rem">
           <button class="btn bg-purple" type="submit" title="Retirer">Retirer</button>
         </form>
+
+
+
         </p>
         <hr/>
       </li>
@@ -109,6 +112,10 @@
     <!-- Confirm all reservations -->
     <form th:action="@{/event-reservation/confirm}" method="post">
       <button class="btn">Confirmer toutes les réservations</button>
+    </form>
+
+    <form th:action="@{/event-reservation/clear}" method="post" style="margin-top:.5rem">
+      <button class="btn">Vider le panier</button>
     </form>
   </div>
 

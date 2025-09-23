@@ -91,4 +91,11 @@ public class EventReservationController {
         }
         return "redirect:/event-reservation";
     }
+
+    @PostMapping("/event-reservation/clear")
+    public String clearCart(HttpSession session) {
+        session.removeAttribute("eventCart");
+        return "redirect:/event-reservation";
+    }
+
 }
