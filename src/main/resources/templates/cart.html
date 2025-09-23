@@ -30,7 +30,7 @@
         <div th:if="${!#lists.isEmpty(cartItems)}">
             <div class="cart-items">
                 <div class="cart-room" th:each="room : ${cartItems}">
-                    <h2>Chambre <span th:text="room.idRoom"></span></h2>
+                    <h2>Chambre <span th:text="${room.roomNumber}"></span></h2>
 
                     <p>
                         <i class="fa-solid fa-calendar-days"></i>
@@ -46,8 +46,9 @@
                     </p>
                     <p>Prix de la chambre : <span th:text="${room.getTotalPriceWithAdditional}"></span></p>
 
-                    <p><strong>Prix total de toutes les chambres : </strong> <span th:text="${totalCartPrice}"></span> €</p>
                 </div>
+                <h2>Prix total de toutes les chambres :</h2>
+                    <p><span th:text="${totalCartPrice}"></span> €</p>
             </div>
 
     </div>

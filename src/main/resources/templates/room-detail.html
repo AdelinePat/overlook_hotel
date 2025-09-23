@@ -110,7 +110,7 @@
                 <input type="hidden" th:field="*{capacity}" th:value="${room.capacity}" />
                 <input type="hidden" th:field="*{description}" th:value="${room.description}" />
                 <input type="hidden" th:field="*{standingString}" th:value="${room.standing.name}" />
-                <input type="hidden" th:field="*{totalPriceWithAdditional}" />
+                <input type="hidden" id="total-price-hidden" th:field="*{totalPriceWithAdditional}" />
 
                 <!-- Container for additional bonuses as hidden inputs -->
                 <div id="bonus-hidden-inputs"></div>
@@ -156,6 +156,11 @@
             focusSelectBonusList.appendChild(li);
         });
 
+        const hiddenTotal = document.querySelector("#total-price-hidden");
+        if (hiddenTotal) {
+            hiddenTotal.value = calculateTotalPrice();
+        }
+
         totalPriceDisplay.textContent = calculateTotalPrice().toFixed(2);
     }
     if (bonusForm) {
@@ -193,9 +198,10 @@
 
 
         // Optional: add hidden total price input if needed
-        const hiddenTotal = document.getElementById("hidden-total-price");
+        // const hiddenTotal = document.getElementById("hidden-total-price");
+        const hiddenTotal = document.querySelector("#total-price-hidden");
         if (hiddenTotal) {
-            hiddenTotal.value = selectedBonuses.reduce((acc, b) => acc + b.price, 0); // or calculate properly
+            hiddenTotal.value = calculateTotalPrice(); // JS total
         }
     });
 
