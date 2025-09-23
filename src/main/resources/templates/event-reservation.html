@@ -55,9 +55,12 @@
   <!-- SEARCH RESULTS -->
   <h1>Résultats: <span th:text="${#lists.size(placeList)}"></span></h1>
   <div class="booking-content">
-    <div class="book-card" th:each="place : ${placeList}">
+    <div class="book-card"
+         th:each="place : ${placeList}"
+         th:attr="data-hourly=${place.hourlyPrice}">
 
-      <!-- Image and price -->
+
+    <!-- Image and price -->
       <div class="booking-img"
            th:classappend="${place.placeType != null ? place.placeType.name.toLowerCase() : 'default'}">
         <p class="price" th:text="${place.hourlyPrice + ' €/heure'}"></p>
@@ -68,6 +71,7 @@
         <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
         <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>
         <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>
+        — <span class="calc-total" data-role="total">—</span>
 
         <!-- Add to cart -->
         <form th:action="@{/event-reservation/{id}(id=${place.id})}" method="post" th:object="${filterFields}">
@@ -104,4 +108,78 @@
 
 </div>
 </body>
+
+<script>
+  (function () {
+    const startInput = document.querySelector('input[name="startDate"]');
+    const endInput   = document.querySelector('input[name="endDate"]');
+
+    function parseLocalDateTime(inputEl) {
+      if (!inputEl || !inputEl.value) return null;
+      // "yyyy-MM-ddTHH:mm" -> Date locale
+      const v = inputEl.value;
+      // Safari iOS peut être capricieux : remplacer "T" par " "
+      const iso = v.includes('T') ? v : v.replace(' ', 'T');
+      const d = new Date(iso);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    function hoursRoundedUp(ms) {
+      if (ms <= 0) return 0;
+      const H = 60 * 60 * 1000;
+      return Math.ceil(ms / H); // arrondi à l'heure supérieure
+    }
+
+    function formatMoney(n) {
+      // Affiche comme 123,45 € en fr-FR
+      return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+    }
+
+    function updateTotals() {
+      const start = parseLocalDateTime(startInput);
+      const end   = parseLocalDateTime(endInput);
+
+      let hours = 0;
+      if (start && end) {
+        hours = hoursRoundedUp(end - start);
+      }
+
+      // 1) Totaux sur les cartes résultats
+      document.querySelectorAll('.book-card').forEach(card => {
+        const rate  = Number(card.dataset.hourly || 0);
+        const field = card.querySelector('[data-role="total"]');
+        if (!field) return;
+
+        if (hours > 0 && rate > 0) {
+          const total = hours * rate;
+          field.textContent = `Total pour ${hours} h : ${formatMoney(total)} €`;
+        } else {
+          field.textContent = 'Sélectionnez des dates pour voir le total';
+        }
+      });
+
+      // 2) Totaux dans le panier
+      document.querySelectorAll('.display-focus li[data-hourly]').forEach(li => {
+        const rate  = Number(li.dataset.hourly || 0);
+        const field = li.querySelector('[data-role="total"]');
+        if (!field) return;
+
+        if (hours > 0 && rate > 0) {
+          const total = hours * rate;
+          field.textContent = `Total: ${formatMoney(total)} € (${hours} h)`;
+        } else {
+          field.textContent = '—';
+        }
+      });
+    }
+
+    // Mets à jour quand on choisit les dates
+    startInput && startInput.addEventListener('change', updateTotals);
+    endInput   && endInput.addEventListener('change', updateTotals);
+
+    // Premier affichage
+    updateTotals();
+  })();
+</script>
+
 </html>
