@@ -74,7 +74,7 @@ public class EventReservationController {
             cart = new ArrayList<>();
         }
 
-        // Add the selected room
+        // Add the selected event
         cart.add(selectedPlace);
         session.setAttribute("eventCart", cart);
 

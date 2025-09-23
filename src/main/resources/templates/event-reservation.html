@@ -144,7 +144,7 @@
     }
 
     function formatMoney(n) {
-      // Affiche comme 123,45 € en fr-FR
+
       return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
     }
 
@@ -157,7 +157,6 @@
         hours = hoursRoundedUp(end - start);
       }
 
-      // 1) Totaux sur les cartes résultats
       document.querySelectorAll('.book-card').forEach(card => {
         const rate  = Number(card.dataset.hourly || 0);
         const field = card.querySelector('[data-role="total"]');
