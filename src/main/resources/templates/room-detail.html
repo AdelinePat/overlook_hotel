@@ -63,7 +63,7 @@
                                 th:data-value="${bonus.type.name()}"
                                 th:data-text="${@displayText.capitalize(bonus.type.name())}"
                                 th:data-price="${bonus.dailyPrice}"
-                                type="checkbox" name="selectedBonuses"  />
+                                type="checkbox" name="additionalBonuses"  />
                         <span th:text="${@displayText.capitalize(bonus.type.name()) + ' - ' + bonus.dailyPrice + ' €/Jour' }"></span>
                     </label>
                 </div>
