@@ -94,6 +94,12 @@
           <strong th:text="${@displayText.capitalize(place.placeType.name)}"></strong>
           — Capacité : <span th:text="${place.capacity}"></span>
           — Prix : <span th:text="${place.hourlyPrice}"></span> €/h
+
+        <form th:action="@{/event-reservation/remove/{id}(id=${place.id})}"
+              method="post"
+              style="display:inline-block;margin-left:.5rem">
+          <button class="btn bg-purple" type="submit" title="Retirer">Retirer</button>
+        </form>
         </p>
         <hr/>
       </li>

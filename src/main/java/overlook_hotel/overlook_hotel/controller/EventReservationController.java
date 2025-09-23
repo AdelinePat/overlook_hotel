@@ -81,4 +81,14 @@ public class EventReservationController {
         // Reload list + cart
         return reservation(filterFields, model, session);
     }
+    @PostMapping("/event-reservation/remove/{id}")
+    public String removeFromCart(@PathVariable Long id, HttpSession session) {
+        List<Place> cart = (List<Place>) session.getAttribute("eventCart");
+        if(cart != null) {
+            cart.removeIf(place -> place != null && place.getId() != null && place.getId().equals(id));
+            session.setAttribute("eventCart", cart);
+
+        }
+        return "redirect:/event-reservation";
+    }
 }
