@@ -19,7 +19,7 @@ public class ClientController {
         this.clientService = clientService;
         this.filterFields = new FilterFields();
         this.focusedField = new FilterFields();
-        this.focusedClient = new Client();
+        this.focusedClient = null;
     }
 
     @RequestMapping(value = "/clients", method = {RequestMethod.GET, RequestMethod.POST})
@@ -142,6 +142,7 @@ public class ClientController {
         this.focusedField.setPassword(null);
         this.focusedField.setJob(null);
         this.focusedField.setPriceRange(null);
+        this.focusedClient = null;
     }
 
     private void populateFocusField(Long id) {

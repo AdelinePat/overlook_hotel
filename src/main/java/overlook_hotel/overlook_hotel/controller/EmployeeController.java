@@ -25,7 +25,7 @@ public class EmployeeController {
         this.jobService = jobService;
         this.filterFields = new FilterFields();
         this.focusedField = new FilterFields();
-        this.focusedEmployee = new Employee();
+        this.focusedEmployee = null;
     }
 
 
@@ -156,6 +156,7 @@ public class EmployeeController {
         this.focusedField.setPassword(null);
         this.focusedField.setJob(null);
         this.focusedField.setPriceRange(null);
+        this.focusedEmployee = null;
     }
 
     private void populateFocusField(Long id) {
