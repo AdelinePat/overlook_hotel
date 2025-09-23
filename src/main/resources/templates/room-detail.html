@@ -7,41 +7,68 @@
     <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<nav><a th:href="@{/index.html}">Overlook Hotel</a><ul>
-    <li>
-        Dashboard
-    </li>
-    <li>
-        Gestion Réservation
-    </li>
-    <li>
-        <a th:href="@{/room-reservation}">Retour à la liste</a>
-    </li>
-</ul><a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a></nav>
+<nav>
+    <a th:href="@{/index.html}">Overlook Hotel</a>
+    <ul>
+        <li>
+            Dashboard
+        </li>
+        <li>
+            Gestion Réservation
+        </li>
+        <li>
+            <a th:href="@{/room-reservation}">Retour à la liste</a>
+        </li>
+
+    </ul>
+    <a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a>
+</nav>
+
 <div class="page">
+
     <h1>Chambre <span th:text="${room.number}"></span> - <span th:text="${@displayText.deleteUnderscore(room.standing.name)}"></span></h1>
+
     <div class="container">
+
         <div class="display-table">
+
             <h3>Chambre <span th:text="${@displayText.capitalize(room.type)}"></span></h3>
             <p>Prix par défaut: <span th:text="${room.nightPrice}"></span>/Nuit</p>
             <p th:text="${room.description}"></p>
+
             <h3>Extras par défaut:</h3>
-            <ul>
-                <li th:each="bonus : ${room.bonuses}">
-                    <span th:text="${bonus.type}"></span> - <span th:text="${bonus.dailyPrice}"></span> €/jour
-                </li>
-            </ul>
-            <form th:action="@{/room-reservation/{id}(id=${room.id})}" method="post">
+                <ul id="base-bonus">
+                    <li th:each="bonus : ${room.bonuses}"
+
+                        th:value="${bonus.type.name()}"
+                        th:data-value="${bonus.type.name()}"
+                        th:data-text="${@displayText.capitalize(bonus.type.name())}"
+                        th:data-price="${bonus.dailyPrice}">
+
+                        <span
+                            th:text="${@displayText.capitalize(bonus.type.name())}"></span> - <span th:text="${bonus.dailyPrice}">
+                        </span>
+                        €/jour
+                    </li>
+                </ul>
+
+            <form class="form-select-bonus" th:action="@{/room-reservation/{id}(id=${room.id})}" method="post">
                 <h3>Ajouter des bonus pour cette réservation :</h3>
-                <div th:each="bonus : ${bonusList}">
+                <div th:each="bonus : ${roomBonusList}">
                     <label>
-                        <input type="checkbox" name="selectedBonuses" th:value="${bonus.name()}" />
-                        <span th:text="${bonus.name()}"></span>
+                        <input
+                                th:value="${bonus.type.name()}"
+                                th:data-value="${bonus.type.name()}"
+                                th:data-text="${@displayText.capitalize(bonus.type.name())}"
+                                th:data-price="${bonus.dailyPrice}"
+                                type="checkbox" name="selectedBonuses"  />
+                        <span th:text="${@displayText.capitalize(bonus.type.name()) + ' - ' + bonus.dailyPrice + ' €/Jour' }"></span>
                     </label>
                 </div>
 
                 <button type="submit" class="btn">Réserver</button>
             </form>
+
             <div class="feedback-list">
                 <h2>Avis précédents :</h2>
                 <div th:each="fb : ${feedbackList}">
@@ -51,6 +78,7 @@
                 </div>
             </div>
         </div>
+
         <div class="display-focus-room">
             <div class="booking-img"
                  th:classappend="${room.standing.name.toLowerCase()}">
@@ -63,7 +91,13 @@
                 <p>Nombre de nuits : <span th:text="${nights}"></span></p>
                 <strong>Extras</strong>
                 <ul id="selected-bonuses">
-                    <li th:each="bonus : ${room.bonuses}" th:text="${bonus.type + ' (' + bonus.dailyPrice + '€/jour)'}"></li>
+                    <li th:each="bonus : ${room.bonuses}"
+                        th:value="${bonus.type.name()}"
+                        th:data-value="${bonus.type.name()}"
+                        th:data-price="${bonus.dailyPrice}"
+                        th:text="${@displayText.capitalize(bonus.type.name()) + ' - ' + bonus.dailyPrice + ' €/Jour' }">
+
+                    </li>
                 </ul>
                 <p>Total <span th:text="${totalPerNight}"></span>€</p>
             </div>
@@ -73,4 +107,51 @@
 </div>
 
 </body>
+    <script>
+        const selectBonuses = document.querySelector(".form-select-bonus");
+
+
+        const basicBonusList = Array.from(document.querySelectorAll("#base-bonus li"))
+            .map(li => ({
+                value: li.dataset.value,
+                text: li.dataset.text,
+                price: li.dataset.price
+            }));
+
+
+        console.log(basicBonusList);
+
+        const focusSelectBonusList = document.querySelector("#selected-bonuses");
+        console.log("helloworld", selectBonuses);
+
+        let bonusList = [];
+
+
+        // EVENT
+        selectBonuses.addEventListener("change", () => {
+            bonusList = [];
+
+            focusSelectBonusList.innerHTML = "";
+
+            const checkedBoxes = selectBonuses.querySelectorAll("input[name='selectedBonuses']:checked");
+
+            checkedBoxes.forEach(checkedBox => bonusList.push(checkedBox.value));
+
+            console.log("Selected bonuses:", bonusList);
+
+            bonusList = Array.from(checkedBoxes).map(box => ({
+                value: box.value,
+                text: box.dataset.text,
+                price: parseFloat(box.dataset.price)
+            }));
+
+            const allBonuses = [...basicBonusList, ...bonusList];
+            allBonuses.forEach(bonus => {
+                const li = document.createElement("li");
+                li.textContent = `${bonus.text} (${bonus.price}€/jour)`;
+                focusSelectBonusList.appendChild(li);
+            });
+
+        })
+    </script>
 </html>

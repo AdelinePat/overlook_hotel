@@ -82,13 +82,15 @@ public class RoomReservationController {
         BigDecimal baseTotalPerNight = room.getTotalNightPrice();
 
         // 2. Get default bonuses for the room
-        List<RoomBonusEnum> bonusList = List.of(RoomBonusEnum.values());
+//        List<RoomBonusEnum> bonusList = List.of(RoomBonusEnum.values());
+        List<RoomBonus> roomBonusList = roomService.getAllBonuses();
 
-        List<RoomBonusEnum> filteredBonuses = bonusList.stream()
+        List<RoomBonus> filteredBonuses = roomBonusList.stream()
                 .filter(bonus -> room.getBonuses().stream()
-                        .noneMatch(rb -> rb.getType() == bonus))
+                        .noneMatch(rb -> rb.getType() == bonus.getType()))
                 .toList();
-        model.addAttribute("bonusList", filteredBonuses);
+
+        model.addAttribute("roomBonusList", filteredBonuses);
 
         // 3. Get feedback for this room (through room_reservation -> feedback)
         List<Feedback> feedbackList = roomService.getRoomFeedback(id);

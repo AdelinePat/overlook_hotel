@@ -4,10 +4,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import overlook_hotel.overlook_hotel.model.entity.Feedback;
 import overlook_hotel.overlook_hotel.model.entity.Room;
+import overlook_hotel.overlook_hotel.model.entity.RoomBonus;
 import overlook_hotel.overlook_hotel.model.entity.Standing;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
 import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
 import overlook_hotel.overlook_hotel.repository.FeedbackRepository;
+import overlook_hotel.overlook_hotel.repository.RoomBonusRepository;
 import overlook_hotel.overlook_hotel.specification.RoomSpecification;
 import overlook_hotel.overlook_hotel.repository.RoomRepository;
 
@@ -19,10 +21,12 @@ import java.util.Optional;
 public class RoomService {
     private final RoomRepository roomRepository;
     private final FeedbackRepository feedbackRepository;
+    private final RoomBonusRepository roomBonusRepository;
 
-    public RoomService(RoomRepository roomRepository, FeedbackRepository feedbackRepository) {
+    public RoomService(RoomRepository roomRepository, FeedbackRepository feedbackRepository, RoomBonusRepository roomBonusRepository) {
         this.roomRepository = roomRepository;
         this.feedbackRepository = feedbackRepository;
+        this.roomBonusRepository = roomBonusRepository;
     }
 
     public List<Room> findAllFiltered(Integer number,
@@ -100,4 +104,7 @@ public class RoomService {
         return feedbackRepository.findAllByRoomId(roomId);
     }
 
+    public List<RoomBonus> getAllBonuses() {
+        return roomBonusRepository.findAll();
+    }
 }
