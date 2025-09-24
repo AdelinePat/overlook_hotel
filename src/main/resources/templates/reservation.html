@@ -99,8 +99,8 @@
 
             <div class="filter-input reservation-input">
                 <label><i class="fa-solid fa-calendar-days"></i></label>
-                <input type="date" th:field="*{startDate}"/>
-                <input type="date" th:field="*{endDate}"/>
+                <input type="date" th:field="*{startDate}" th:disabled="${lockDateInputs}"/>
+                <input type="date" th:field="*{endDate}" th:disabled="${lockDateInputs}"/>
             </div>
 
             <div class="filter-input reservation-input">

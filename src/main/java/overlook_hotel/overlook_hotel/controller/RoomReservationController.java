@@ -49,10 +49,18 @@ public class RoomReservationController {
         LocalDate start = filterFields.getStartDate();
         LocalDate end = filterFields.getEndDate();
 
-        if (cart.getRooms() != null && !cart.getRooms().isEmpty()) {
+        boolean cartHasRooms = cart.getRooms() != null && !cart.getRooms().isEmpty();
+
+        if (cartHasRooms) {
             RoomReservationFields firstRoom = cart.getRooms().get(0);
             filterFields.setStartDate(firstRoom.getStartDate());
             filterFields.setEndDate(firstRoom.getEndDate());
+        } else {
+            // If cart is empty and no filter date set → reset to today/tomorrow
+            if (filterFields.getStartDate() == null || filterFields.getEndDate() == null) {
+                filterFields.setStartDate(LocalDate.now());
+                filterFields.setEndDate(LocalDate.now().plusDays(1));
+            }
         }
 
         System.out.println("\n\n\n\n\n\n\n\t\t\t\t\t\t\tpricerange: " + filterFields.getPriceRange());
@@ -77,45 +85,40 @@ public class RoomReservationController {
         model.addAttribute("titlePage", "Overlook Hotel - Réservation");
         model.addAttribute("bonusList", RoomBonusEnum.values());
 
+        model.addAttribute("lockDateInputs", cartHasRooms);
+
         return "reservation";
     }
 
-    //    @GetMapping("/room-reservation/{id}")
+
     @RequestMapping(value = "/room-reservation/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     public String roomDetails(@PathVariable Long id,
                               @RequestParam(required = false) List<String> selectedBonuses,
                               @ModelAttribute RoomReservationFields filterFields,
                               Model model) {
-        // 1. Get room by id
         Room room = roomService.findById(id);
         model.addAttribute("room", room);
 
-        RoomReservationFields roomReservationFields = new RoomReservationFields();
-        roomReservationFields.setIdRoom(room.getId());
-        roomReservationFields.setRoomNumber(room.getNumber());
-        roomReservationFields.setCapacity(room.getCapacity());
-        roomReservationFields.setDescription(room.getDescription());
-        roomReservationFields.setStandingString(room.getStanding().getName());
-        roomReservationFields.setStartDate(filterFields.getStartDate());
-        roomReservationFields.setEndDate(filterFields.getEndDate());
 
-//        LocalDate startDate = filterFields.getStartDate();
-//        LocalDate endDate = filterFields.getEndDate();
-        model.addAttribute("startDate", roomReservationFields.getStartDate());
-        model.addAttribute("endDate", roomReservationFields.getEndDate());
+        filterFields.setIdRoom(room.getId());
+        filterFields.setRoomNumber(room.getNumber());
+        filterFields.setCapacity(room.getCapacity());
+        filterFields.setDescription(room.getDescription());
+        filterFields.setStandingString(room.getStanding().getName());
 
-        model.addAttribute("roomReservationFields", roomReservationFields); // for form
+        model.addAttribute("startDate", filterFields.getStartDate());
+        model.addAttribute("endDate", filterFields.getEndDate());
+
+        model.addAttribute("roomReservationFields", filterFields); // for form
         int nights = 0;
-        if (roomReservationFields.getStartDate() != null &&  roomReservationFields.getEndDate() != null) {
-            nights = (int) ChronoUnit.DAYS.between(roomReservationFields.getStartDate(), roomReservationFields.getEndDate());
+        if (filterFields.getStartDate() != null &&  filterFields.getEndDate() != null) {
+            nights = (int) ChronoUnit.DAYS.between(filterFields.getStartDate(), filterFields.getEndDate());
             if (nights < 0) nights = 0;
         }
         model.addAttribute("nights", nights);
 
         BigDecimal baseTotalPerNight = room.getTotalNightPrice();
 
-        // 2. Get default bonuses for the room
-//        List<RoomBonusEnum> bonusList = List.of(RoomBonusEnum.values());
         List<RoomBonus> roomBonusList = roomService.getAllBonuses();
 
         List<RoomBonus> filteredBonuses = roomBonusList.stream()
