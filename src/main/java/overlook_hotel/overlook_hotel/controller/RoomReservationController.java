@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import overlook_hotel.overlook_hotel.model.RoomReservationCart;
 import overlook_hotel.overlook_hotel.model.RoomReservationFields;
 import overlook_hotel.overlook_hotel.model.entity.Feedback;
 import overlook_hotel.overlook_hotel.model.entity.Place;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@SessionAttributes("roomReservationFilter")
 public class RoomReservationController {
     private final RoomService roomService;
     private final StandingService standingService;
@@ -31,9 +33,28 @@ public class RoomReservationController {
         this.standingService = standingService;
     }
 
+    @ModelAttribute("roomReservationFilter")
+    public RoomReservationFields createFilter() {
+        RoomReservationFields filter = new RoomReservationFields();
+        if (filter.getStartDate() == null) filter.setStartDate(LocalDate.now());
+        if (filter.getEndDate() == null) filter.setEndDate(LocalDate.now().plusDays(1));
+        return filter;
+    }
+
     @RequestMapping(value = "/room-reservation", method = {RequestMethod.GET, RequestMethod.POST})
-    public String reservation(@ModelAttribute RoomReservationFields filterFields,
+    public String reservation(@ModelAttribute("roomReservationFilter") RoomReservationFields filterFields,
+                              @ModelAttribute("roomReservationCart") RoomReservationCart cart,
                               Model model) {
+
+        LocalDate start = filterFields.getStartDate();
+        LocalDate end = filterFields.getEndDate();
+
+        if (cart.getRooms() != null && !cart.getRooms().isEmpty()) {
+            RoomReservationFields firstRoom = cart.getRooms().get(0);
+            filterFields.setStartDate(firstRoom.getStartDate());
+            filterFields.setEndDate(firstRoom.getEndDate());
+        }
+
         System.out.println("\n\n\n\n\n\n\n\t\t\t\t\t\t\tpricerange: " + filterFields.getPriceRange());
 
         model.addAttribute("standingList", standingService.getFullStandingList());
@@ -45,8 +66,8 @@ public class RoomReservationController {
                 filterFields.getDescription(),
                 filterFields.getStanding(),
                 filterFields.getBedType(),
-                filterFields.getStartDate(),
-                filterFields.getEndDate(),
+                start,
+                end,
                 filterFields.getPriceRange(),
                 filterFields.getBonuses());
 

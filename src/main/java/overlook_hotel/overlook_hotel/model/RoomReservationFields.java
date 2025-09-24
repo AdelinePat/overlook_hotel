@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import overlook_hotel.overlook_hotel.model.entity.Job;
 import overlook_hotel.overlook_hotel.model.entity.Standing;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
@@ -27,8 +28,13 @@ public class RoomReservationFields {
     private String description;
     private Standing standing;
     private String standingString;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
+
     private BedType bedType;
     private BigDecimal totalPriceWithAdditional;
     List<RoomBonusEnum> bonuses;
