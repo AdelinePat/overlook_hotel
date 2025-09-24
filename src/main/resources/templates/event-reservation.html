@@ -8,6 +8,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
+  <script th:if="${session.successMessage != null}">
+    alert([[${session.successMessage}]]);
+  </script>
+
 </head>
 <body>
 <nav>
@@ -105,6 +109,9 @@
     <h3>Total panier : <span id="event-cart-total">—</span></h3>
 
     <form th:action="@{/event-reservation/confirm}" method="post">
+      <input type="hidden" name="placeTypeId" th:value="${filterFields.placeTypeId}"/>
+      <input type="hidden" name="startDate" th:value="${filterFields.startDate}"/>
+      <input type="hidden" name="endDate" th:value="${filterFields.endDate}"/>
       <button class="btn">Confirmer toutes les réservations</button>
     </form>
 
@@ -115,6 +122,7 @@
 
 </div>
 </body>
+
 
 <script>
   (function () {

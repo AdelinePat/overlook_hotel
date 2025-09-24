@@ -35,11 +35,11 @@ public class EventReservation {
 
     @NotNull
     @Column(name="start_date")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @NotNull
     @Column(name="end_date")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Column(name="used_fidelity")
     private Integer usedFidelity;
@@ -47,7 +47,8 @@ public class EventReservation {
     @OneToMany(mappedBy = "eventReservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<EventLinkReservation> placeLinks = new ArrayList<>();
 
-    @Transient
+    @NotNull
+    @Column(name = "total_price", precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
 }

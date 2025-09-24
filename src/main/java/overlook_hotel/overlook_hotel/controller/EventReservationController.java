@@ -5,12 +5,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import overlook_hotel.overlook_hotel.model.EventFilterFields;
+import overlook_hotel.overlook_hotel.model.entity.EventLinkReservation;
+import overlook_hotel.overlook_hotel.model.entity.EventReservation;
 import overlook_hotel.overlook_hotel.model.entity.Place;
 import overlook_hotel.overlook_hotel.model.entity.PlaceType;
 import overlook_hotel.overlook_hotel.model.enumList.EventType;
+import overlook_hotel.overlook_hotel.repository.ClientRepository;
+import overlook_hotel.overlook_hotel.repository.EventLinkPlaceRepository;
+import overlook_hotel.overlook_hotel.repository.EventReservationRepository;
 import overlook_hotel.overlook_hotel.service.PlaceService;
 import overlook_hotel.overlook_hotel.service.PlaceTypeService;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +27,16 @@ public class EventReservationController {
 
     private final PlaceService placeService;
     private final PlaceTypeService placeTypeService;
+    private final EventReservationRepository eventReservationRepository;
+    private final EventLinkPlaceRepository eventLinkPlaceRepository;
+    private final ClientRepository clientRepository;
 
-    public EventReservationController(PlaceService placeService, PlaceTypeService placeTypeService) {
+    public EventReservationController(PlaceService placeService, PlaceTypeService placeTypeService, EventReservationRepository eventReservationRepository, EventLinkPlaceRepository eventLinkPlaceRepository, ClientRepository clientRepository) {
         this.placeService = placeService;
         this.placeTypeService = placeTypeService;
+        this.eventReservationRepository = eventReservationRepository;
+        this.eventLinkPlaceRepository = eventLinkPlaceRepository;
+        this.clientRepository = clientRepository;
     }
 
     /** LIST + FILTERS */
@@ -95,6 +109,69 @@ public class EventReservationController {
     @PostMapping("/event-reservation/clear")
     public String clearCart(HttpSession session) {
         session.removeAttribute("eventCart");
+        return "redirect:/event-reservation";
+    }
+
+    @PostMapping("/event-reservation/confirm")
+    public String confirmReservation(@ModelAttribute EventFilterFields filterFields,
+                                     Model model,
+                                     HttpSession session
+                                     ) {
+        List<Place> cart = (List<Place>) session.getAttribute("eventCart");
+        if (cart == null || cart.isEmpty()) {
+            return "redirect:/event-reservation"; // cart empty
+        }
+
+        LocalDateTime startDate = filterFields.getStartDate() != null
+                ? filterFields.getStartDate()
+                : LocalDateTime.now();
+
+        LocalDateTime endDate = filterFields.getEndDate() != null
+                ? filterFields.getEndDate()
+                : startDate.plusHours(1);
+
+        long hours = java.time.Duration.between(startDate, endDate).toHours();
+        if (java.time.Duration.between(startDate, endDate).toMinutesPart() > 0) {
+            hours++; // round hours
+        }
+
+        // total
+        BigDecimal total = BigDecimal.ZERO;
+        for (Place place : cart) {
+            total = total.add(place.getHourlyPrice().multiply(BigDecimal.valueOf(hours)));
+        }
+
+        // entity reservation
+        EventReservation reservation = new EventReservation();
+        reservation.setClient(clientRepository.findById(1L).orElseThrow());
+        reservation.setEventType(EventType.REUNION);
+        reservation.setStartDate(startDate);
+        reservation.setEndDate(endDate);
+        reservation.setTotalPrice(total);
+
+        EventReservation savedReservation = eventReservationRepository.save(reservation); //to save
+
+        // to create link with EventLinkReservation
+        for (Place place : cart)
+        {
+            EventLinkReservation  link = new EventLinkReservation();
+            link.setEventReservation(savedReservation);
+            link.setPlace(place);
+            eventLinkPlaceRepository.save(link);
+        }
+
+        //remove the cart
+        session.removeAttribute("eventCart");
+
+
+        if (session.getAttribute("successMessage") != null) {
+            model.addAttribute("successMessage", session.getAttribute("successMessage"));
+            session.removeAttribute("successMessage");
+        }
+
+
+
+
         return "redirect:/event-reservation";
     }
 
