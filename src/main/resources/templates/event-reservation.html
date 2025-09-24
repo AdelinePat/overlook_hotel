@@ -108,6 +108,10 @@
     <!-- 👉 Total panier global -->
     <h3>Total panier : <span id="event-cart-total">—</span></h3>
 
+    <div th:if="${successMessage}" class="alert alert-success" style="color: green; font-weight: bold; margin: 1em 0;">
+      <p th:text="${successMessage}"></p>
+    </div>
+
     <form th:action="@{/event-reservation/confirm}" method="post">
       <input type="hidden" name="placeTypeId" th:value="${filterFields.placeTypeId}"/>
       <input type="hidden" name="startDate" th:value="${filterFields.startDate}"/>

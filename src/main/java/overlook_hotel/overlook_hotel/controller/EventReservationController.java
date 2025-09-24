@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import overlook_hotel.overlook_hotel.model.EventFilterFields;
 import overlook_hotel.overlook_hotel.model.entity.EventLinkReservation;
 import overlook_hotel.overlook_hotel.model.entity.EventReservation;
@@ -15,6 +16,8 @@ import overlook_hotel.overlook_hotel.repository.EventLinkPlaceRepository;
 import overlook_hotel.overlook_hotel.repository.EventReservationRepository;
 import overlook_hotel.overlook_hotel.service.PlaceService;
 import overlook_hotel.overlook_hotel.service.PlaceTypeService;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -114,7 +117,7 @@ public class EventReservationController {
 
     @PostMapping("/event-reservation/confirm")
     public String confirmReservation(@ModelAttribute EventFilterFields filterFields,
-                                     Model model,
+                                     RedirectAttributes redirectAttributes,
                                      HttpSession session
                                      ) {
         List<Place> cart = (List<Place>) session.getAttribute("eventCart");
@@ -163,11 +166,8 @@ public class EventReservationController {
         //remove the cart
         session.removeAttribute("eventCart");
 
+        redirectAttributes.addFlashAttribute("successMessage", "Réservation enregistrée avec succès !");
 
-        if (session.getAttribute("successMessage") != null) {
-            model.addAttribute("successMessage", session.getAttribute("successMessage"));
-            session.removeAttribute("successMessage");
-        }
 
 
 
