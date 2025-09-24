@@ -1,5 +1,6 @@
 package overlook_hotel.overlook_hotel.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +11,8 @@ import overlook_hotel.overlook_hotel.model.enumList.EventType;
 import overlook_hotel.overlook_hotel.service.PlaceService;
 import overlook_hotel.overlook_hotel.service.PlaceTypeService;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-
 
 @Controller
 public class EventReservationController {
@@ -20,57 +20,82 @@ public class EventReservationController {
     private final PlaceService placeService;
     private final PlaceTypeService placeTypeService;
 
-
     public EventReservationController(PlaceService placeService, PlaceTypeService placeTypeService) {
         this.placeService = placeService;
         this.placeTypeService = placeTypeService;
     }
 
+    /** LIST + FILTERS */
     @RequestMapping(value = "/event-reservation", method = {RequestMethod.GET, RequestMethod.POST})
     public String reservation(@ModelAttribute EventFilterFields filterFields,
-                              Model model) {
+                              Model model,
+                              HttpSession session) {
 
-        if (filterFields.getStartDate() == null) {
-            filterFields.setStartDate(
-                    LocalDateTime.now().plusDays(1).withMinute(0).withSecond(0).withNano(0)
-            );
-        }
-
-        // pour les selects
-
+        // data for select inputs
         List<PlaceType> placeTypes = placeTypeService.getAll();
         model.addAttribute("placeTypeList", placeTypes);
         model.addAttribute("eventTypes", EventType.values());
 
-        String placeTypeName = null;
-        if(filterFields.getPlaceTypeId() != null) {
-            PlaceType pt = placeTypeService.findById(filterFields.getPlaceTypeId());
-            placeTypeName = (pt != null ? pt.getName() : null);
-        }
-
+        // filtered list
         List<Place> places = placeService.findAllFiltered(
-                placeTypeName,
+                filterFields.getPlaceTypeId() != null ? placeTypeService.findById(filterFields.getPlaceTypeId()).getName() : null,
                 filterFields.getMinCapacity(),
                 filterFields.getStartDate(),
                 filterFields.getEndDate(),
                 null,
                 null
-
         );
 
-        //pour la vue
         model.addAttribute("filterFields", filterFields);
         model.addAttribute("placeList", places);
         model.addAttribute("title", "Réservation d'événement");
         model.addAttribute("titlePage", "Overlook Hotel - Réservation événement");
 
-        //pring de log
-
-        for (Place p : places) {
-            System.out.println("Place #" + p.getId() + " cap=" + p.getCapacity());
+        // Cart: initialize if absent
+        if (session.getAttribute("eventCart") == null) {
+            session.setAttribute("eventCart", new ArrayList<Place>());
         }
 
         return "event-reservation";
-
     }
+
+    /** ADD TO CART (simple, without server-side calculations) */
+    @PostMapping("/event-reservation/{id}")
+    public String addToCart(@PathVariable Long id,
+                            @ModelAttribute EventFilterFields filterFields,
+                            Model model,
+                            HttpSession session) {
+
+        Place selectedPlace = placeService.findById(id);
+
+        // Retrieve existing cart
+        List<Place> cart = (List<Place>) session.getAttribute("eventCart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+
+        // Add the selected room
+        cart.add(selectedPlace);
+        session.setAttribute("eventCart", cart);
+
+        // Reload list + cart
+        return reservation(filterFields, model, session);
+    }
+    @PostMapping("/event-reservation/remove/{id}")
+    public String removeFromCart(@PathVariable Long id, HttpSession session) {
+        List<Place> cart = (List<Place>) session.getAttribute("eventCart");
+        if(cart != null) {
+            cart.removeIf(place -> place != null && place.getId() != null && place.getId().equals(id));
+            session.setAttribute("eventCart", cart);
+
+        }
+        return "redirect:/event-reservation";
+    }
+
+    @PostMapping("/event-reservation/clear")
+    public String clearCart(HttpSession session) {
+        session.removeAttribute("eventCart");
+        return "redirect:/event-reservation";
+    }
+
 }

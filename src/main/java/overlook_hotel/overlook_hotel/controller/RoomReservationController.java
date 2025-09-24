@@ -1,10 +1,12 @@
 package overlook_hotel.overlook_hotel.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import overlook_hotel.overlook_hotel.model.RoomReservationFields;
 import overlook_hotel.overlook_hotel.model.entity.Feedback;
+import overlook_hotel.overlook_hotel.model.entity.Place;
 import overlook_hotel.overlook_hotel.model.entity.Room;
 import overlook_hotel.overlook_hotel.model.entity.RoomBonus;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
@@ -57,7 +59,7 @@ public class RoomReservationController {
         return "reservation";
     }
 
-//    @GetMapping("/room-reservation/{id}")
+    //    @GetMapping("/room-reservation/{id}")
     @RequestMapping(value = "/room-reservation/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     public String roomDetails(@PathVariable Long id,
                               @RequestParam(required = false) List<String> selectedBonuses,
@@ -67,14 +69,24 @@ public class RoomReservationController {
         Room room = roomService.findById(id);
         model.addAttribute("room", room);
 
-        LocalDate startDate = filterFields.getStartDate();
-        LocalDate endDate = filterFields.getEndDate();
-        model.addAttribute("startDate", startDate);
-        model.addAttribute("endDate", endDate);
+        RoomReservationFields roomReservationFields = new RoomReservationFields();
+        roomReservationFields.setIdRoom(room.getId());
+        roomReservationFields.setRoomNumber(room.getNumber());
+        roomReservationFields.setCapacity(room.getCapacity());
+        roomReservationFields.setDescription(room.getDescription());
+        roomReservationFields.setStandingString(room.getStanding().getName());
+        roomReservationFields.setStartDate(filterFields.getStartDate());
+        roomReservationFields.setEndDate(filterFields.getEndDate());
 
+//        LocalDate startDate = filterFields.getStartDate();
+//        LocalDate endDate = filterFields.getEndDate();
+        model.addAttribute("startDate", roomReservationFields.getStartDate());
+        model.addAttribute("endDate", roomReservationFields.getEndDate());
+
+        model.addAttribute("roomReservationFields", roomReservationFields); // for form
         int nights = 0;
-        if (startDate != null && endDate != null) {
-            nights = (int) ChronoUnit.DAYS.between(startDate, endDate);
+        if (roomReservationFields.getStartDate() != null &&  roomReservationFields.getEndDate() != null) {
+            nights = (int) ChronoUnit.DAYS.between(roomReservationFields.getStartDate(), roomReservationFields.getEndDate());
             if (nights < 0) nights = 0;
         }
         model.addAttribute("nights", nights);
@@ -99,4 +111,6 @@ public class RoomReservationController {
         model.addAttribute("titlePage", "Détails de la chambre " + room.getNumber());
         return "room-detail";
     }
+
+
 }

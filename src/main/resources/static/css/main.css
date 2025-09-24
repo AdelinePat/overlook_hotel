@@ -159,6 +159,7 @@ a.btn:hover {
     color: var(--secondary-bg-color);
 }
 
+
 .container {
     display: flex;
     gap: 40px;
@@ -516,4 +517,43 @@ padding-top: 0px;
     background-size: cover;
     background-position: center;
     filter: brightness(0.5) contrast(1.1) grayscale(0.3);
+}
+
+
+/* ROOM DETAIL*/
+.form-select-bonus-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    align-content: center;
+}
+
+.input-add-bonus {
+}
+
+.input-add-bonus label {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    border: 2px solid var(--secondary-bg-color);
+    color: var(--secondary-bg-color);
+    border-radius: 12px;
+    padding: 4px 8px;
+    vertical-align: center;
+}
+
+.input-add-bonus label:hover {
+    background: var(--secondary-bg-color);
+    color: var(--dark-grey);
+    cursor: pointer;
+}
+
+.input-add-bonus label:has(input:checked) {
+    background: var(--secondary-bg-color); /* Selected background */
+    color: var(--dark-grey);
+}
+
+.input-add-bonus input {
+    display: none;
 }
