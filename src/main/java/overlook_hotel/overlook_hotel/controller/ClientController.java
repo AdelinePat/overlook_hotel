@@ -7,11 +7,13 @@ import overlook_hotel.overlook_hotel.model.FilterFields;
 import overlook_hotel.overlook_hotel.model.entity.Client;
 import overlook_hotel.overlook_hotel.service.ClientService;
 import overlook_hotel.overlook_hotel.util.InputSanitizer;
+import overlook_hotel.overlook_hotel.util.InputValidator;
 
 import java.util.List;
 
 @Controller
 public class ClientController extends AbstractEntityController<Client, FilterFields> {
+
     private final ClientService clientService;
     private FilterFields filterFields;
 
@@ -53,6 +55,24 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
                 );
             }
             else if (action.equals("add") && id == null) {
+                String validationError = validateFieldInput(lastname, firstname, email, phone);
+                if (validationError != null) {
+                    model.addAttribute("error", validationError);
+                    // Retain user input in focus form (doesn't work)
+                    // this.focusedField = new FilterFields();
+                    // this.focusedField.setLastname(lastname);
+                    // this.focusedField.setFirstname(firstname);
+                    // this.focusedField.setEmail(email);
+                    // this.focusedField.setPhone(phone);
+                    List<Client> clients = clientService.findAllFiltered(
+                        this.filterFields.getLastname(),
+                        this.filterFields.getFirstname(),
+                        this.filterFields.getEmail(),
+                        this.filterFields.getPhone()
+                    );
+                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
+                    return "table";
+                }
                 try {
                     Client newClient = new Client();
                     newClient.setLastname(InputSanitizer.sanitize(lastname));
@@ -69,6 +89,24 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
                 this.resetFocusedField(f -> new FilterFields());
                 this.filterFields = new FilterFields();
             } else if (action.equals("update") && id != null) {
+                String validationError = validateFieldInput(lastname, firstname, email, phone);
+                if (validationError != null) {
+                    model.addAttribute("error", validationError);
+                    // Retain user input in focus form (doesn't work)
+                    // this.focusedField = new FilterFields();
+                    // this.focusedField.setLastname(lastname);
+                    // this.focusedField.setFirstname(firstname);
+                    // this.focusedField.setEmail(email);
+                    // this.focusedField.setPhone(phone);
+                    List<Client> clients = clientService.findAllFiltered(
+                        this.filterFields.getLastname(),
+                        this.filterFields.getFirstname(),
+                        this.filterFields.getEmail(),
+                        this.filterFields.getPhone()
+                    );
+                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
+                    return "table";
+                }
                 try {
                     Client clientToUpdate = clientService.findById(id);
                     if (clientToUpdate != null) {
@@ -126,6 +164,25 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
         this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
 
         return "table";
+    }
+
+        /**
+     * Validates client input fields. Returns null if all valid, otherwise error message.
+     */
+    private String validateFieldInput(String lastname, String firstname, String email, String phone) {
+        if (!InputValidator.isValidWord(lastname)) {
+            return "Nom invalide.";
+        }
+        if (!InputValidator.isValidWord(firstname)) {
+            return "Prénom invalide.";
+        }
+        if (!InputValidator.isValidEmail(email)) {
+            return "Email invalide.";
+        }
+        if (!InputValidator.isValidPhone(phone)) {
+            return "Téléphone invalide.";
+        }
+        return null;
     }
 
     private void populateFilterFields(String lastname, String firstname, String email, String phone) {

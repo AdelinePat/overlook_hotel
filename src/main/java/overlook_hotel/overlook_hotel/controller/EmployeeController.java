@@ -9,11 +9,13 @@ import overlook_hotel.overlook_hotel.service.EmployeeService;
 import overlook_hotel.overlook_hotel.model.entity.Job;
 import overlook_hotel.overlook_hotel.service.JobService;
 import overlook_hotel.overlook_hotel.util.InputSanitizer;
+import overlook_hotel.overlook_hotel.util.InputValidator;
 
 import java.util.List;
 
 @Controller
 public class EmployeeController extends AbstractEntityController<Employee, FilterFields> {
+
     private final EmployeeService employeeService;
     private final JobService jobService;
     private FilterFields filterFields;
@@ -25,7 +27,6 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
         this.focusedField = new FilterFields();
         this.focusedEntity = null;
     }
-
 
     @RequestMapping(value = "/employees", method = {RequestMethod.GET, RequestMethod.POST})
     public String employees(
@@ -63,6 +64,18 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
                     job
                 );
             } else if (action.equals("add") && id == null) {
+                String validationError = validateFieldInput(lastname, firstname, email, job);
+                if (validationError != null) {
+                    model.addAttribute("error", validationError);
+                    List<Employee> employees = employeeService.findAllFiltered(
+                        this.filterFields.getLastname(),
+                        this.filterFields.getFirstname(),
+                        this.filterFields.getEmail(),
+                        this.filterFields.getJob()
+                    );
+                    this.populateModel(model, employees, "employee", List.of("Nom", "Prénom", "Email", "Job"), jobService.getFullJobList());
+                    return "table";
+                }
                 try {
                     Employee newEmployee = new Employee();
                     newEmployee.setLastname(InputSanitizer.sanitize(lastname));
@@ -79,6 +92,18 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
                 this.resetFocusedField(f -> new FilterFields());
                 this.filterFields = new FilterFields();
             } else if (action.equals("update") && id != null) {
+                String validationError = validateFieldInput(lastname, firstname, email, job);
+                if (validationError != null) {
+                    model.addAttribute("error", validationError);
+                    List<Employee> employees = employeeService.findAllFiltered(
+                        this.filterFields.getLastname(),
+                        this.filterFields.getFirstname(),
+                        this.filterFields.getEmail(),
+                        this.filterFields.getJob()
+                    );
+                    this.populateModel(model, employees, "employee", List.of("Nom", "Prénom", "Email", "Job"), jobService.getFullJobList());
+                    return "table";
+                }
                 try {
                     Employee employeeToUpdate = employeeService.findById(id);
                     if (employeeToUpdate != null) {
@@ -136,6 +161,25 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
         this.populateModel(model, employees, "employee", List.of("Nom", "Prénom", "Email", "Job"), jobService.getFullJobList());
 
         return "table";
+    }
+
+        /**
+     * Validates employee input fields. Returns null if all valid, otherwise error message.
+     */
+    private String validateFieldInput(String lastname, String firstname, String email, Job job) {
+        if (!InputValidator.isValidWord(lastname)) {
+            return "Nom invalide.";
+        }
+        if (!InputValidator.isValidWord(firstname)) {
+            return "Prénom invalide.";
+        }
+        if (!InputValidator.isValidEmail(email)) {
+            return "Email invalide.";
+        }
+        if (job == null) {
+            return "Job invalide.";
+        }
+        return null;
     }
 
     private void populateFilterFields(String lastname, String firstname, String email, Job job) {
