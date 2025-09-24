@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import overlook_hotel.overlook_hotel.model.FilterFields;
 import overlook_hotel.overlook_hotel.model.entity.Client;
 import overlook_hotel.overlook_hotel.service.ClientService;
+import overlook_hotel.overlook_hotel.util.InputSanitizer;
 
 import java.util.List;
 
@@ -44,15 +45,20 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
         // Handle add, update, delete actions
         if (action != null) {
             if (action.equals("search")) {
-                this.populateFilterFields(lastname, firstname, email, phone);
+                this.populateFilterFields(
+                    InputSanitizer.sanitize(lastname),
+                    InputSanitizer.sanitize(firstname),
+                    InputSanitizer.sanitize(email),
+                    InputSanitizer.sanitize(phone)
+                );
             }
             else if (action.equals("add") && id == null) {
                 try {
                     Client newClient = new Client();
-                    newClient.setLastname(lastname);
-                    newClient.setFirstname(firstname);
-                    newClient.setEmail(email);
-                    newClient.setPhone(phone);
+                    newClient.setLastname(InputSanitizer.sanitize(lastname));
+                    newClient.setFirstname(InputSanitizer.sanitize(firstname));
+                    newClient.setEmail(InputSanitizer.sanitize(email));
+                    newClient.setPhone(InputSanitizer.sanitize(phone));
                     newClient.setSalt("defaultSalt");
                     newClient.setPassword("defaultPassword");
                     clientService.save(newClient);
@@ -66,10 +72,10 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
                 try {
                     Client clientToUpdate = clientService.findById(id);
                     if (clientToUpdate != null) {
-                        clientToUpdate.setLastname(lastname);
-                        clientToUpdate.setFirstname(firstname);
-                        clientToUpdate.setEmail(email);
-                        clientToUpdate.setPhone(phone);
+                        clientToUpdate.setLastname(InputSanitizer.sanitize(lastname));
+                        clientToUpdate.setFirstname(InputSanitizer.sanitize(firstname));
+                        clientToUpdate.setEmail(InputSanitizer.sanitize(email));
+                        clientToUpdate.setPhone(InputSanitizer.sanitize(phone));
                         clientService.save(clientToUpdate);
                         model.addAttribute("message", "Modification réussie !");
                     }

@@ -8,6 +8,7 @@ import overlook_hotel.overlook_hotel.model.entity.Employee;
 import overlook_hotel.overlook_hotel.service.EmployeeService;
 import overlook_hotel.overlook_hotel.model.entity.Job;
 import overlook_hotel.overlook_hotel.service.JobService;
+import overlook_hotel.overlook_hotel.util.InputSanitizer;
 
 import java.util.List;
 
@@ -55,13 +56,18 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
 
         if (action != null) {
             if (action.equals("search")) {
-                this.populateFilterFields(lastname, firstname, email, job);
+                this.populateFilterFields(
+                    InputSanitizer.sanitize(lastname),
+                    InputSanitizer.sanitize(firstname),
+                    InputSanitizer.sanitize(email),
+                    job
+                );
             } else if (action.equals("add") && id == null) {
                 try {
                     Employee newEmployee = new Employee();
-                    newEmployee.setLastname(lastname);
-                    newEmployee.setFirstname(firstname);
-                    newEmployee.setEmail(email);
+                    newEmployee.setLastname(InputSanitizer.sanitize(lastname));
+                    newEmployee.setFirstname(InputSanitizer.sanitize(firstname));
+                    newEmployee.setEmail(InputSanitizer.sanitize(email));
                     newEmployee.setJob(job);
                     newEmployee.setSalt("defaultSalt");
                     newEmployee.setPassword("defaultPassword");
@@ -76,9 +82,9 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
                 try {
                     Employee employeeToUpdate = employeeService.findById(id);
                     if (employeeToUpdate != null) {
-                        employeeToUpdate.setLastname(lastname);
-                        employeeToUpdate.setFirstname(firstname);
-                        employeeToUpdate.setEmail(email);
+                        employeeToUpdate.setLastname(InputSanitizer.sanitize(lastname));
+                        employeeToUpdate.setFirstname(InputSanitizer.sanitize(firstname));
+                        employeeToUpdate.setEmail(InputSanitizer.sanitize(email));
                         employeeToUpdate.setJob(job);
                         employeeService.save(employeeToUpdate);
                         model.addAttribute("message", "Modification réussie !");
