@@ -57,29 +57,44 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
             if (action.equals("search")) {
                 this.populateFilterFields(lastname, firstname, email, job);
             } else if (action.equals("add") && id == null) {
-                Employee newEmployee = new Employee();
-                newEmployee.setLastname(lastname);
-                newEmployee.setFirstname(firstname);
-                newEmployee.setEmail(email);
-                newEmployee.setJob(job);
-                newEmployee.setSalt("defaultSalt");
-                newEmployee.setPassword("defaultPassword");
-                employeeService.save(newEmployee);
+                try {
+                    Employee newEmployee = new Employee();
+                    newEmployee.setLastname(lastname);
+                    newEmployee.setFirstname(firstname);
+                    newEmployee.setEmail(email);
+                    newEmployee.setJob(job);
+                    newEmployee.setSalt("defaultSalt");
+                    newEmployee.setPassword("defaultPassword");
+                    employeeService.save(newEmployee);
+                    model.addAttribute("message", "Ajout réussi !");
+                } catch (Exception e) {
+                    model.addAttribute("error", "Erreur lors de l'ajout : " + e.getMessage());
+                }
                 this.resetFocusedField(f -> new FilterFields());
                 this.filterFields = new FilterFields();
             } else if (action.equals("update") && id != null) {
-                Employee employeeToUpdate = employeeService.findById(id);
-                if (employeeToUpdate != null) {
-                    employeeToUpdate.setLastname(lastname);
-                    employeeToUpdate.setFirstname(firstname);
-                    employeeToUpdate.setEmail(email);
-                    employeeToUpdate.setJob(job);
-                    employeeService.save(employeeToUpdate);
-                    this.resetFocusedField(f -> new FilterFields());
+                try {
+                    Employee employeeToUpdate = employeeService.findById(id);
+                    if (employeeToUpdate != null) {
+                        employeeToUpdate.setLastname(lastname);
+                        employeeToUpdate.setFirstname(firstname);
+                        employeeToUpdate.setEmail(email);
+                        employeeToUpdate.setJob(job);
+                        employeeService.save(employeeToUpdate);
+                        model.addAttribute("message", "Modification réussie !");
+                    }
+                } catch (Exception e) {
+                    model.addAttribute("error", "Erreur lors de la modification : " + e.getMessage());
                 }
+                this.resetFocusedField(f -> new FilterFields());
                 this.filterFields = new FilterFields();
             } else if (action.equals("delete") && id != null) {
-                employeeService.deleteById(id);
+                try {
+                    employeeService.deleteById(id);
+                    model.addAttribute("message", "Suppression réussie !");
+                } catch (Exception e) {
+                    model.addAttribute("error", "Erreur lors de la suppression : " + e.getMessage());
+                }
                 this.resetFocusedField(f -> new FilterFields());
                 this.filterFields = new FilterFields();
             }

@@ -47,29 +47,44 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
                 this.populateFilterFields(lastname, firstname, email, phone);
             }
             else if (action.equals("add") && id == null) {
-                Client newClient = new Client();
-                newClient.setLastname(lastname);
-                newClient.setFirstname(firstname);
-                newClient.setEmail(email);
-                newClient.setPhone(phone);
-                newClient.setSalt("defaultSalt");
-                newClient.setPassword("defaultPassword");
-                clientService.save(newClient);
+                try {
+                    Client newClient = new Client();
+                    newClient.setLastname(lastname);
+                    newClient.setFirstname(firstname);
+                    newClient.setEmail(email);
+                    newClient.setPhone(phone);
+                    newClient.setSalt("defaultSalt");
+                    newClient.setPassword("defaultPassword");
+                    clientService.save(newClient);
+                    model.addAttribute("message", "Ajout réussi !");
+                } catch (Exception e) {
+                    model.addAttribute("error", "Erreur lors de l'ajout : " + e.getMessage());
+                }
                 this.resetFocusedField(f -> new FilterFields());
                 this.filterFields = new FilterFields();
             } else if (action.equals("update") && id != null) {
-                Client clientToUpdate = clientService.findById(id);
-                if (clientToUpdate != null) {
-                    clientToUpdate.setLastname(lastname);
-                    clientToUpdate.setFirstname(firstname);
-                    clientToUpdate.setEmail(email);
-                    clientToUpdate.setPhone(phone);
-                    clientService.save(clientToUpdate);
-                    this.resetFocusedField(f -> new FilterFields());
+                try {
+                    Client clientToUpdate = clientService.findById(id);
+                    if (clientToUpdate != null) {
+                        clientToUpdate.setLastname(lastname);
+                        clientToUpdate.setFirstname(firstname);
+                        clientToUpdate.setEmail(email);
+                        clientToUpdate.setPhone(phone);
+                        clientService.save(clientToUpdate);
+                        model.addAttribute("message", "Modification réussie !");
+                    }
+                } catch (Exception e) {
+                    model.addAttribute("error", "Erreur lors de la modification : " + e.getMessage());
                 }
+                this.resetFocusedField(f -> new FilterFields());
                 this.filterFields = new FilterFields();
             } else if (action.equals("delete") && id != null) {
-                clientService.deleteById(id);
+                try {
+                    clientService.deleteById(id);
+                    model.addAttribute("message", "Suppression réussie !");
+                } catch (Exception e) {
+                    model.addAttribute("error", "Erreur lors de la suppression : " + e.getMessage());
+                }
                 this.resetFocusedField(f -> new FilterFields());
                 this.filterFields = new FilterFields();
             }
