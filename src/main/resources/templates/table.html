@@ -14,7 +14,21 @@
             document.getElementById("focus-id").value = id;
             document.getElementById("focusForm").submit();
         }
-    </script>
+        // Confirm deletion popup for focus form
+        document.addEventListener('DOMContentLoaded', function() {
+            var focusForm = document.getElementById('displayedFocusForm');
+            if (focusForm) {
+                focusForm.addEventListener('submit', function(e) {
+                    var deleteBtn = focusForm.querySelector('button[name="action"][value="delete"]');
+                    if (deleteBtn && document.activeElement === deleteBtn) {
+                        if (!confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) {
+                            e.preventDefault();
+                        }
+                    }
+                });
+            }
+        });
+        </script>
 </head>
 <body>
 <nav><a th:href="@{/index.html}">Overlook Hotel</a><ul>
@@ -58,7 +72,7 @@
                         </option>
                         <option th:each="job : ${jobEnumValues}"
                                 th:value="${job.id}"
-                                th:text="${job.title}"
+                                th:text="${@displayText.capitalize(job.title)}"
                                 th:selected="${filterField.job != null and filterField.job.id == job.id}">
                         </option>
                     </select>
@@ -66,6 +80,11 @@
 
                 <button type="submit" name="action" value="search" class="btn lh12">Rechercher</button>
             </form>
+
+            <!-- actions messages -->
+            <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+            <!-- end actions messages -->
 
             <table class="my20">
                 <thead>
