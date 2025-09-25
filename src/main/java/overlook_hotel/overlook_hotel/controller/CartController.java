@@ -137,9 +137,9 @@ public class CartController {
             Optional<Client> dummyClient = clientRepository.findById(1L);
             if (dummyClient.isEmpty()) throw new IllegalStateException("Dummy client must exist");
 
-            for (RoomReservationFields fields : cart.getRooms()) {
-                roomReservationService.saveReservation(fields, dummyClient.get().getId());
-            }
+            // Save the entire cart as a single reservation
+            roomReservationService.saveCartAsReservation(cart, dummyClient.get().getId());
+
             cart.getRooms().clear();
             sessionStatus.setComplete();
         }
