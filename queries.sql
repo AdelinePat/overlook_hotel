@@ -173,20 +173,18 @@ ORDER BY id_event_reservation DESC
 LIMIT 5;
 
 -- panier avec date et lieu
+
 SELECT
-    er.id_event_reservation,
-    er.event,
-    er.start_date,
-    er.end_date,
-    er.total_price,
-    pt.name AS place_type
-FROM event_reservation er
-JOIN event_link_place elp
-    ON er.id_event_reservation = elp.id_event_reservation
-JOIN place p
-    ON elp.id_place = p.id_place
-JOIN place_type pt
-    ON p.id_place_type = pt.id_place_type
-ORDER BY er.id_event_reservation DESC
+    id_event_reservation,
+    event,
+    start_date,
+    end_date,
+    total_price,
+    name AS place_type
+FROM event_reservation
+JOIN event_link_place USING (id_event_reservation)
+JOIN place USING (id_place)
+JOIN place_type USING (id_place_type)
+ORDER BY id_event_reservation DESC
 LIMIT 5;
 

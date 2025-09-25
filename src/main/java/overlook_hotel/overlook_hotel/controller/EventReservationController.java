@@ -50,20 +50,39 @@ public class EventReservationController {
                               Model model,
                               HttpSession session) {
 
+        LocalDateTime now = LocalDateTime.now();
 
-        if (filterFields.getStartDate() == null) {
-            filterFields.setStartDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+
+//        if (filterFields.getStartDate() == null) {
+//            filterFields.setStartDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+//        }
+//        if (filterFields.getEndDate() == null || !filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
+//            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
+//        }
+
+        if (filterFields.getStartDate() != null && filterFields.getStartDate().isBefore(now)) {
+            model.addAttribute("errorMessage", "La date de début ne peut pas être antérieure à aujourd'hui.");
+            filterFields.setStartDate(now.truncatedTo(ChronoUnit.MINUTES));
         }
-        if (filterFields.getEndDate() == null || !filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
+
+        if (filterFields.getEndDate() != null && filterFields.getStartDate() != null &&
+                !filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
+            model.addAttribute("errorMessage", "La date de fin doit être postérieure à la date de début.");
+            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
+        }
+        if (filterFields.getStartDate() != null && filterFields.getEndDate() != null &&
+                !filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
+            model.addAttribute("errorMessage", "L'heure de fin doit être postérieure à l'heure de début.");
             filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
         }
 
+        if (filterFields.getStartDate() == null) {
+            filterFields.setStartDate(now.truncatedTo(ChronoUnit.MINUTES));
+        }
+        if (filterFields.getEndDate() == null) {
+            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
+        }
 
-//        if (filterFields.getEventType() != null) {
-//            filterFields.setEventType(filterFields.getEventType());
-//        } else {
-//            filterFields.setEventType(EventType.AUTRE);
-//        }
 
 
 
@@ -141,16 +160,37 @@ public class EventReservationController {
     ) {
         List<Place> cart = (List<Place>) session.getAttribute("eventCart");
         if (cart == null || cart.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Votre panier est vide.");
             return "redirect:/event-reservation"; // cart empty
         }
 
-        LocalDateTime startDate = filterFields.getStartDate() != null
-                ? filterFields.getStartDate()
-                : LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+
+        LocalDateTime startDate = filterFields.getStartDate();
+        if (startDate == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "La date de début est obligatoire.");
+            return "redirect:/event-reservation";
+        }
+        if (startDate.isBefore(now)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "La date de début ne peut pas être antérieure à aujourd'hui.");
+            return "redirect:/event-reservation";
+        }
+
+
+//        LocalDateTime startDate = filterFields.getStartDate() != null
+//                ? filterFields.getStartDate()
+//                : LocalDateTime.now();
 
         LocalDateTime endDate = filterFields.getEndDate() != null
                 ? filterFields.getEndDate()
                 : startDate.plusHours(1);
+
+        if (!endDate.isAfter(startDate)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "La date de fin doit être postérieure à la date de début.");
+            return "redirect:/event-reservation";
+        }
+
+
 
         long hours = java.time.Duration.between(startDate, endDate).toHours();
         if (java.time.Duration.between(startDate, endDate).toMinutesPart() > 0) {
