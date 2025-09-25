@@ -28,11 +28,13 @@
                     </li>
                 </ul>
                 <div th:if="${!#authorization.expression('isAuthenticated()')}">
-                    <form th:action="@{/login}" method="get" style="display:inline;">
-                        <input type="text" name="email" placeholder="Email" required>
+                    <form th:action="@{/login}" method="post" style="display:inline;">
+                        <input type="text" name="username" placeholder="Email" required>
                         <input type="password" name="password" placeholder="Mot de passe" required>
-                        <button type="submit" class="btn btn-outline-primary btn-sm">Se connecter</button>
+                        <button type="submit" class="btn">Se connecter</button>
                     </form>
+                </div>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
                         <span class="navbar-text me-2">Bienvenue, <span th:text="${#authentication?.name}"></span></span>
                     </li>
