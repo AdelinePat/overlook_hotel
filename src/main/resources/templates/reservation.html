@@ -28,17 +28,8 @@
     </script>
 </head>
 <body>
-<nav><a th:href="@{/index.html}">Overlook Hotel</a><ul>
-    <li>
-        Dashboard
-    </li>
-    <li>
-        Gestion Réservation
-    </li>
-</ul>
-<form th:action="@{/logout}" method="post" style="display:inline;">
-    <button type="submit" class="btn bg-purple">Se déconnecter</button>
-</form>
+<div th:replace="fragments/navbar :: navbar"></div>
+
 <div class="page ">
 <!--    <h1 th:text="${title}"></h1>-->
         <form class="filter-bar mt50" th:action="@{/room-reservation}" method="post" th:object="${filterFields}">

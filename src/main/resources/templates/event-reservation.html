@@ -10,7 +10,7 @@
   <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<nav>
+<!-- <nav>
   <a th:href="@{/index.html}">Overlook Hotel</a>
   <ul>
     <li>Dashboard</li>
@@ -19,7 +19,8 @@
   <form th:action="@{/logout}" method="post" style="display:inline;">
     <button type="submit" class="btn bg-purple">Se déconnecter</button>
 </form>
-</nav>
+</nav> -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
 <div class="page">
 

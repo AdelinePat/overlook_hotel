@@ -29,8 +29,7 @@ public class SecurityConfig {
             .userDetailsService(customUserDetailsService)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/clients", "/employees").hasRole("MANAGER")
-                .requestMatchers("/cart").hasRole("CLIENT")
-                .requestMatchers("/table.html").hasAnyRole("EMPLOYEE", "MANAGER")
+                .requestMatchers("/cart", "/room_reservation", "/room-detail", "/event-reservation").hasRole("CLIENT")
                 .requestMatchers("/login", "/css/**", "/js/**", "/img/**", "/").permitAll()
                 .anyRequest().permitAll()
             )

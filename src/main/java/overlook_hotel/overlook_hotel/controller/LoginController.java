@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
+    @GetMapping("/")
+    public String root() {
+        return "login";
+    }
     @Autowired
     private ClientService clientService;
     @Autowired

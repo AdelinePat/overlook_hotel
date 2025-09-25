@@ -31,13 +31,7 @@
         </script>
 </head>
 <body>
-<nav>
-    <a th:href="@{/index.html}">Overlook Hotel</a>
-    <ul>
-        <li>
-            Dashboard
-        </li>
-        <li>
+<div th:replace="fragments/navbar :: navbar"></div>
             Gestion Réservation
         </li>
     </ul>
@@ -87,11 +81,6 @@
                 <button type="submit" name="action" value="search" class="btn lh12">Rechercher</button>
             </form>
 
-            <!-- actions messages -->
-            <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
-            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-            <!-- end actions messages -->
-
             <table class="my20">
                 <thead>
                 <tr>
@@ -120,6 +109,11 @@
 
         <div class="display-focus">
         <h2>Focus</h2>
+            <!-- actions messages -->
+            <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+            <!-- end actions messages -->
+
             <form th:action="${entityType == 'client' ? '/clients' : '/employees'}" method="post" id="displayedFocusForm">
 
                 <input type="hidden" name="id" id="focus-id-hidden"
