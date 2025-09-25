@@ -8,6 +8,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
+  <script th:if="${session.successMessage != null}">
+    alert([[${session.successMessage}]]);
+  </script>
+
 </head>
 <body>
 <nav>
@@ -22,9 +26,22 @@
 <div class="page">
 
   <!-- FILTER SECTION -->
+
+
+
+
   <form class="filter-bar mt50" th:action="@{/event-reservation}" method="post" th:object="${filterFields}">
 
-    <!-- Space type filter -->
+    <div class="filter-input reservation-input">
+      <label><i class="fa-solid fa-champagne-glasses"></i></label>
+      <select th:field="*{eventType}">
+        <option value="">-- Type d'événement --</option>
+        <option th:each="et : ${eventTypes}"
+                th:value="${et}"
+                th:text="${@displayText.capitalize(et)}"></option>
+      </select>
+    </div>
+
     <div class="filter-input reservation-input">
       <label><i class="fa-solid fa-tags"></i></label>
       <select th:field="*{placeTypeId}">
@@ -36,13 +53,12 @@
       </select>
     </div>
 
-    <!-- Minimum capacity filter -->
-    <div class="filter-input reservation-input">
-      <label><i class="fa-solid fa-user-group"></i></label>
-      <input type="number" th:field="*{minCapacity}" placeholder="Capacité minimale"/>
-    </div>
+<!--    <div class="filter-input reservation-input">-->
+<!--      <label><i class="fa-solid fa-user-group"></i></label>-->
+<!--      <input type="number" th:field="*{minCapacity}" placeholder="Capacité minimale"/>-->
+<!--    </div>-->
 
-    <!-- Date range filter -->
+
     <div class="filter-input reservation-input">
       <label><i class="fa-solid fa-calendar-days"></i></label>
       <input type="datetime-local" th:field="*{startDate}"/>
@@ -58,25 +74,18 @@
     <div class="book-card"
          th:each="place : ${placeList}"
          th:attr="data-hourly=${place.hourlyPrice}">
-
-
-    <!-- Image and price -->
       <div class="booking-img"
            th:classappend="${place.placeType != null ? place.placeType.name.toLowerCase() : 'default'}">
         <p class="price" th:text="${place.hourlyPrice + ' €/heure'}"></p>
       </div>
 
-      <!-- Description of the space -->
       <div class="card-description">
         <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
-        <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>
-        <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>
-        — <span class="calc-total" data-role="total">—</span>
-
-        <!-- Add to cart -->
+<!--        <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>-->
+<!--        <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>-->
         <form th:action="@{/event-reservation/{id}(id=${place.id})}" method="post" th:object="${filterFields}">
           <input type="hidden" th:field="*{placeTypeId}"/>
-          <input type="hidden" th:field="*{minCapacity}"/>
+<!--          <input type="hidden" th:field="*{minCapacity}"/>-->
           <input type="hidden" th:field="*{startDate}"/>
           <input type="hidden" th:field="*{endDate}"/>
           <button type="submit" class="btn m10">Ajouter au panier</button>
@@ -89,28 +98,42 @@
   <div class="display-focus" th:if="${session.eventCart != null}">
     <h2>Votre panier d’événements</h2>
     <ul>
-      <li th:each="place : ${session.eventCart}">
+      <!-- 👉 data-hourly ajouté sur <li> -->
+      <li th:each="place : ${session.eventCart}"
+          th:attr="data-hourly=${place.hourlyPrice}">
         <p>
           <strong th:text="${@displayText.capitalize(place.placeType.name)}"></strong>
-          — Capacité : <span th:text="${place.capacity}"></span>
+<!--          — Capacité : <span th:text="${place.capacity}"></span>-->
           — Prix : <span th:text="${place.hourlyPrice}"></span> €/h
+          — <span class="calc-total" data-role="total">—</span>
 
+          <!-- ✅ ajout de la classe remove-form -->
         <form th:action="@{/event-reservation/remove/{id}(id=${place.id})}"
               method="post"
+              class="remove-form"
               style="display:inline-block;margin-left:.5rem">
+          <input type="hidden" th:name="startDate" th:value="${filterFields.startDate}" />
+          <input type="hidden" th:name="endDate" th:value="${filterFields.endDate}" />
+        <input type="hidden" th:name="eventType" th:value="${filterFields.eventType}" />
           <button class="btn bg-purple" type="submit" title="Retirer">Retirer</button>
         </form>
-
-
-
         </p>
         <hr/>
       </li>
     </ul>
 
+    <!-- 👉 Total panier global -->
+    <h3>Total panier : <span id="event-cart-total">—</span></h3>
 
-    <!-- Confirm all reservations -->
+    <div th:if="${successMessage}" class="alert alert-success" style="color: green; font-weight: bold; margin: 1em 0;">
+      <p th:text="${successMessage}"></p>
+    </div>
+
     <form th:action="@{/event-reservation/confirm}" method="post">
+      <input type="hidden" name="placeTypeId" th:value="${filterFields.placeTypeId}"/>
+      <input type="hidden" name="startDate" th:value="${filterFields.startDate}"/>
+      <input type="hidden" name="endDate" th:value="${filterFields.endDate}"/>
+      <input type="hidden" name="eventType" th:value="${filterFields.eventType}"/>
       <button class="btn">Confirmer toutes les réservations</button>
     </form>
 
@@ -122,16 +145,16 @@
 </div>
 </body>
 
+
 <script>
   (function () {
-    const startInput = document.querySelector('input[name="startDate"]');
-    const endInput   = document.querySelector('input[name="endDate"]');
+    const startInput  = document.querySelector('input[name="startDate"]');
+    const endInput    = document.querySelector('input[name="endDate"]');
+    const cartTotalEl = document.getElementById('event-cart-total');
 
     function parseLocalDateTime(inputEl) {
       if (!inputEl || !inputEl.value) return null;
-      // "yyyy-MM-ddTHH:mm" -> Date locale
       const v = inputEl.value;
-      // Safari iOS peut être capricieux : remplacer "T" par " "
       const iso = v.includes('T') ? v : v.replace(' ', 'T');
       const d = new Date(iso);
       return isNaN(d.getTime()) ? null : d;
@@ -140,12 +163,14 @@
     function hoursRoundedUp(ms) {
       if (ms <= 0) return 0;
       const H = 60 * 60 * 1000;
-      return Math.ceil(ms / H); // arrondi à l'heure supérieure
+      return Math.ceil(ms / H);
     }
 
     function formatMoney(n) {
-      // Affiche comme 123,45 € en fr-FR
-      return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+      return new Intl.NumberFormat('fr-FR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(n);
     }
 
     function updateTotals() {
@@ -157,41 +182,46 @@
         hours = hoursRoundedUp(end - start);
       }
 
-      // 1) Totaux sur les cartes résultats
-      document.querySelectorAll('.book-card').forEach(card => {
-        const rate  = Number(card.dataset.hourly || 0);
-        const field = card.querySelector('[data-role="total"]');
-        if (!field) return;
+      let cartSum = 0;
 
-        if (hours > 0 && rate > 0) {
-          const total = hours * rate;
-          field.textContent = `Total pour ${hours} h : ${formatMoney(total)} €`;
-        } else {
-          field.textContent = 'Sélectionnez des dates pour voir le total';
-        }
-      });
-
-      // 2) Totaux dans le panier
+      // sous-total par réservation
       document.querySelectorAll('.display-focus li[data-hourly]').forEach(li => {
         const rate  = Number(li.dataset.hourly || 0);
         const field = li.querySelector('[data-role="total"]');
-        if (!field) return;
 
         if (hours > 0 && rate > 0) {
-          const total = hours * rate;
-          field.textContent = `Total: ${formatMoney(total)} € (${hours} h)`;
+          const lineTotal = hours * rate;
+          cartSum += lineTotal;
+          if (field) field.textContent = `${formatMoney(lineTotal)} € (${hours} h)`;
         } else {
-          field.textContent = '—';
+          if (field) field.textContent = '—';
         }
       });
+
+      // total global
+      if (cartTotalEl) {
+        cartTotalEl.textContent = (hours > 0 && cartSum > 0)
+          ? `${formatMoney(cartSum)} €`
+          : '—';
+      }
     }
 
-    // Mets à jour quand on choisit les dates
+    // recalcul si on change les dates
     startInput && startInput.addEventListener('change', updateTotals);
     endInput   && endInput.addEventListener('change', updateTotals);
 
-    // Premier affichage
+    //recalcul initial
     updateTotals();
+
+    // suppression d’un item sans rechargement
+    document.querySelectorAll('.remove-form').forEach(form => {
+      form.addEventListener('submit', e => {
+        e.preventDefault(); // empêche le rechargement
+        const li = form.closest('li');
+        li.remove();        // supprime l’élément du DOM
+        updateTotals();     // recalcule le total
+      });
+    });
   })();
 </script>
 
