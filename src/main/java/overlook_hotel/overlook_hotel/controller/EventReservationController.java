@@ -147,7 +147,7 @@ public class EventReservationController {
         // entity reservation
         EventReservation reservation = new EventReservation();
         reservation.setClient(clientRepository.findById(1L).orElseThrow());
-        reservation.setEventType(EventType.REUNION);
+        reservation.setEventType(filterFields.getEventType());
         reservation.setStartDate(startDate);
         reservation.setEndDate(endDate);
         reservation.setTotalPrice(total);

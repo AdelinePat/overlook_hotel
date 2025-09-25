@@ -3,6 +3,7 @@ package overlook_hotel.overlook_hotel.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import overlook_hotel.overlook_hotel.model.enumList.EventType;
 
 import java.time.LocalDateTime;
 
@@ -17,4 +18,6 @@ public class EventFilterFields {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endDate;
+
+    private EventType eventType;
 }

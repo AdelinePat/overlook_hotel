@@ -26,7 +26,22 @@
 <div class="page">
 
   <!-- FILTER SECTION -->
+
+
+
+
   <form class="filter-bar mt50" th:action="@{/event-reservation}" method="post" th:object="${filterFields}">
+
+    <div class="filter-input reservation-input">
+      <label><i class="fa-solid fa-champagne-glasses"></i></label>
+      <select th:field="*{eventType}">
+        <option value="">-- Type d'événement --</option>
+        <option th:each="et : ${eventTypes}"
+                th:value="${et}"
+                th:text="${et}"></option>
+      </select>
+    </div>
+
     <div class="filter-input reservation-input">
       <label><i class="fa-solid fa-tags"></i></label>
       <select th:field="*{placeTypeId}">
@@ -42,6 +57,7 @@
 <!--      <label><i class="fa-solid fa-user-group"></i></label>-->
 <!--      <input type="number" th:field="*{minCapacity}" placeholder="Capacité minimale"/>-->
 <!--    </div>-->
+
 
     <div class="filter-input reservation-input">
       <label><i class="fa-solid fa-calendar-days"></i></label>
@@ -98,6 +114,7 @@
               style="display:inline-block;margin-left:.5rem">
           <input type="hidden" th:name="startDate" th:value="${filterFields.startDate}" />
           <input type="hidden" th:name="endDate" th:value="${filterFields.endDate}" />
+        <input type="hidden" th:name="eventType" th:value="${filterFields.eventType}" />
           <button class="btn bg-purple" type="submit" title="Retirer">Retirer</button>
         </form>
         </p>
@@ -116,6 +133,7 @@
       <input type="hidden" name="placeTypeId" th:value="${filterFields.placeTypeId}"/>
       <input type="hidden" name="startDate" th:value="${filterFields.startDate}"/>
       <input type="hidden" name="endDate" th:value="${filterFields.endDate}"/>
+      <input type="hidden" name="eventType" th:value="${filterFields.eventType}"/>
       <button class="btn">Confirmer toutes les réservations</button>
     </form>
 
