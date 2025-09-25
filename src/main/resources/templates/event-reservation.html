@@ -38,7 +38,7 @@
         <option value="">-- Type d'événement --</option>
         <option th:each="et : ${eventTypes}"
                 th:value="${et}"
-                th:text="${et}"></option>
+                th:text="${@displayText.capitalize(et)}"></option>
       </select>
     </div>
 
