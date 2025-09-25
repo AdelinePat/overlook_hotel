@@ -1,13 +1,11 @@
 package overlook_hotel.overlook_hotel.controller;
 
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import overlook_hotel.overlook_hotel.model.RoomReservationCart;
 import overlook_hotel.overlook_hotel.model.RoomReservationFields;
 import overlook_hotel.overlook_hotel.model.entity.Feedback;
-import overlook_hotel.overlook_hotel.model.entity.Place;
 import overlook_hotel.overlook_hotel.model.entity.Room;
 import overlook_hotel.overlook_hotel.model.entity.RoomBonus;
 import overlook_hotel.overlook_hotel.model.enumList.BedType;
@@ -18,12 +16,11 @@ import overlook_hotel.overlook_hotel.service.StandingService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
-@SessionAttributes("roomReservationFilter")
+@SessionAttributes({"roomReservationFilter", "roomReservationCart"})
 public class RoomReservationController {
     private final RoomService roomService;
     private final StandingService standingService;
@@ -41,13 +38,17 @@ public class RoomReservationController {
         return filter;
     }
 
+    @ModelAttribute("roomReservationCart")
+    public RoomReservationCart createCart() {
+        RoomReservationCart cart = new RoomReservationCart();
+        cart.setRooms(new ArrayList<>());
+        return cart;
+    }
+
     @RequestMapping(value = "/room-reservation", method = {RequestMethod.GET, RequestMethod.POST})
     public String reservation(@ModelAttribute("roomReservationFilter") RoomReservationFields filterFields,
                               @ModelAttribute("roomReservationCart") RoomReservationCart cart,
                               Model model) {
-
-        LocalDate start = filterFields.getStartDate();
-        LocalDate end = filterFields.getEndDate();
 
         boolean cartHasRooms = cart.getRooms() != null && !cart.getRooms().isEmpty();
 
@@ -55,15 +56,16 @@ public class RoomReservationController {
             RoomReservationFields firstRoom = cart.getRooms().get(0);
             filterFields.setStartDate(firstRoom.getStartDate());
             filterFields.setEndDate(firstRoom.getEndDate());
-        } else {
-            // If cart is empty and no filter date set → reset to today/tomorrow
-            if (filterFields.getStartDate() == null || filterFields.getEndDate() == null) {
+        } else if (filterFields.getStartDate() == null || filterFields.getEndDate() == null) {
                 filterFields.setStartDate(LocalDate.now());
                 filterFields.setEndDate(LocalDate.now().plusDays(1));
-            }
         }
 
         System.out.println("\n\n\n\n\n\n\n\t\t\t\t\t\t\tpricerange: " + filterFields.getPriceRange());
+
+        List<Long> excludedRoomIds = cart.getRooms().stream()
+                .map(RoomReservationFields::getIdRoom)
+                .toList();
 
         model.addAttribute("standingList", standingService.getFullStandingList());
         model.addAttribute("bedTypeList", BedType.values());
@@ -74,10 +76,11 @@ public class RoomReservationController {
                 filterFields.getDescription(),
                 filterFields.getStanding(),
                 filterFields.getBedType(),
-                start,
-                end,
+                filterFields.getStartDate(),
+                filterFields.getEndDate(),
                 filterFields.getPriceRange(),
-                filterFields.getBonuses());
+                filterFields.getBonuses(),
+                excludedRoomIds);
 
         model.addAttribute("filterFields", filterFields);
         model.addAttribute("roomList", rooms);

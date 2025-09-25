@@ -37,6 +37,7 @@
     </li>
 </ul><a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a></nav>
 <div class="page ">
+    <p>Cart locked: <span th:text="${lockDateInputs}"></span></p>
 <!--    <h1 th:text="${title}"></h1>-->
         <form class="filter-bar mt50" th:action="@{/room-reservation}" method="post" th:object="${filterFields}">
 
@@ -122,7 +123,7 @@
                 </div>
 
                 <div class="card-description">
-                    <h3 th:text="${room.number} + ' ' + ${room.standing.name}"></h3>
+                    <h3 th:text="${room.number} + ' ' + ${@displayText.deleteUnderscore(room.standing.name)}"></h3>
                     <p>lit <span th:text="${room.type.name().toLowerCase()}"></span></p>
                     <p><span th:text="${room.nightPrice}"></span>€/Nuit</p>
                     <div class="bonus-list" th:if="${room.bonuses != null and #lists.size(room.bonuses) > 0}">

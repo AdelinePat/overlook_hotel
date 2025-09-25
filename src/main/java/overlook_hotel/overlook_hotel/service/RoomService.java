@@ -37,7 +37,8 @@ public class RoomService {
                                       LocalDate startDate,
                                       LocalDate endDate,
                                       List<Integer> night_price,
-                                      List<RoomBonusEnum> bonuses) {
+                                      List<RoomBonusEnum> bonuses,
+                                      List<Long> excludedRoomIds) {
 
         Specification<Room> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
 
@@ -82,6 +83,10 @@ public class RoomService {
 
         if (startDate != null && endDate != null) {
             spec = spec.and(RoomSpecification.isAvailableBetween(startDate, endDate));
+        }
+
+        if (excludedRoomIds != null && !excludedRoomIds.isEmpty()) {
+            spec = spec.and(RoomSpecification.idNotIn(excludedRoomIds));
         }
 
         return roomRepository.findAll(spec);

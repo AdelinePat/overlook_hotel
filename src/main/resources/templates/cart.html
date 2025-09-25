@@ -40,7 +40,7 @@
                     <p>
                         <strong>Bonus supplémentaires :</strong>
                         <span th:if="${#lists.isEmpty(room.additionalBonuses)}">Aucun</span>
-                        <span th:each="bonus, bonusStat : ${room.additionalBonuses}">
+                        <span th:each="bonus, bonusStat : ${@displayText.capitalize(room.additionalBonuses)}">
                             [[${bonus}]]<span th:if="${!bonusStat.last}">, </span>
                         </span>
                     </p>
