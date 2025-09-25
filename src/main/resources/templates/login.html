@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+    <div class="centered">
+        <div class="display-focus">
+            <h2>Login</h2>
+            <form th:action="@{/login}" method="post">
+                <input type="email" id="email" name="username" placeholder="Email" required />
+                <input type="password" id="password" name="password" placeholder="Password" required />
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <div th:if="${param.error}" style="color:red;">Invalid email or password.</div>
+            <div th:if="${param.logout}" style="color:green;">You have been logged out.</div>
+        </div>
+    </div>
+</body>
+</html>

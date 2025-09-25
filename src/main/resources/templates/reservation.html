@@ -35,7 +35,10 @@
     <li>
         Gestion Réservation
     </li>
-</ul><a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a></nav>
+</ul>
+<form th:action="@{/logout}" method="post" style="display:inline;">
+    <button type="submit" class="btn bg-purple">Se déconnecter</button>
+</form>
 <div class="page ">
 <!--    <h1 th:text="${title}"></h1>-->
         <form class="filter-bar mt50" th:action="@{/room-reservation}" method="post" th:object="${filterFields}">

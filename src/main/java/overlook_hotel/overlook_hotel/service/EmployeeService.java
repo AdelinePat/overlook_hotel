@@ -12,6 +12,13 @@ import java.util.List;
 
 @Service
 public class EmployeeService {
+    public Employee authenticate(String email, String password) {
+        Employee employee = employeeRepository.findByEmail(email);
+        if (employee != null && employee.getPassword() != null && employee.getPassword().equals(password)) {
+            return employee;
+        }
+        return null;
+    }
     private final EmployeeRepository employeeRepository;
     private final DatabaseEnumService databaseEnumService;
 

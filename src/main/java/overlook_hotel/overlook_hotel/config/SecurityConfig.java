@@ -3,10 +3,19 @@ package overlook_hotel.overlook_hotel.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
 @Configuration
 public class SecurityConfig {
+    @Autowired
+    private overlook_hotel.overlook_hotel.service.CustomUserDetailsService customUserDetailsService;
+
+    @Bean
+    public org.springframework.security.crypto.password.PasswordEncoder passwordEncoder() {
+        // Plain text for demo; use BCrypt in production
+        return org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
+    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //        http
@@ -17,10 +26,25 @@ public class SecurityConfig {
 //                .formLogin(login -> login.loginPage("/login").permitAll());
 
         http
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-                .csrf(csrf -> csrf.disable())
-                .formLogin(login -> login.disable())
-                .logout(logout -> logout.disable());
+            .userDetailsService(customUserDetailsService)
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/clients", "/employees").hasRole("MANAGER")
+                .requestMatchers("/cart").hasRole("CLIENT")
+                .requestMatchers("/table.html").hasAnyRole("EMPLOYEE", "MANAGER")
+                .requestMatchers("/login", "/css/**", "/js/**", "/img/**", "/").permitAll()
+                .anyRequest().permitAll()
+            )
+            .formLogin(login -> login
+                .loginPage("/login")
+                .defaultSuccessUrl("/", true)
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
+            )
+            .csrf(csrf -> csrf.disable());
 
         return http.build();
     }

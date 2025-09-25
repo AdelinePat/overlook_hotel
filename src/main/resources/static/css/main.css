@@ -257,6 +257,15 @@ a.btn:hover {
 /*.display-focus form input {
 }*/
 
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .display-focus form {
+
+    }
+}
 
 .display-focus input, .display-focus select {
     padding: 5px 10px;

@@ -50,6 +50,14 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
+        public Client authenticate(String email, String password) {
+            Client client = clientRepository.findByEmail(email);
+            if (client != null && client.getPassword() != null && client.getPassword().equals(password)) {
+                return client;
+            }
+            return null;
+        }
+
     public void deleteById(Long id) {
         clientRepository.deleteById(id);
     }
