@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${titlePage}">Overlook Hotel - Réservation événement</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav>
+  <a th:href="@{/index.html}">Overlook Hotel</a>
+  <ul>
+    <li>Dashboard</li>
+    <li>Gestion Événements</li>
+  </ul>
+  <a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a>
+</nav>
+
+<div class="page">
+
+  <!-- FILTER SECTION -->
+  <form class="filter-bar mt50" th:action="@{/event-reservation}" method="post" th:object="${filterFields}">
+
+    <!-- Space type filter -->
+    <div class="filter-input reservation-input">
+      <label><i class="fa-solid fa-tags"></i></label>
+      <select th:field="*{placeTypeId}">
+        <option value="">-- Type d'espace --</option>
+        <option th:each="pt : ${placeTypeList}"
+                th:value="${pt.id}"
+                th:text="${@displayText.capitalize(pt.name)}">
+        </option>
+      </select>
+    </div>
+
+    <!-- Minimum capacity filter -->
+    <div class="filter-input reservation-input">
+      <label><i class="fa-solid fa-user-group"></i></label>
+      <input type="number" th:field="*{minCapacity}" placeholder="Capacité minimale"/>
+    </div>
+
+    <!-- Date range filter -->
+    <div class="filter-input reservation-input">
+      <label><i class="fa-solid fa-calendar-days"></i></label>
+      <input type="datetime-local" th:field="*{startDate}"/>
+      <input type="datetime-local" th:field="*{endDate}"/>
+    </div>
+
+    <button class="btn lh12" type="submit">Rechercher</button>
+  </form>
+
+  <!-- SEARCH RESULTS -->
+  <h1>Résultats: <span th:text="${#lists.size(placeList)}"></span></h1>
+  <div class="booking-content">
+    <div class="book-card"
+         th:each="place : ${placeList}"
+         th:attr="data-hourly=${place.hourlyPrice}">
+
+
+    <!-- Image and price -->
+      <div class="booking-img"
+           th:classappend="${place.placeType != null ? place.placeType.name.toLowerCase() : 'default'}">
+        <p class="price" th:text="${place.hourlyPrice + ' €/heure'}"></p>
+      </div>
+
+      <!-- Description of the space -->
+      <div class="card-description">
+        <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
+        <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>
+        <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>
+        — <span class="calc-total" data-role="total">—</span>
+
+        <!-- Add to cart -->
+        <form th:action="@{/event-reservation/{id}(id=${place.id})}" method="post" th:object="${filterFields}">
+          <input type="hidden" th:field="*{placeTypeId}"/>
+          <input type="hidden" th:field="*{minCapacity}"/>
+          <input type="hidden" th:field="*{startDate}"/>
+          <input type="hidden" th:field="*{endDate}"/>
+          <button type="submit" class="btn m10">Ajouter au panier</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENT CART -->
+  <div class="display-focus" th:if="${session.eventCart != null}">
+    <h2>Votre panier d’événements</h2>
+    <ul>
+      <li th:each="place : ${session.eventCart}">
+        <p>
+          <strong th:text="${@displayText.capitalize(place.placeType.name)}"></strong>
+          — Capacité : <span th:text="${place.capacity}"></span>
+          — Prix : <span th:text="${place.hourlyPrice}"></span> €/h
+
+        <form th:action="@{/event-reservation/remove/{id}(id=${place.id})}"
+              method="post"
+              style="display:inline-block;margin-left:.5rem">
+          <button class="btn bg-purple" type="submit" title="Retirer">Retirer</button>
+        </form>
+
+
+
+        </p>
+        <hr/>
+      </li>
+    </ul>
+
+
+    <!-- Confirm all reservations -->
+    <form th:action="@{/event-reservation/confirm}" method="post">
+      <button class="btn">Confirmer toutes les réservations</button>
+    </form>
+
+    <form th:action="@{/event-reservation/clear}" method="post" style="margin-top:.5rem">
+      <button class="btn">Vider le panier</button>
+    </form>
+  </div>
+
+</div>
+</body>
+
+<script>
+  (function () {
+    const startInput = document.querySelector('input[name="startDate"]');
+    const endInput   = document.querySelector('input[name="endDate"]');
+
+    function parseLocalDateTime(inputEl) {
+      if (!inputEl || !inputEl.value) return null;
+      // "yyyy-MM-ddTHH:mm" -> Date locale
+      const v = inputEl.value;
+      // Safari iOS peut être capricieux : remplacer "T" par " "
+      const iso = v.includes('T') ? v : v.replace(' ', 'T');
+      const d = new Date(iso);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    function hoursRoundedUp(ms) {
+      if (ms <= 0) return 0;
+      const H = 60 * 60 * 1000;
+      return Math.ceil(ms / H); // arrondi à l'heure supérieure
+    }
+
+    function formatMoney(n) {
+      // Affiche comme 123,45 € en fr-FR
+      return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+    }
+
+    function updateTotals() {
+      const start = parseLocalDateTime(startInput);
+      const end   = parseLocalDateTime(endInput);
+
+      let hours = 0;
+      if (start && end) {
+        hours = hoursRoundedUp(end - start);
+      }
+
+      // 1) Totaux sur les cartes résultats
+      document.querySelectorAll('.book-card').forEach(card => {
+        const rate  = Number(card.dataset.hourly || 0);
+        const field = card.querySelector('[data-role="total"]');
+        if (!field) return;
+
+        if (hours > 0 && rate > 0) {
+          const total = hours * rate;
+          field.textContent = `Total pour ${hours} h : ${formatMoney(total)} €`;
+        } else {
+          field.textContent = 'Sélectionnez des dates pour voir le total';
+        }
+      });
+
+      // 2) Totaux dans le panier
+      document.querySelectorAll('.display-focus li[data-hourly]').forEach(li => {
+        const rate  = Number(li.dataset.hourly || 0);
+        const field = li.querySelector('[data-role="total"]');
+        if (!field) return;
+
+        if (hours > 0 && rate > 0) {
+          const total = hours * rate;
+          field.textContent = `Total: ${formatMoney(total)} € (${hours} h)`;
+        } else {
+          field.textContent = '—';
+        }
+      });
+    }
+
+    // Mets à jour quand on choisit les dates
+    startInput && startInput.addEventListener('change', updateTotals);
+    endInput   && endInput.addEventListener('change', updateTotals);
+
+    // Premier affichage
+    updateTotals();
+  })();
+</script>
+
+</html>

@@ -1,0 +1,79 @@
+package overlook_hotel.overlook_hotel.model.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import overlook_hotel.overlook_hotel.model.enumList.BedType;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@Entity
+@Table(name = "room")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Room {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_room")
+    private Long id;
+
+    @NotNull
+    @Column(name="number")
+    private Integer number;
+
+    @NotNull
+    @Column(name="capacity")
+    private Integer capacity;
+
+    @NotBlank
+    @Column(name="description", length = 500)
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "id_standing", nullable = false)
+    private Standing standing;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name="type", length = 15)
+    private BedType type;
+
+    @NotNull
+    @Column(name="night_price")
+    private BigDecimal nightPrice;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<RoomLinkReservation> roomReservationsList;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "room_link_bonus",
+            joinColumns = @JoinColumn(name = "id_room"),
+            inverseJoinColumns = @JoinColumn(name = "id_room_bonus")
+    )
+    private List<RoomBonus> bonuses;
+
+
+    @Transient
+    public BigDecimal getTotalNightPrice() {
+        BigDecimal base = (nightPrice != null) ? nightPrice : BigDecimal.ZERO;
+        if (bonuses == null || bonuses.isEmpty()) {
+            return base;
+        }
+        BigDecimal total = base;
+        for (RoomBonus bonus : bonuses) {
+            if (bonus.getDailyPrice() != null) {
+                total = total.add(bonus.getDailyPrice());
+            }
+        }
+        return total;
+    }
+
+}

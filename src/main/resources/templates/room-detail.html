@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Chambre ' + ${room.number} + ' - ' + ${room.standing.name}"></title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav>
+    <a th:href="@{/index.html}">Overlook Hotel</a>
+    <ul>
+        <li>
+            Dashboard
+        </li>
+        <li>
+            Gestion Réservation
+        </li>
+        <li>
+            <a th:href="@{/room-reservation}">Retour à la liste</a>
+        </li>
+
+    </ul>
+    <a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a>
+</nav>
+
+<div class="page">
+
+    <h1>Chambre <span th:text="${room.number}"></span> - <span th:text="${@displayText.deleteUnderscore(room.standing.name)}"></span></h1>
+
+    <div class="container">
+
+        <div class="display-table">
+
+            <h3>Chambre <span th:text="${@displayText.capitalize(room.type)}"></span></h3>
+            <p>Prix par défaut: <span th:text="${room.nightPrice}"></span>/Nuit</p>
+            <p th:text="${room.description}"></p>
+
+            <h3>Extras par défaut:</h3>
+                <ul id="base-bonus">
+                    <li th:each="bonus : ${room.bonuses}"
+
+                        th:value="${bonus.type.name()}"
+                        th:data-value="${bonus.type.name()}"
+                        th:data-text="${@displayText.capitalize(bonus.type.name())}"
+                        th:data-price="${bonus.dailyPrice}">
+
+                        <span
+                            th:text="${@displayText.capitalize(bonus.type.name())}"></span> - <span th:text="${bonus.dailyPrice}">
+                        </span>
+                        €/jour
+                    </li>
+                </ul>
+
+            <form class="form-select-bonus" th:action="@{/room-reservation/{id}(id=${room.id})}" method="post">
+                <h3>Ajouter des bonus pour cette réservation :</h3>
+                <div class="form-select-bonus-content">
+                <div class="input-add-bonus"
+                     th:each="bonus : ${roomBonusList}">
+                    <label>
+                        <input
+                                th:value="${bonus.type.name()}"
+                                th:data-value="${bonus.type.name()}"
+                                th:data-text="${@displayText.capitalize(bonus.type.name())}"
+                                th:data-price="${bonus.dailyPrice}"
+                                type="checkbox" name="additionalBonuses"  />
+                        <span th:text="${@displayText.capitalize(bonus.type.name()) + ' - ' + bonus.dailyPrice + ' €/Jour' }"></span>
+                    </label>
+                </div>
+
+                </div>
+            </form>
+
+            <div class="feedback-list">
+                <h2>Avis précédents :</h2>
+                <div th:each="fb : ${feedbackList}">
+                    <p>Note: <span th:text="${fb.rate}"></span>/5</p>
+                    <p th:text="${fb.comment}"></p>
+                    <hr/>
+                </div>
+            </div>
+        </div>
+
+        <div class="display-focus-room">
+            <div class="booking-img"
+                 th:classappend="${room.standing.name.toLowerCase()}">
+            </div>
+            <form th:object="${roomReservationFields}" class="focus-room-content"
+                  th:action="@{/cart}"
+                  method="post">
+                <h2>Votre séjour</h2>
+
+                <p><i class="fa-solid fa-calendar-days"></i>
+                    <span th:text="${startDate}"></span> - <span th:text="${endDate}"></span>
+                </p>
+                <p>Nombre de nuits : <span th:text="${nights}"></span></p>
+
+                <!-- Selected Bonuses -->
+                <ul id="selected-bonuses">
+                    <li th:each="bonus : ${room.bonuses}"
+                        th:text="${@displayText.capitalize(bonus.type.name()) + ' - ' + bonus.dailyPrice + ' €/Jour'}">
+                    </li>
+                </ul>
+
+                <!-- Hidden inputs for RoomReservationFields -->
+                <input type="hidden" th:field="*{idRoom}"  th:value="${room.id}" />
+                <input type="hidden" th:field="*{startDate}" th:value="${startDate}" />
+                <input type="hidden" th:field="*{endDate}" th:value="${endDate}" />
+                <input type="hidden" th:field="*{roomNumber}" th:value="${room.number}" />
+                <input type="hidden" th:field="*{capacity}" th:value="${room.capacity}" />
+                <input type="hidden" th:field="*{description}" th:value="${room.description}" />
+                <input type="hidden" th:field="*{standingString}" th:value="${room.standing.name}" />
+                <input type="hidden" id="total-price-hidden" th:field="*{totalPriceWithAdditional}" />
+
+                <!-- Container for additional bonuses as hidden inputs -->
+                <div id="bonus-hidden-inputs"></div>
+
+                <h3>Total <span id="total-price" th:text="${totalPerNight}"></span>€</h3>
+                <button type="submit" class="btn bg-purple">Réserver</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+</body>
+<script th:inline="javascript">
+    const nights = [[${nights}]];
+    const roomNightPrice = [[${room.nightPrice}]];
+</script>
+
+<script>
+    const focusRoomForm = document.querySelector(".focus-room-content");
+    const bonusForm = document.querySelector(".form-select-bonus");
+
+    const totalPriceDisplay = document.querySelector("#total-price");
+
+    const basicBonusList = Array.from(document.querySelectorAll("#base-bonus li")).map(li => ({
+        value: li.dataset.value,
+        text: li.dataset.text,
+        price: parseFloat(li.dataset.price)
+    }));
+
+    let selectedBonuses = [];
+
+    // Refresh UI in the focus form
+    function refreshUI() {
+        const focusSelectBonusList = document.querySelector("#selected-bonuses");
+        if (!focusSelectBonusList) return;
+        focusSelectBonusList.innerHTML = "";
+
+        const allBonuses = [...basicBonusList, ...selectedBonuses];
+        allBonuses.forEach(bonus => {
+            const li = document.createElement("li");
+            li.textContent = `${bonus.text} (${bonus.price}€/jour)`;
+            focusSelectBonusList.appendChild(li);
+        });
+
+        const hiddenTotal = document.querySelector("#total-price-hidden");
+        if (hiddenTotal) {
+            hiddenTotal.value = calculateTotalPrice();
+        }
+
+        totalPriceDisplay.textContent = calculateTotalPrice().toFixed(2);
+    }
+    if (bonusForm) {
+        // Update selected bonuses whenever checkboxes change
+        bonusForm.addEventListener("change", () => {
+            const checkedBoxes = bonusForm.querySelectorAll("input[name='additionalBonuses']:checked");
+            selectedBonuses = Array.from(checkedBoxes).map(box => ({
+                value: box.value,
+                text: box.dataset.text,
+                price: parseFloat(box.dataset.price)
+            }));
+            refreshUI();
+        });
+    }
+
+    // On submit, create hidden inputs for selected bonuses
+    focusRoomForm.addEventListener("submit", (event) => {
+        const hiddenContainer = document.querySelector("#bonus-hidden-inputs");
+        hiddenContainer.innerHTML = ""; // Clear previous hidden inputs
+
+        // selectedBonuses.forEach(bonus => {
+        //     const hidden = document.createElement("input");
+        //     hidden.type = "hidden";
+        //     hidden.name = `additionalBonuses[${index}]`
+        //     hidden.value = bonus.value;
+        //     hiddenContainer.appendChild(hidden);
+        // });
+        selectedBonuses.forEach((bonus, index) => {
+            const hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.name = `additionalBonuses[${index}]`;
+            hidden.value = bonus.value;
+            hiddenContainer.appendChild(hidden);
+        });
+
+
+        // Optional: add hidden total price input if needed
+        // const hiddenTotal = document.getElementById("hidden-total-price");
+        const hiddenTotal = document.querySelector("#total-price-hidden");
+        if (hiddenTotal) {
+            hiddenTotal.value = calculateTotalPrice(); // JS total
+        }
+    });
+
+
+    function calculateTotalPrice() {
+        // Start with base room price
+        let total = roomNightPrice;
+
+        // Add all default bonuses
+        basicBonusList.forEach(bonus => total += bonus.price);
+
+        // Add selected extra bonuses
+        selectedBonuses.forEach(bonus => total += bonus.price);
+
+        // Multiply by number of nights
+        total *= nights;
+
+        return total;
+    }
+
+
+</script>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${titlePage}"></title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.dropdown-toggle').forEach(function(button) {
+            button.addEventListener('click', function() {
+                // Toggle the "show" class on parent .dropdown
+                this.parentElement.classList.toggle('show');
+            });
+        });
+
+            document.addEventListener('click', function(event) {
+                document.querySelectorAll('.dropdown').forEach(function(dropdown) {
+                    if (!dropdown.contains(event.target)) {
+                        dropdown.classList.remove('show');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<nav><a th:href="@{/index.html}">Overlook Hotel</a><ul>
+    <li>
+        Dashboard
+    </li>
+    <li>
+        Gestion Réservation
+    </li>
+</ul><a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a></nav>
+<div class="page ">
+    <p>Cart locked: <span th:text="${lockDateInputs}"></span></p>
+<!--    <h1 th:text="${title}"></h1>-->
+        <form class="filter-bar mt50" th:action="@{/room-reservation}" method="post" th:object="${filterFields}">
+
+            <div class="filter-input reservation-input">
+                <label><i class="fa-solid fa-hashtag"></i></label>
+                <input type="number" th:field="*{roomNumber}" placeholder="Numéro de chambre"/>
+            </div>
+
+            <div class="filter-input reservation-input bonus-dropdown">
+                <label><i class="fa-solid fa-boxes-packing"></i></label>
+
+                <div class="dropdown">
+                    <button type="button" class="dropdown-toggle">-- Bonus --</button>
+
+                    <div class="dropdown-menu">
+                        <div class="dropdown-items" th:each="bonus : ${bonusList}">
+                            <label>
+                                <input type="checkbox"
+                                       th:field="*{bonuses}"
+                                       th:value="${bonus.name()}"/>
+                                <span th:text="${@displayText.capitalize(bonus.name())}"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-input reservation-input">
+                <label><i class="fa-solid fa-align-left"></i></label>
+                <input type="text" th:field="*{description}" placeholder="Mot clé" />
+            </div>
+
+            <div class="filter-input reservation-input">
+                <label><i class="fa-solid fa-tags"></i></label>
+                <select th:field="*{standing}">
+                    <option value="">-- Standing --</option>
+                    <option th:each="stand : ${standingList}"
+                            th:value="${stand.id}"
+                            th:text="${@displayText.capitalize(stand.name)}"
+                            th:selected="${filterFields.standing != null and filterFields.standing.id == stand.id}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-input reservation-input">
+                <label><i class="fa-solid fa-bed"></i></label>
+                <select th:field="*{bedType}">
+                    <option value=""
+                            th:text="'-- type --'"
+                            th:selected="${filterFields.bedType == null}">
+                    </option>
+                    <option th:each="type : ${bedTypeList}"
+                            th:value="${type}"
+                            th:text="${@displayText.capitalize(type)}"
+                            th:selected="${filterFields.bedType == type}">
+                    </option>
+                </select>
+            </div>
+
+
+            <div class="filter-input reservation-input">
+                <label><i class="fa-solid fa-calendar-days"></i></label>
+                <input type="date" th:field="*{startDate}" th:disabled="${lockDateInputs}"/>
+                <input type="date" th:field="*{endDate}" th:disabled="${lockDateInputs}"/>
+            </div>
+
+            <div class="filter-input reservation-input">
+                <label><i class="fa-solid fa-money-check-dollar"></i></label>
+                <input type="number" th:field="*{priceRange[0]}" placeholder="Min"/>
+                <input type="number" th:field="*{priceRange[1]}" placeholder="Max"/>
+            </div>
+
+            <button class="btn lh12" type="submit">Rechercher</button>
+        </form>
+
+        <h1>Résultats: <span th:text="${#lists.size(roomList)}"></span></h1>
+
+        <div class="booking-content">
+            <div class="book-card" th:each="room : ${roomList}">
+                <div class="booking-img"
+                     th:classappend="${room.standing.name.toLowerCase()}">
+                    <p class="price" th:text="${room.totalNightPrice}"></p>
+                </div>
+
+                <div class="card-description">
+                    <h3 th:text="${room.number} + ' ' + ${@displayText.deleteUnderscore(room.standing.name)}"></h3>
+                    <p>lit <span th:text="${room.type.name().toLowerCase()}"></span></p>
+                    <p><span th:text="${room.nightPrice}"></span>€/Nuit</p>
+                    <div class="bonus-list" th:if="${room.bonuses != null and #lists.size(room.bonuses) > 0}">
+                        <p>Extra:</p>
+                        <ul>
+                            <li th:each="bonus : ${room.bonuses}">
+                                <span th:text="${@displayText.capitalize(bonus.type.name())}"></span>
+                                <span th:text="${bonus.dailyPrice}"></span>€/Jour
+                            </li>
+                        </ul>
+                    </div>
+<!--                    <p class="price"><span th:text="${room.nightPrice}"></span>€/nuit</p>-->
+                    <form th:action="@{/room-reservation/{id}(id=${room.id})}" method="post" th:object="${filterFields}">
+                        <input type="hidden" th:field="*{startDate}" />
+                        <input type="hidden" th:field="*{endDate}" />
+                        <input type="hidden" th:field="*{roomNumber}" />
+                        <input type="hidden" th:field="*{capacity}" />
+                        <input type="hidden" th:field="*{description}" />
+                        <input type="hidden" th:field="*{standing}" />
+                        <input type="hidden" th:field="*{bedType}" />
+                        <input type="hidden" th:field="*{priceRange[0]}" />
+                        <input type="hidden" th:field="*{priceRange[1]}" />
+                        <input type="hidden" th:field="*{bonuses}" />
+                        <button type="submit" class="btn m10">
+                            Réserver
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+</div>
+</body>
+</html>
