@@ -58,7 +58,10 @@ public class EventReservationController {
             filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
         }
 
-        if (filterFields.getEventType() == null) {
+
+        if (filterFields.getEventType() != null) {
+            filterFields.setEventType(filterFields.getEventType());
+        } else {
             filterFields.setEventType(EventType.AUTRE);
         }
 
@@ -133,7 +136,7 @@ public class EventReservationController {
     public String confirmReservation(@ModelAttribute EventFilterFields filterFields,
                                      RedirectAttributes redirectAttributes,
                                      HttpSession session
-                                     ) {
+    ) {
         List<Place> cart = (List<Place>) session.getAttribute("eventCart");
         if (cart == null || cart.isEmpty()) {
             return "redirect:/event-reservation"; // cart empty
