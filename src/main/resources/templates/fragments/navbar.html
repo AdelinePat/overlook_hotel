@@ -1,52 +1,48 @@
 <!-- fragments/navbar.html -->
 <div th:fragment="navbar">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Overlook Hotel</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
-                        <a class="nav-link" th:href="@{/clients}">Gestions Clients</a>
-                    </li>
-                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
-                        <a class="nav-link" th:href="@{/employees}">Gestions Employés</a>
-                    </li>
-                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''EMPLOYEE'')')}">
-                        <a class="nav-link" th:href="@{/schedule}">Planning</a>
-                    </li>
-                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
-                        <a class="nav-link" th:href="@{/room-reservation}">Réserver votre Séjour</a>
-                    </li>
-                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
-                        <a class="nav-link" th:href="@{/event-reservation}">Réserver votre Événement</a>
-                    </li>
-                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
-                        <a class="nav-link" th:href="@{/cart}">Vos Réservations</a>
-                    </li>
-                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
-                        <a class="nav-link" th:href="@{/cart}">Ma sélection</a>
-                    </li>
-                </ul>
-                <div th:if="${!#authorization.expression('isAuthenticated()')}">
-                    <form th:action="@{/login}" method="post" style="display:inline;">
-                        <input type="text" name="username" placeholder="Email" required>
-                        <input type="password" name="password" placeholder="Mot de passe" required>
-                        <button type="submit" class="btn">Se connecter</button>
-                    </form>
-                    <form th:action="@{/register}" method="post" style="display:inline;">
-                        <button type="submit" class="btn bg-purple">Créer un compte</button>
-                </div>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
-                        <span class="navbar-text me-2">Bienvenue, <span th:text="${#authentication?.name}"></span></span>
-                    </li>
-                    <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
-                        <form th:action="@{/logout}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Déconnexion</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
+    <nav>
+        <a href="/">Overlook Hotel</a>
+        <ul>
+            <li th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
+                <a class="nav-link" th:href="@{/clients}">Gestions Clients</a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
+                <a class="nav-link" th:href="@{/employees}">Gestions Employés</a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''EMPLOYEE'')')}">
+                <a class="nav-link" th:href="@{/schedule}">Planning</a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
+                <a class="nav-link" th:href="@{/room-reservation}">Réserver votre Séjour</a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
+                <a class="nav-link" th:href="@{/event-reservation}">Réserver votre Événement</a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
+                <a class="nav-link" th:href="@{/cart}">Vos Réservations</a>
+            </li>
+            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
+                <a class="nav-link" th:href="@{/cart}">Ma sélection</a>
+            </li>
+        </ul>
+        <div th:if="${!#authorization.expression('isAuthenticated()')}">
+            <form th:action="@{/login}" method="post" style="display:inline;">
+                <input type="text" name="username" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Mot de passe" required>
+                <button type="submit" class="btn">Se connecter</button>
+            </form>
+            <form th:action="@{/register}" method="post" style="display:inline;">
+                <button type="submit" class="btn">Créer un compte</button>
         </div>
+        <ul>
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+                <span>Bienvenue, <span th:text="${#authentication?.name}"></span></span>
+            </li>
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn">Déconnexion</button>
+                </form>
+            </li>
+        </ul>
     </nav>
 </div>
