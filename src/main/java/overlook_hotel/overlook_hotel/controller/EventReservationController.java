@@ -59,11 +59,13 @@ public class EventReservationController {
         }
 
 
-        if (filterFields.getEventType() != null) {
-            filterFields.setEventType(filterFields.getEventType());
-        } else {
-            filterFields.setEventType(EventType.AUTRE);
-        }
+//        if (filterFields.getEventType() != null) {
+//            filterFields.setEventType(filterFields.getEventType());
+//        } else {
+//            filterFields.setEventType(EventType.AUTRE);
+//        }
+
+
 
         // data for select inputs
         List<PlaceType> placeTypes = placeTypeService.getAll();
@@ -161,6 +163,11 @@ public class EventReservationController {
             total = total.add(place.getHourlyPrice().multiply(BigDecimal.valueOf(hours)));
         }
 
+        EventType chosenEventType = filterFields.getEventType();
+        if (chosenEventType == null) {
+            chosenEventType = EventType.AUTRE;
+        }
+
         // entity reservation
         EventReservation reservation = new EventReservation();
         reservation.setClient(clientRepository.findById(1L).orElseThrow());
@@ -184,10 +191,6 @@ public class EventReservationController {
         session.removeAttribute("eventCart");
 
         redirectAttributes.addFlashAttribute("successMessage", "Réservation enregistrée avec succès !");
-
-
-
-
 
         return "redirect:/event-reservation";
     }
