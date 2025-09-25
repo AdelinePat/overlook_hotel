@@ -19,5 +19,7 @@ public class EventFilterFields {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endDate;
 
-    private EventType eventType;
+//    private EventType eventType;
+
+    private EventType eventType = EventType.AUTRE;
 }

@@ -24,6 +24,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Controller
 public class EventReservationController {
@@ -47,6 +49,18 @@ public class EventReservationController {
     public String reservation(@ModelAttribute EventFilterFields filterFields,
                               Model model,
                               HttpSession session) {
+
+
+        if (filterFields.getStartDate() == null) {
+            filterFields.setStartDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        }
+        if (filterFields.getEndDate() == null || !filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
+            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
+        }
+
+        if (filterFields.getEventType() == null) {
+            filterFields.setEventType(EventType.AUTRE);
+        }
 
         // data for select inputs
         List<PlaceType> placeTypes = placeTypeService.getAll();
