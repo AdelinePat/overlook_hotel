@@ -29,7 +29,7 @@
 
         <div th:if="${!#lists.isEmpty(cartItems)}">
             <div class="cart-items">
-                <div class="cart-room" th:each="room : ${cartItems}">
+                <div class="cart-room" th:each="room,  iterStat : ${cartItems}">
                     <h2>Chambre <span th:text="${room.roomNumber}"></span></h2>
 
                     <p>
@@ -40,15 +40,24 @@
                     <p>
                         <strong>Bonus supplémentaires :</strong>
                         <span th:if="${#lists.isEmpty(room.additionalBonuses)}">Aucun</span>
-                        <span th:each="bonus, bonusStat : ${room.additionalBonuses}">
+                        <span th:each="bonus, bonusStat : ${@displayText.capitalize(room.additionalBonuses)}">
                             [[${bonus}]]<span th:if="${!bonusStat.last}">, </span>
                         </span>
                     </p>
+                    <form th:action="@{/cart}" method="post" style="display:inline;">
+                        <input type="hidden" name="deleteIndex" th:value="${iterStat.index}" />
+                        <button type="submit" class="btn">Annuler</button>
+                    </form>
                     <p>Prix de la chambre : <span th:text="${room.getTotalPriceWithAdditional}"></span></p>
 
                 </div>
                 <h2>Prix total de toutes les chambres :</h2>
                     <p><span th:text="${totalCartPrice}"></span> €</p>
+                <a href="/room-reservation" class="btn bg-purple">Réserver une chambre</a>
+                <form th:action="@{/cart}" method="post" style="display:inline;">
+                    <input type="hidden" name="resetCart" value="true"/>
+                    <button type="submit" class="btn">Vider le panier</button>
+                </form>
             </div>
 
     </div>

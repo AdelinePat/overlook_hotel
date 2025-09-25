@@ -43,32 +43,32 @@ public class CartController {
     }
 
     // POST /cart → Add room to cart
-    @PostMapping("/cart")
-    public String addToCart(@ModelAttribute RoomReservationFields roomFields,
-                            @ModelAttribute("roomReservationCart") RoomReservationCart cart) {
-
-        // Resolve Standing entity
-        if (roomFields.getStandingString() != null) {
-            Standing standing = standingService.findStandingByName(roomFields.getStandingString());
-            roomFields.setStanding(standing);
-        }
-
-        // Convert additional bonuses to enum
-        if (roomFields.getAdditionalBonuses() != null) {
-            List<RoomBonusEnum> enumBonuses = new ArrayList<>();
-            System.out.println("\n\n\n\n\n\n\n\n\n" + roomFields.getAdditionalBonuses());
-            for (RoomBonusEnum bonus : roomFields.getAdditionalBonuses()) {
-                try {
-                    System.out.println("\n\n\n\n\n\n\n\n\n" + bonus);
-                    enumBonuses.add(RoomBonusEnum.valueOf(bonus.name()));
-                } catch (IllegalArgumentException ignored) {}
-            }
-            roomFields.setAdditionalBonuses(enumBonuses);
-        }
-
-        cart.getRooms().add(roomFields);
-        return "redirect:/cart"; // Show updated cart
-    }
+//    @PostMapping("/cart")
+//    public String addToCart(@ModelAttribute RoomReservationFields roomFields,
+//                            @ModelAttribute("roomReservationCart") RoomReservationCart cart) {
+//
+//        // Resolve Standing entity
+//        if (roomFields.getStandingString() != null) {
+//            Standing standing = standingService.findStandingByName(roomFields.getStandingString());
+//            roomFields.setStanding(standing);
+//        }
+//
+//        // Convert additional bonuses to enum
+//        if (roomFields.getAdditionalBonuses() != null) {
+//            List<RoomBonusEnum> enumBonuses = new ArrayList<>();
+//            System.out.println("\n\n\n\n\n\n\n\n\n" + roomFields.getAdditionalBonuses());
+//            for (RoomBonusEnum bonus : roomFields.getAdditionalBonuses()) {
+//                try {
+//                    System.out.println("\n\n\n\n\n\n\n\n\n" + bonus);
+//                    enumBonuses.add(RoomBonusEnum.valueOf(bonus.name()));
+//                } catch (IllegalArgumentException ignored) {}
+//            }
+//            roomFields.setAdditionalBonuses(enumBonuses);
+//        }
+//
+//        cart.getRooms().add(roomFields);
+//        return "redirect:/cart"; // Show updated cart
+//    }
 
     // GET /cart → Show cart contents
     @GetMapping("/cart")
@@ -132,5 +132,49 @@ public class CartController {
         cart.getRooms().clear();
         sessionStatus.setComplete(); // Remove session attribute
         return "redirect:/confirmation";
+    }
+
+
+    @PostMapping("/cart")
+    public String addOrDeleteFromCart(@RequestParam(value = "deleteIndex", required = false) Integer deleteIndex,
+                                      @RequestParam(value = "resetCart", required = false) Boolean resetCart,
+                                      @ModelAttribute RoomReservationFields roomFields,
+                                      @ModelAttribute("roomReservationCart") RoomReservationCart cart,
+                                      @ModelAttribute("roomReservationFilter") RoomReservationFields filterFields) {
+
+
+        filterFields.setStartDate(roomFields.getStartDate());
+        filterFields.setEndDate(roomFields.getEndDate());
+
+
+        if (resetCart != null && resetCart) {
+            // 🗑 Clear the entire cart
+            cart.getRooms().clear();
+        } else if (deleteIndex != null) {
+            // 🗑 Remove single item by index
+            if (deleteIndex >= 0 && deleteIndex < cart.getRooms().size()) {
+                cart.getRooms().remove((int) deleteIndex);
+            }
+        } else {
+            // ➕ Add new item as before
+            if (roomFields.getStandingString() != null) {
+                Standing standing = standingService.findStandingByName(roomFields.getStandingString());
+                roomFields.setStanding(standing);
+            }
+
+            if (roomFields.getAdditionalBonuses() != null) {
+                List<RoomBonusEnum> enumBonuses = new ArrayList<>();
+                for (RoomBonusEnum bonus : roomFields.getAdditionalBonuses()) {
+                    try {
+                        enumBonuses.add(RoomBonusEnum.valueOf(bonus.name()));
+                    } catch (IllegalArgumentException ignored) {}
+                }
+                roomFields.setAdditionalBonuses(enumBonuses);
+            }
+
+            cart.getRooms().add(roomFields);
+        }
+
+        return "redirect:/cart";
     }
 }
