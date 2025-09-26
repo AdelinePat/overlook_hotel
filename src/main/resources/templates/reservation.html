@@ -38,7 +38,7 @@
 </ul><a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a></nav>
 <div class="page ">
         <div th:if="${errors != null}">
-            <ul class="error-messages">
+            <ul class="alert error">
                 <li th:each="err : ${errors}" th:text="${err}" style="color: red;"></li>
             </ul>
         </div>

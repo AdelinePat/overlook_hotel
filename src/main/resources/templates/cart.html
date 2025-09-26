@@ -22,6 +22,14 @@
     <div class="container">
         <h1>Votre panier</h1>
 
+        <div th:if="${message != null}" class="alert success">
+            <p th:text="${message}"></p>
+        </div>
+
+        <div th:if="${errorMessage != null}" class="alert error">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
         <div th:if="${#lists.isEmpty(cartItems)}">
             <p>Votre panier est vide.</p>
             <a href="/room-reservation" class="btn bg-purple">Réserver une chambre</a>
