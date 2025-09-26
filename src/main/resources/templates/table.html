@@ -32,13 +32,7 @@
 </head>
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
-            Gestion Réservation
-        </li>
-    </ul>
-    <form th:action="@{/logout}" method="post" style="display:inline;">
-        <button type="submit" class="btn bg-purple">Se déconnecter</button>
-    </form>
-</nav>
+
 <div class="page">
     <h1 th:text="${title}"></h1>
     <div class="container">
@@ -143,6 +137,12 @@
                 <input type="text" name="phone" id="focus-phone"
                     placeholder="telephone"
                     th:value="${focusedClient != null ? focusedClient.phone : ''}" th:if="${entityType == 'client'}">
+
+                <!-- Password fields for add action only -->
+                <input type="password" name="password" id="focus-password"
+                    placeholder="Mot de passe" th:if="${focusedClient == null}" required>
+                <input type="password" name="confirmPassword" id="focus-confirm-password"
+                    placeholder="Confirmer le mot de passe" th:if="${focusedClient == null}" required>
 
                 <button type="submit" name="reset" value="true" class="btn">Réinitialiser</button>
 
