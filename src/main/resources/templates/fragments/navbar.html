@@ -31,8 +31,7 @@
                 <input type="password" name="password" placeholder="Mot de passe" required>
                 <button type="submit" class="btn">Se connecter</button>
             </form>
-            <form th:action="@{/register}" method="post" style="display:inline;">
-                <button type="submit" class="btn">Créer un compte</button>
+            <a th:href="@{/register}" class="btn">Créer un compte</a>
         </div>
         <ul>
             <li th:if="${#authorization.expression('isAuthenticated()')}">

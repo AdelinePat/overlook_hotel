@@ -10,6 +10,9 @@ import java.util.List;
 
 @Service
 public class ClientService {
+    public Client findByEmail(String email) {
+        return clientRepository.findByEmail(email);
+    }
     private final ClientRepository clientRepository;
 
     public ClientService(ClientRepository clientRepository) {
