@@ -6,10 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import overlook_hotel.overlook_hotel.model.EventFilterFields;
-import overlook_hotel.overlook_hotel.model.entity.EventLinkReservation;
-import overlook_hotel.overlook_hotel.model.entity.EventReservation;
-import overlook_hotel.overlook_hotel.model.entity.Place;
-import overlook_hotel.overlook_hotel.model.entity.PlaceType;
+import overlook_hotel.overlook_hotel.model.entity.*;
 import overlook_hotel.overlook_hotel.model.enumList.EventType;
 import overlook_hotel.overlook_hotel.repository.ClientRepository;
 import overlook_hotel.overlook_hotel.repository.EventLinkPlaceRepository;
@@ -210,7 +207,13 @@ public class EventReservationController {
 
         // entity reservation
         EventReservation reservation = new EventReservation();
-        reservation.setClient(clientRepository.findById(1L).orElseThrow());
+//        reservation.setClient(clientRepository.findById(1L).orElseThrow());
+        Client client = (Client) session.getAttribute("loggedClient");
+        if (client == null ) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vous devez être connecté pour réserver.");
+            return "redirect:/login";
+        }
+        reservation.setClient(client);
         reservation.setEventType(filterFields.getEventType());
         reservation.setStartDate(startDate);
         reservation.setEndDate(endDate);
@@ -237,10 +240,14 @@ public class EventReservationController {
 
     }
     @GetMapping("/event-reservation/list")
-    public String listReservations(Model model) {
-        Long clientId = 1L;
+    public String listReservations(Model model, HttpSession session) {
+//        Long clientId = 1L;
+        Client client = (Client) session.getAttribute("loggedClient");
+        if (client == null) {
+            return "redirect:/login";
+        }
 
-        List<EventReservation> reservations = eventReservationRepository.findByClientId(clientId);
+        List<EventReservation> reservations = eventReservationRepository.findByClientId(client.getId());
 
         model.addAttribute("reservations", reservations);
         model.addAttribute("titlePage", "Mesreservations - Overlook Hotel");
