@@ -84,6 +84,10 @@ h3 {
     background: var(--main-bg-color);
 }
 
+.bg-grey {
+    background: var(--grey);
+}
+
 p10 {
     padding: 10px;
 }

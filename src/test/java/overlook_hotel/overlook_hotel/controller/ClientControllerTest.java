@@ -18,7 +18,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Disabled
 public class ClientControllerTest {
 
     private final ClientService mockClientService = mock(ClientService.class);
