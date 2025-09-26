@@ -228,33 +228,35 @@ VALUES
         ('PLACARD_A_BALAIS'),
         ('SALLE_SUR_DEMANDE');
 
+-- MOT DE PASSE === password
 INSERT INTO manager (lastname, firstname, email, salt, password)
 VALUES
-        ('Dupont', 'Jean', 'jean.dupont@example.com', 'somesalt1', 'password1'),
-        ('Martin', 'Sophie', 'sophie.martin@example.com', 'somesalt2', 'password2');
+        ('Dupont', 'Jean', 'jean.dupont@example.com', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Test', 'Manager', 'man.ager@ex.com', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Martin', 'Sophie', 'sophie.martin@example.com', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG');
 
 INSERT INTO client (lastname, firstname, email, phone, salt, password)
 VALUES
-        ('Durand', 'Alice', 'alice.durand@example.com', '0123456789', 'salt1', 'pass1'),
-        ('Moreau', 'Bob', 'bob.moreau@example.com', '0987654321', 'salt2', 'pass2'),
-        ('Petit', 'Claire', 'claire.petit@example.com', '0612345678', 'salt3', 'pass3'),
-        ('Roux', 'David', 'david.roux@example.com', '0654321987', 'salt4', 'pass4'),
-        ('Blanc', 'Emma', 'emma.blanc@example.com', '0623456789', 'salt5', 'pass5'),
-        ('Lemoine', 'Franck', 'franck.lemoine@example.com', '0678912345', 'salt6', 'pass6'),
-        ('Gautier', 'Hélène', 'helene.gautier@example.com', '0612349876', 'salt7', 'pass7'),
-        ('Faure', 'Isabelle', 'isabelle.faure@example.com', '0656781234', 'salt8', 'pass8'),
-        ('Chevalier', 'Julien', 'julien.chevalier@example.com', '0621987654', 'salt9', 'pass9'),
-        ('Michel', 'Karine', 'karine.michel@example.com', '0612345671', 'salt10', 'pass10'),
-        ('Perrin', 'Laurent', 'laurent.perrin@example.com', '0623456782', 'salt11', 'pass11'),
-        ('Henry', 'Marie', 'marie.henry@example.com', '0678123490', 'salt12', 'pass12'),
-        ('Noel', 'Nicolas', 'nicolas.noel@example.com', '0612987654', 'salt13', 'pass13'),
-        ('Robin', 'Olivia', 'olivia.robin@example.com', '0654321765', 'salt14', 'pass14'),
-        ('Giraud', 'Paul', 'paul.giraud@example.com', '0612349872', 'salt15', 'pass15'),
-        ('Colin', 'Quentin', 'quentin.colin@example.com', '0623451987', 'salt16', 'pass16'),
-        ('Marchand', 'Roxane', 'roxane.marchand@example.com', '0678123459', 'salt17', 'pass17'),
-        ('Lucas', 'Sylvain', 'sylvain.lucas@example.com', '0612348765', 'salt18', 'pass18'),
-        ('Bertrand', 'Thomas', 'thomas.bertrand@example.com', '0623456780', 'salt19', 'pass19'),
-            ('Lefevre', 'Valérie', 'valerie.lefevre@example.com', '0678123491', 'salt20', 'pass20');
+        ('Durand', 'Alice', 'alice.durand@example.com', '0123456789', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Moreau', 'Bob', 'bob.moreau@example.com', '0987654321', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Petit', 'Claire', 'claire.petit@example.com', '0612345678', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Roux', 'David', 'david.roux@example.com', '0654321987', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Blanc', 'Emma', 'emma.blanc@example.com', '0623456789', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Lemoine', 'Franck', 'franck.lemoine@example.com', '0678912345', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Gautier', 'Hélène', 'helene.gautier@example.com', '0612349876', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Faure', 'Isabelle', 'isabelle.faure@example.com', '0656781234', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Chevalier', 'Julien', 'julien.chevalier@example.com', '0621987654', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Michel', 'Karine', 'karine.michel@example.com', '0612345671', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbd0lhN16cfDy2wo5jFphpG1A==W65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Perrin', 'Laurent', 'laurent.perrin@example.com', '0623456782', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Henry', 'Marie', 'marie.henry@example.com', '0678123490', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Noel', 'Nicolas', 'nicolas.noel@example.com', '0612987654', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Robin', 'Olivia', 'olivia.robin@example.com', '0654321765', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Giraud', 'Paul', 'paul.giraud@example.com', '0612349872', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Colin', 'Quentin', 'quentin.colin@example.com', '0623451987', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Marchand', 'Roxane', 'roxane.marchand@example.com', '0678123459', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Lucas', 'Sylvain', 'sylvain.lucas@example.com', '0612348765', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+        ('Bertrand', 'Thomas', 'thomas.bertrand@example.com', '0623456780', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG'),
+            ('Lefevre', 'Valérie', 'valerie.lefevre@example.com', '0678123491', '0lhN16cfDy2wo5jFphpG1A==', '$2a$10$O7UsZBanbdW65JmguN2iG.ekj1pXyUUGVX/ITciQmgznoQKsH41jG');
 
 INSERT INTO employee (lastname, firstname, email, id_job, salt, password)
 VALUES
