@@ -25,7 +25,19 @@
 
 <div class="page">
 
+  <!-- ✅ Messages globaux -->
+  <div th:if="${errorMessage}" class="alert alert-danger"
+       style="color: red; font-weight: bold; margin: 1em 0;">
+    <p th:text="${errorMessage}"></p>
+  </div>
+
+  <div th:if="${successMessage}" class="alert alert-success"
+       style="color: green; font-weight: bold; margin: 1em 0;">
+    <p th:text="${successMessage}"></p>
+  </div>
+
   <!-- FILTER SECTION -->
+
 
 
 
@@ -53,10 +65,10 @@
       </select>
     </div>
 
-<!--    <div class="filter-input reservation-input">-->
-<!--      <label><i class="fa-solid fa-user-group"></i></label>-->
-<!--      <input type="number" th:field="*{minCapacity}" placeholder="Capacité minimale"/>-->
-<!--    </div>-->
+    <!--    <div class="filter-input reservation-input">-->
+    <!--      <label><i class="fa-solid fa-user-group"></i></label>-->
+    <!--      <input type="number" th:field="*{minCapacity}" placeholder="Capacité minimale"/>-->
+    <!--    </div>-->
 
 
     <div class="filter-input reservation-input">
@@ -81,13 +93,14 @@
 
       <div class="card-description">
         <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
-<!--        <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>-->
-<!--        <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>-->
+        <!--        <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>-->
+        <!--        <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>-->
         <form th:action="@{/event-reservation/{id}(id=${place.id})}" method="post" th:object="${filterFields}">
           <input type="hidden" th:field="*{placeTypeId}"/>
-<!--          <input type="hidden" th:field="*{minCapacity}"/>-->
+          <!--          <input type="hidden" th:field="*{minCapacity}"/>-->
           <input type="hidden" th:field="*{startDate}"/>
           <input type="hidden" th:field="*{endDate}"/>
+          <input type="hidden" th:field="*{eventType}"/>
           <button type="submit" class="btn m10">Ajouter au panier</button>
         </form>
       </div>
@@ -103,7 +116,7 @@
           th:attr="data-hourly=${place.hourlyPrice}">
         <p>
           <strong th:text="${@displayText.capitalize(place.placeType.name)}"></strong>
-<!--          — Capacité : <span th:text="${place.capacity}"></span>-->
+          <!--          — Capacité : <span th:text="${place.capacity}"></span>-->
           — Prix : <span th:text="${place.hourlyPrice}"></span> €/h
           — <span class="calc-total" data-role="total">—</span>
 
@@ -114,7 +127,7 @@
               style="display:inline-block;margin-left:.5rem">
           <input type="hidden" th:name="startDate" th:value="${filterFields.startDate}" />
           <input type="hidden" th:name="endDate" th:value="${filterFields.endDate}" />
-        <input type="hidden" th:name="eventType" th:value="${filterFields.eventType}" />
+          <input type="hidden" th:name="eventType" th:value="${filterFields.eventType}" />
           <button class="btn bg-purple" type="submit" title="Retirer">Retirer</button>
         </form>
         </p>
@@ -124,6 +137,9 @@
 
     <!-- 👉 Total panier global -->
     <h3>Total panier : <span id="event-cart-total">—</span></h3>
+
+
+    <!-- 👉message success -->
 
     <div th:if="${successMessage}" class="alert alert-success" style="color: green; font-weight: bold; margin: 1em 0;">
       <p th:text="${successMessage}"></p>

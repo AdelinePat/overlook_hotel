@@ -165,3 +165,26 @@ LEFT JOIN room_link_bonus AS rlb USING(id_room)
 LEFT JOIN room_bonus AS rb USING(id_room_bonus)
 GROUP BY r.id_room, r.night_price
 HAVING (r.night_price + COALESCE(SUM(rb.daily_price), 0)) >= 150;
+
+-- requete panier evenements
+SELECT id_event_reservation, event, total_price
+FROM event_reservation
+ORDER BY id_event_reservation DESC
+LIMIT 5;
+
+-- panier avec date et lieu
+
+SELECT
+    id_event_reservation,
+    event,
+    start_date,
+    end_date,
+    total_price,
+    name AS place_type
+FROM event_reservation
+JOIN event_link_place USING (id_event_reservation)
+JOIN place USING (id_place)
+JOIN place_type USING (id_place_type)
+ORDER BY id_event_reservation DESC
+LIMIT 5;
+
