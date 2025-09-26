@@ -233,6 +233,23 @@ public class EventReservationController {
         redirectAttributes.addFlashAttribute("successMessage", "Réservation enregistrée avec succès !");
 
         return "redirect:/event-reservation";
+
+
     }
+    @GetMapping("/event-reservation/list")
+    public String listReservations(Model model) {
+        Long clientId = 1L;
+
+        List<EventReservation> reservations = eventReservationRepository.findByClientId(clientId);
+
+        model.addAttribute("reservations", reservations);
+        model.addAttribute("titlePage", "Mesreservations - Overlook Hotel");
+
+        return "event-reservation-list";
+
+
+    }
+
+
 
 }
