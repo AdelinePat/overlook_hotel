@@ -14,6 +14,7 @@ import overlook_hotel.overlook_hotel.specification.RoomSpecification;
 import overlook_hotel.overlook_hotel.repository.RoomRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,8 @@ public class RoomService {
         this.feedbackRepository = feedbackRepository;
         this.roomBonusRepository = roomBonusRepository;
     }
+
+
 
     public List<Room> findAllFiltered(Integer number,
                                       Integer capacity,
@@ -111,5 +114,11 @@ public class RoomService {
 
     public List<RoomBonus> getAllBonuses() {
         return roomBonusRepository.findAll();
+    }
+
+    public List<Room> findAllByIds(List<Long> ids) {
+        Specification<Room> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
+        spec = spec.and(RoomSpecification.idIn(ids));
+        return roomRepository.findAll(spec);
     }
 }

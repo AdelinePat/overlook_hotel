@@ -3,6 +3,7 @@ package overlook_hotel.overlook_hotel.model.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import overlook_hotel.overlook_hotel.model.enumList.EventType;
 
 import java.math.BigDecimal;
@@ -35,11 +36,13 @@ public class EventReservation {
 
     @NotNull
     @Column(name="start_date")
-    private LocalDate startDate;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime startDate;
 
     @NotNull
     @Column(name="end_date")
-    private LocalDate endDate;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime endDate;
 
     @Column(name="used_fidelity")
     private Integer usedFidelity;
@@ -47,7 +50,8 @@ public class EventReservation {
     @OneToMany(mappedBy = "eventReservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<EventLinkReservation> placeLinks = new ArrayList<>();
 
-    @Transient
+    @NotNull
+    @Column(name = "total_price", precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
 }

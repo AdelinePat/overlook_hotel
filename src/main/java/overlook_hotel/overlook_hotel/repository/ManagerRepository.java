@@ -7,4 +7,5 @@ import overlook_hotel.overlook_hotel.model.entity.Manager;
 
 @Repository
 public interface ManagerRepository extends JpaRepository<Manager, Long>, JpaSpecificationExecutor<Manager> {
+	Manager findByEmail(String email);
 }

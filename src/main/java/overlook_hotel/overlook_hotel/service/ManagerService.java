@@ -11,6 +11,13 @@ import java.util.List;
 
 @Service
 public class ManagerService {
+    public Manager authenticate(String email, String password) {
+        Manager manager = managerRepository.findByEmail(email);
+        if (manager != null && manager.getPassword() != null && manager.getPassword().equals(password)) {
+            return manager;
+        }
+        return null;
+    }
     private final ManagerRepository managerRepository;
 
     public ManagerService(ManagerRepository managerRepository) {

@@ -173,6 +173,10 @@ public class RoomSpecification {
         };
     }
 
+    public static Specification<Room> idIn(List<Long> ids) {
+        return (root, query, criteriaBuilder) -> root.get("id").in(ids);
+    }
+
 
 
 }

@@ -254,7 +254,7 @@ VALUES
         ('Marchand', 'Roxane', 'roxane.marchand@example.com', '0678123459', 'salt17', 'pass17'),
         ('Lucas', 'Sylvain', 'sylvain.lucas@example.com', '0612348765', 'salt18', 'pass18'),
         ('Bertrand', 'Thomas', 'thomas.bertrand@example.com', '0623456780', 'salt19', 'pass19'),
-        ('Lefevre', 'Valérie', 'valerie.lefevre@example.com', '0678123491', 'salt20', 'pass20');
+            ('Lefevre', 'Valérie', 'valerie.lefevre@example.com', '0678123491', 'salt20', 'pass20');
 
 INSERT INTO employee (lastname, firstname, email, id_job, salt, password)
 VALUES
