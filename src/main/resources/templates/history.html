@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!--    <title>Client List</title>-->
+    <title th:text="${titlePage}"></title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
+    <script>
+        function selectRow(id) {
+            document.getElementById("focus-id").value = id;
+            document.getElementById("focusForm").submit();
+        }
+        // Confirm deletion popup for focus form
+        document.addEventListener('DOMContentLoaded', function() {
+            var focusForm = document.getElementById('displayedFocusForm');
+            if (focusForm) {
+                focusForm.addEventListener('submit', function(e) {
+                    var deleteBtn = focusForm.querySelector('button[name="action"][value="delete"]');
+                    if (deleteBtn && document.activeElement === deleteBtn) {
+                        if (!confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) {
+                            e.preventDefault();
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+Gestion Réservation
+</li>
+</ul>
+<form th:action="@{/logout}" method="post" style="display:inline;">
+    <button type="submit" class="btn bg-purple">Se déconnecter</button>
+</form>
+</nav>
+<div class="page">
+    <h1 th:text="${title}"></h1>
+    <div class="container">
+
+        <div class="display-table">
+        </div>
+
+        <div class="display-focus">
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>
