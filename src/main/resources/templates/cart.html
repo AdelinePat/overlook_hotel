@@ -63,6 +63,10 @@
                     <input type="hidden" name="resetCart" value="true"/>
                     <button type="submit" class="btn">Vider le panier</button>
                 </form>
+                <form th:action="@{/cart}" method="post" style="display:inline;">
+                    <input type="hidden" name="confirmCart" value="true"/>
+                    <button type="submit" class="btn">Confirmer</button>
+                </form>
             </div>
 
     </div>
