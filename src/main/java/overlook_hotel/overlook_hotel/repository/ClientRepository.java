@@ -7,4 +7,5 @@ import overlook_hotel.overlook_hotel.model.entity.Client;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long>, JpaSpecificationExecutor<Client> {
+	Client findByEmail(String email);
 }

@@ -10,6 +10,9 @@ import java.util.List;
 
 @Service
 public class ClientService {
+    public Client findByEmail(String email) {
+        return clientRepository.findByEmail(email);
+    }
     private final ClientRepository clientRepository;
 
     public ClientService(ClientRepository clientRepository) {
@@ -49,6 +52,14 @@ public class ClientService {
     public Client save(Client client) {
         return clientRepository.save(client);
     }
+
+        public Client authenticate(String email, String password) {
+            Client client = clientRepository.findByEmail(email);
+            if (client != null && client.getPassword() != null && client.getPassword().equals(password)) {
+                return client;
+            }
+            return null;
+        }
 
     public void deleteById(Long id) {
         clientRepository.deleteById(id);

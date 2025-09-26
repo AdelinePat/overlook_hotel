@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Inscription Client</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <div class="page">
+        <h2>Créer un compte client</h2>
+
+        <div>
+            <div th:if="${error}" style="color:red;" th:text="${error}"></div>
+            <div th:if="${success}" style="color:green;" th:text="${success}"></div>
+        </div>
+
+        <form th:action="@{/register}" method="post">
+            <div>
+                <input type="text" id="lastname" name="lastname" placeholder="Nom" required>
+                <input type="text" id="firstname" name="firstname" placeholder="Prénom" required>
+            </div>
+            <div>
+                <!-- <label for="email">Email</label> -->
+                <input type="email" id="email" name="email" placeholder="Email" required>
+            </div>
+            <div>
+                <!-- <label for="phone">Téléphone</label> -->
+                <input type="text" id="phone" name="phone" placeholder="Téléphone" required>
+            </div>
+            <div>
+                <!-- <label for="password">Mot de passe</label> -->
+                <input type="password" id="password" name="password" placeholder="Mot de passe" required>
+            </div>
+            <div>
+                <!-- <label for="confirmPassword">Confirmer le mot de passe</label> -->
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmer le mot de passe" required>
+            </div>
+            <button type="submit" class="btn">S'inscrire</button>
+        </form>
+    </div>
+</body>
+</html>

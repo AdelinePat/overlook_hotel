@@ -7,5 +7,6 @@ import overlook_hotel.overlook_hotel.model.entity.Employee;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSpecificationExecutor<Employee> {
+	Employee findByEmail(String email);
 }
 

@@ -10,14 +10,19 @@
     <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<nav><a th:href="@{/index.html}">Overlook Hotel</a><ul>
+<!-- <nav><a th:href="@{/index.html}">Overlook Hotel</a><ul>
     <li>
         Dashboard
     </li>
     <li>
         Gestion Réservation
     </li>
-</ul><a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a></nav>
+</ul> -->
+<div th:replace="fragments/navbar :: navbar"></div>
+<!-- <form th:action="@{/logout}" method="post" style="display:inline;">
+    <button type="submit" class="btn bg-purple">Se déconnecter</button>
+</form>
+</nav> -->
 <div class="page ">
     <div class="container">
         <h1>Votre panier</h1>

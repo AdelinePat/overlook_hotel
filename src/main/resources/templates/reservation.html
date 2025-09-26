@@ -28,14 +28,8 @@
     </script>
 </head>
 <body>
-<nav><a th:href="@{/index.html}">Overlook Hotel</a><ul>
-    <li>
-        Dashboard
-    </li>
-    <li>
-        Gestion Réservation
-    </li>
-</ul><a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a></nav>
+<div th:replace="fragments/navbar :: navbar"></div>
+
 <div class="page ">
     <p>Cart locked: <span th:text="${lockDateInputs}"></span></p>
 <!--    <h1 th:text="${title}"></h1>-->
