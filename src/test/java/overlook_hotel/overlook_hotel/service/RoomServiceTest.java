@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
-@Disabled
 public class RoomServiceTest {
     private final Standing roomStanding = new Standing(1L, "DE_LUXE");;
     private final BedType type = BedType.SIMPLE;

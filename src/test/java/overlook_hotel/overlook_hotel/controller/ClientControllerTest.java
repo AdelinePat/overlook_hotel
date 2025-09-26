@@ -44,6 +44,8 @@ public class ClientControllerTest {
                 "",
                 "",
                 null,
+                null,
+                null,
                 false,
                 null,
                 model);

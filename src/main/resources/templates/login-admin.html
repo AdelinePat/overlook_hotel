@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion Administrateur</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <div class="page">
+        <h1>Connexion Administrateur</h1>
+    <form th:action="@{/login}" method="post">
+            <div>
+                <label for="email">Email</label>
+                <input type="text" id="email" name="username" placeholder="Email" required />
+            </div>
+            <div>
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" placeholder="Mot de passe" required />
+            </div>
+            <button type="submit" class="btn">Se connecter</button>
+        </form>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    </div>
+</body>
+</html>
