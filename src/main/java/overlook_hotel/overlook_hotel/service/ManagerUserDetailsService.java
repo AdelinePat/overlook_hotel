@@ -21,7 +21,6 @@ public class ManagerUserDetailsService implements UserDetailsService {
         if (manager == null) {
             throw new UsernameNotFoundException("Manager not found");
         }
-        // Use manager.getPassword() directly (plain text for now)
         return User.builder()
                 .username(manager.getEmail())
                 .password(manager.getPassword())

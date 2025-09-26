@@ -5,10 +5,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
+import org.springframework.beans.factory.annotation.Autowired;
+import overlook_hotel.overlook_hotel.service.ManagerUserDetailsService;
+import overlook_hotel.overlook_hotel.service.CustomUserDetailsService;
 
 @Configuration
 public class SecurityConfig {
-    // Removed unused customUserDetailsService field
+    @Autowired
+    private ManagerUserDetailsService managerUserDetailsService;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public org.springframework.security.crypto.password.PasswordEncoder passwordEncoder() {
@@ -20,7 +26,8 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain managerFilterChain(HttpSecurity http) throws Exception {
         http
-            .securityMatcher("/login-admin/**", "/clients/**", "/employees/**")
+            .securityMatcher("/login-admin", "/clients/**", "/employees/**")
+            .userDetailsService(managerUserDetailsService)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login-admin", "/login-admin/**").permitAll()
                 .requestMatchers("/clients/**", "/employees/**").hasRole("MANAGER")
@@ -46,6 +53,7 @@ public class SecurityConfig {
     public SecurityFilterChain defaultFilterChain(HttpSecurity http) throws Exception {
         http
             .securityMatcher("/**")
+            .userDetailsService(customUserDetailsService)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/cart", "/room_reservation", "/room-detail", "/event-reservation").hasRole("CLIENT")
                 .requestMatchers("/login", "/css/**", "/js/**", "/img/**", "/").permitAll()

@@ -1,4 +1,5 @@
 package overlook_hotel.overlook_hotel.service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Service
 public class ManagerService {
+    private final PasswordEncoder passwordEncoder;
     public Manager authenticate(String email, String password) {
         Manager manager = managerRepository.findByEmail(email);
         if (manager != null && manager.getPassword() != null && manager.getPassword().equals(password)) {
@@ -20,8 +22,19 @@ public class ManagerService {
     }
     private final ManagerRepository managerRepository;
 
-    public ManagerService(ManagerRepository managerRepository) {
+    public ManagerService(ManagerRepository managerRepository, PasswordEncoder passwordEncoder) {
         this.managerRepository = managerRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+    // Create a manager with a clear password, store hashed password
+    public Manager createManager(String lastname, String firstname, String email, String clearPassword, String salt) {
+        Manager manager = new Manager();
+        manager.setLastname(lastname);
+        manager.setFirstname(firstname);
+        manager.setEmail(email);
+        manager.setSalt(salt);
+        manager.setPassword(passwordEncoder.encode(clearPassword));
+        return managerRepository.save(manager);
     }
 
     public List<Manager> findAllFiltered(String lastname,

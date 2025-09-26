@@ -42,16 +42,16 @@ public class ClientControllerTest {
                 "",
                 "",
                 "",
-                null,
-                null,
-                null,
+                "",
+                "",
+                null, 
                 false,
-                null,
-                model);
+                "",
+                model);  
 
         List<Client> clients = (List<Client>) model.getAttribute("rows");
 
-        for( Client client : clients ) {
+        for (Client client : clients) {
             System.out.println(client.getLastname() +
                     " " + client.getFirstname() +
                     " " + client.getEmail() +
