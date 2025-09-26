@@ -166,6 +166,17 @@ public class RoomSpecification {
         };
     }
 
+    public static Specification<Room> idNotIn(List<Long> excludedIds) {
+        return (root, query, criteriaBuilder) -> {
+                criteriaBuilder.conjunction(); // no filtering
+            return root.get("id").in(excludedIds).not();
+        };
+    }
+
+    public static Specification<Room> idIn(List<Long> ids) {
+        return (root, query, criteriaBuilder) -> root.get("id").in(ids);
+    }
+
 
 
 }

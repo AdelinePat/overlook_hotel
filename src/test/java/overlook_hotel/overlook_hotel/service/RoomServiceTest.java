@@ -25,6 +25,7 @@ public class RoomServiceTest {
     private final List<Integer> night_price_between = Arrays.asList(100, 180);
     private final LocalDate startDate = LocalDate.of(2025, 9, 6);
     private final LocalDate endDate = LocalDate.of(2025, 9, 8);
+    private final List<Long> excludedRoomIds = Arrays.asList(5L, 7L);
     private final List<RoomBonusEnum> bonuses = List.of(RoomBonusEnum.MINI_BAR);
 
     @Autowired
@@ -32,7 +33,16 @@ public class RoomServiceTest {
 
     @Test
     public void findAllRooms() {
-        List<Room> rooms = roomService.findAllFiltered(null, null, null, null, null, null, null, this.night_price_null, null);
+        List<Room> rooms = roomService.findAllFiltered(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null, this.night_price_null,
+                null,
+                null);
 
         assertEquals(10, rooms.size());
         System.out.println("\t\t #### 1 #### liste des chambres");
@@ -43,7 +53,17 @@ public class RoomServiceTest {
 
     @Test
     public void findByNumber() {
-        List<Room> rooms = roomService.findAllFiltered(105, null, null, null, null, null, null, null, null);
+        List<Room> rooms = roomService.findAllFiltered(
+                105,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
 
         assertEquals(1, rooms.size());
         System.out.println("\t\t #### 2 #### liste des chambres par nombre");
@@ -54,7 +74,17 @@ public class RoomServiceTest {
 
     @Test
     public void findByCapacity() {
-        List<Room> rooms = roomService.findAllFiltered(null, 2, null, null, null, null, null, null, null);
+        List<Room> rooms = roomService.findAllFiltered(
+                null,
+                2,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
 
         assertEquals(6, rooms.size());
         System.out.println("\t\t #### 3 #### liste des chambres capacité");
@@ -65,7 +95,17 @@ public class RoomServiceTest {
 
     @Test
     public void findByStanding() {
-        List<Room> rooms = roomService.findAllFiltered(null, null, null, this.roomStanding, null, null, null, null, null);
+        List<Room> rooms = roomService.findAllFiltered(
+                null,
+                null,
+                null,
+                this.roomStanding,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
 
         assertEquals(3, rooms.size());
         System.out.println("\t\t #### 4 #### liste des chambres standing");
@@ -76,7 +116,16 @@ public class RoomServiceTest {
 
     @Test
     public void findByBedType() {
-        List<Room> rooms = roomService.findAllFiltered(null, null, null, null, this.type, null, null, null, null);
+        List<Room> rooms = roomService.findAllFiltered(
+                null,
+                null,
+                null,
+                null, this.type,
+                null,
+                null,
+                null,
+                null,
+                null);
 
         assertEquals(3, rooms.size());
         System.out.println("\t\t #### 4 #### liste des chambres type");
@@ -87,7 +136,16 @@ public class RoomServiceTest {
 
     @Test
     public void findByLowerThan() {
-        List<Room> rooms = roomService.findAllFiltered(null, null, null, null, null, null, null, night_price_lower, null);
+        List<Room> rooms = roomService.findAllFiltered(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null, night_price_lower,
+                null,
+                null);
 
         assertEquals(7, rooms.size());
         System.out.println("\t\t #### 5.1 #### liste des chambres prix LOWER");
@@ -108,6 +166,7 @@ public class RoomServiceTest {
                 null,
                 null,
                 this.night_price_greater,
+                null,
                 null);
 
         assertEquals(7, rooms.size());
@@ -119,7 +178,17 @@ public class RoomServiceTest {
 
     @Test
     public void findByBetween() {
-        List<Room> rooms = roomService.findAllFiltered(null, null, null, null, null, null, null, night_price_between, null);
+        List<Room> rooms = roomService.findAllFiltered(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                night_price_between,
+                null,
+                null);
 
         assertEquals(4, rooms.size());
         System.out.println("\t\t #### 5.3 #### liste des chambres prix BETWEEN");
@@ -130,7 +199,17 @@ public class RoomServiceTest {
 
     @Test
     public void findByDescriptionContent() {
-        List<Room> rooms = roomService.findAllFiltered(null, null, "with", null, null, null, null, null, null);
+        List<Room> rooms = roomService.findAllFiltered(
+                null,
+                null,
+                "with",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
 
         assertEquals(5, rooms.size());
         System.out.println("\t\t #### 6 #### liste des chambres description");
@@ -141,7 +220,17 @@ public class RoomServiceTest {
 
     @Test
     public void findByAvailability() {
-        List<Room> rooms = roomService.findAllFiltered(null, null, null, null, null, this.startDate, this.endDate, null, null);
+        List<Room> rooms = roomService.findAllFiltered(
+                null,
+                null,
+                null,
+                null,
+                null,
+                this.startDate,
+                this.endDate,
+                null,
+                null,
+                null);
 
         assertEquals(4, rooms.size());
         System.out.println("\t\t #### 7 #### liste des chambres DISPONIBLE du 6 au 8 septembre");
@@ -152,10 +241,43 @@ public class RoomServiceTest {
 
     @Test
     public void findByBonus() {
-        List<Room> rooms = roomService.findAllFiltered(null, null, null, null, null, null, null, null, this.bonuses);
+        List<Room> rooms = roomService.findAllFiltered(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                this.bonuses,
+                null);
+
+        assertEquals(1, rooms.size());
+        System.out.println("\t\t #### 8 #### liste des chambres SECHOIR");
+        System.out.println(this.bonuses);
+
+        for (Room room : rooms) {
+            System.out.println("\t" + room.getNumber() + " " + room.getStanding().getName() + " " + room.getDescription()) ;
+        }
+    }
+
+    @Test
+    public void findByExcludedRoomIds() {
+        List<Room> rooms = roomService.findAllFiltered(
+                null,
+                null,
+                null,
+                null,
+                null,
+                this.startDate,
+                this.endDate,
+                null,
+                null,
+                this.excludedRoomIds);
 
         assertEquals(2, rooms.size());
-        System.out.println("\t\t #### 8 #### liste des chambres SECHOIR");
+        System.out.println("\t\t #### 9 #### liste des chambres SECHOIR");
         for (Room room : rooms) {
             System.out.println("\t" + room.getNumber() + " " + room.getStanding().getName() + " " + room.getDescription()) ;
         }

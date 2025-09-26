@@ -31,80 +31,92 @@
 <div th:replace="fragments/navbar :: navbar"></div>
 
 <div class="page ">
+        <div th:if="${errors != null}">
+            <ul class="alert error">
+                <li th:each="err : ${errors}" th:text="${err}" style="color: red;"></li>
+            </ul>
+        </div>
 <!--    <h1 th:text="${title}"></h1>-->
-        <form class="filter-bar mt50" th:action="@{/room-reservation}" method="post" th:object="${filterFields}">
+        <div class="filter-bar">
+            <form class="filter-bar mt50" th:action="@{/room-reservation}" method="post" th:object="${filterFields}">
 
-            <div class="filter-input reservation-input">
-                <label><i class="fa-solid fa-hashtag"></i></label>
-                <input type="number" th:field="*{roomNumber}" placeholder="Numéro de chambre"/>
-            </div>
+                <div class="filter-input reservation-input">
+                    <label><i class="fa-solid fa-hashtag"></i></label>
+                    <input type="number" th:field="*{roomNumber}" placeholder="Numéro de chambre"/>
+                </div>
 
-            <div class="filter-input reservation-input bonus-dropdown">
-                <label><i class="fa-solid fa-boxes-packing"></i></label>
+                <div class="filter-input reservation-input bonus-dropdown">
+                    <label><i class="fa-solid fa-boxes-packing"></i></label>
 
-                <div class="dropdown">
-                    <button type="button" class="dropdown-toggle">-- Bonus --</button>
+                    <div class="dropdown">
+                        <button type="button" class="dropdown-toggle">-- Bonus --</button>
 
-                    <div class="dropdown-menu">
-                        <div class="dropdown-items" th:each="bonus : ${bonusList}">
-                            <label>
-                                <input type="checkbox"
-                                       th:field="*{bonuses}"
-                                       th:value="${bonus.name()}"/>
-                                <span th:text="${@displayText.capitalize(bonus.name())}"></span>
-                            </label>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-items" th:each="bonus : ${bonusList}">
+                                <label>
+                                    <input type="checkbox"
+                                           th:field="*{bonuses}"
+                                           th:value="${bonus.name()}"/>
+                                    <span th:text="${@displayText.capitalize(bonus.name())}"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="filter-input reservation-input">
-                <label><i class="fa-solid fa-align-left"></i></label>
-                <input type="text" th:field="*{description}" placeholder="Mot clé" />
-            </div>
+                <div class="filter-input reservation-input">
+                    <label><i class="fa-solid fa-align-left"></i></label>
+                    <input type="text" th:field="*{description}" placeholder="Mot clé" />
+                </div>
 
-            <div class="filter-input reservation-input">
-                <label><i class="fa-solid fa-tags"></i></label>
-                <select th:field="*{standing}">
-                    <option value="">-- Standing --</option>
-                    <option th:each="stand : ${standingList}"
-                            th:value="${stand.id}"
-                            th:text="${@displayText.capitalize(stand.name)}"
-                            th:selected="${filterFields.standing != null and filterFields.standing.id == stand.id}">
-                    </option>
-                </select>
-            </div>
+                <div class="filter-input reservation-input">
+                    <label><i class="fa-solid fa-tags"></i></label>
+                    <select th:field="*{standing}">
+                        <option value="">-- Standing --</option>
+                        <option th:each="stand : ${standingList}"
+                                th:value="${stand.id}"
+                                th:text="${@displayText.capitalize(stand.name)}"
+                                th:selected="${filterFields.standing != null and filterFields.standing.id == stand.id}">
+                        </option>
+                    </select>
+                </div>
 
-            <div class="filter-input reservation-input">
-                <label><i class="fa-solid fa-bed"></i></label>
-                <select th:field="*{bedType}">
-                    <option value=""
-                            th:text="'-- type --'"
-                            th:selected="${filterFields.bedType == null}">
-                    </option>
-                    <option th:each="type : ${bedTypeList}"
-                            th:value="${type}"
-                            th:text="${@displayText.capitalize(type)}"
-                            th:selected="${filterFields.bedType == type}">
-                    </option>
-                </select>
-            </div>
+                <div class="filter-input reservation-input">
+                    <label><i class="fa-solid fa-bed"></i></label>
+                    <select th:field="*{bedType}">
+                        <option value=""
+                                th:text="'-- type --'"
+                                th:selected="${filterFields.bedType == null}">
+                        </option>
+                        <option th:each="type : ${bedTypeList}"
+                                th:value="${type}"
+                                th:text="${@displayText.capitalize(type)}"
+                                th:selected="${filterFields.bedType == type}">
+                        </option>
+                    </select>
+                </div>
 
 
-            <div class="filter-input reservation-input">
-                <label><i class="fa-solid fa-calendar-days"></i></label>
-                <input type="date" th:field="*{startDate}"/>
-                <input type="date" th:field="*{endDate}"/>
-            </div>
+                <div class="filter-input reservation-input">
+                    <label><i class="fa-solid fa-calendar-days"></i></label>
+                    <input type="date" th:field="*{startDate}" th:disabled="${lockDateInputs}"/>
+                    <input type="date" th:field="*{endDate}" th:disabled="${lockDateInputs}"/>
+                </div>
 
-            <div class="filter-input reservation-input">
-                <label><i class="fa-solid fa-money-check-dollar"></i></label>
-                <input type="number" th:field="*{priceRange[0]}" placeholder="Min"/>
-                <input type="number" th:field="*{priceRange[1]}" placeholder="Max"/>
-            </div>
+                <div class="filter-input reservation-input">
+                    <label><i class="fa-solid fa-money-check-dollar"></i></label>
+                    <input type="number" th:field="*{priceRange[0]}" placeholder="Min"/>
+                    <input type="number" th:field="*{priceRange[1]}" placeholder="Max"/>
+                </div>
 
-            <button class="btn lh12" type="submit">Rechercher</button>
-        </form>
+                <button class="btn lh12" type="submit">Rechercher</button>
+
+            </form>
+            <form th:action="@{/room-reservation}" method="post" style="display:inline;">
+                <button class="btn lh12 bg-grey" type="submit" name="resetFilter" value="true">Réinitialiser</button>
+            </form>
+        </div>
+
 
         <h1>Résultats: <span th:text="${#lists.size(roomList)}"></span></h1>
 
@@ -116,7 +128,7 @@
                 </div>
 
                 <div class="card-description">
-                    <h3 th:text="${room.number} + ' ' + ${room.standing.name}"></h3>
+                    <h3 th:text="${room.number} + ' ' + ${@displayText.deleteUnderscore(room.standing.name)}"></h3>
                     <p>lit <span th:text="${room.type.name().toLowerCase()}"></span></p>
                     <p><span th:text="${room.nightPrice}"></span>€/Nuit</p>
                     <div class="bonus-list" th:if="${room.bonuses != null and #lists.size(room.bonuses) > 0}">
