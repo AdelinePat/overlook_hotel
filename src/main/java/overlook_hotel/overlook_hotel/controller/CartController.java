@@ -162,12 +162,19 @@ public class CartController {
     }
 
     private RoomReservationFields initFields(RoomReservationFields roomFields) {
-        System.out.println("\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\tDANS INITFIELDS!! " + roomFields.getStartDate() + " " + roomFields.getEndDate());
         RoomReservationFields newFields = new RoomReservationFields();
         newFields.setIdRoom(roomFields.getIdRoom());
+        newFields.setRoomNumber(roomFields.getRoomNumber());
+
+        newFields.setCapacity(roomFields.getCapacity());
+        newFields.setDescription(roomFields.getDescription());
+
         newFields.setStartDate(roomFields.getStartDate());
         newFields.setEndDate(roomFields.getEndDate());
+
         newFields.setStanding(roomFields.getStanding());
+        newFields.setStandingString(roomFields.getStandingString());
+
         newFields.setAdditionalBonuses(new ArrayList<>(roomFields.getAdditionalBonuses() != null ? roomFields.getAdditionalBonuses() : List.of()));
         return newFields;
     }

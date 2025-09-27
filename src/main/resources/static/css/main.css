@@ -124,6 +124,17 @@ footer a {
     margin: auto;
 }
 
+.cart {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-item: flex-start;
+}
+
+.cart a {
+    align-self: flex-start;
+}
+
 h1, h2 {
     text-transform: uppercase;
     padding: 10px;
@@ -228,6 +239,7 @@ table thead tr td {
     cursor: pointer;
     background: var(--purple);
     border: 2px solid transparent;
+    color: var(--main-bg-color);
     }
 
 
@@ -792,5 +804,55 @@ create_account ~ .login-content form div input::placeholder {
 .event-cta .btn-reverse {
     margin-top: 24px;
     font-size: 1.4rem;
+}
 
+.cart-room {
+    display: flex;
+    gap: 23px;
+    border-bottom: 1px solid var(--ultra-light-grey);
+    padding-bottom: 16px;
+    margin-top: 16px;
+    align-items: center;
+}
+
+.cart-content {
+    display-flex;
+    flex-direction: column;
+    justify-content: center;
+    background: none;
+}
+
+.cart-content h3 {
+    margin-bottom: 16px;
+}
+
+.cart-content p {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.cart-content .btn {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.cart-img {
+    min-height: 200px;
+    min-width: 300px;
+    border-radius: 20px;
+}
+
+.focus-cart {
+    margin-top: 24px;
+}
+
+.focus-cart h3 {
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+.cart-link {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    align-items: center;
 }
