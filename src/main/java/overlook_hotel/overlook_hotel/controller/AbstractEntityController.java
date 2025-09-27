@@ -35,19 +35,16 @@ public abstract class AbstractEntityController<T, F> {
         }
     }
 
-    protected void populateModel(Model model, List<T> entities, String entityType, List<String> columns, List<?> enumValues) {
-        model.addAttribute("clients", entities);
-        model.addAttribute("focusedClient", focusedEntity);
+    protected void populateModel(Model model, List<T> entities, String entityType, List<String> columns) {
+        model.addAttribute("rows", entities);
+        model.addAttribute("focusedEntity", focusedEntity);
         model.addAttribute("focusField", focusedField);
         model.addAttribute("filterField", filterFields != null ? filterFields : createEmptyFilterFields());
-        model.addAttribute("title", entityType.equals("client") ? "Clients" : "Employés");
-        model.addAttribute("titlePage", entityType.equals("client") ? "Gestion des clients" : "Gestion des employés");
+        String capitalized = entityType.substring(0, 1).toUpperCase() + entityType.substring(1) + "s";
+        model.addAttribute("title", capitalized);
+        model.addAttribute("titlePage", "Gestion des " + entityType + "s");
         model.addAttribute("columns", columns);
-        model.addAttribute("rows", entities);
         model.addAttribute("entityType", entityType);
-        if (enumValues != null) {
-            model.addAttribute("jobEnumValues", enumValues);
-        }
     }
 
     // Helper to create an empty FilterFields instance

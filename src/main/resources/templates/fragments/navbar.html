@@ -2,7 +2,7 @@
 <div th:fragment="navbar">
     <nav>
         <a href="/">Overlook Hotel</a>
-        <ul>
+        <ul class="nav-list">
             <li th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
                 <a class="nav-link" th:href="@{/clients}">Gestions Clients</a>
             </li>
@@ -15,16 +15,20 @@
             <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
                 <a class="nav-link" th:href="@{/room-reservation}">Réserver votre Séjour</a>
             </li>
+<!--            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">-->
+<!--                <a class="nav-link" th:href="@{/event-reservation}">Réserver votre Événement</a>-->
+<!--            </li>-->
             <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
-                <a class="nav-link" th:href="@{/event-reservation}">Réserver votre Événement</a>
+                <a class="nav-link" th:href="@{/history}"><i class="fa-solid fa-list-check"></i> Vos séjours</a>
             </li>
             <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
-                <a class="nav-link" th:href="@{/cart}">Vos Réservations</a>
+                <a class="nav-link" th:href="@{/event-reservation/list}"><i class="fa-solid fa-gifts"></i> Vos événements</a>
             </li>
             <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
-                <a class="nav-link" th:href="@{/cart}">Ma sélection</a>
+                <a class="nav-link" th:href="@{/cart}"><i class="fa-solid fa-cart-shopping"></i> Votre Sélection</a>
             </li>
         </ul>
+
         <div th:if="${!#authorization.expression('isAuthenticated()')}">
             <form th:action="@{/login}" method="post" style="display:inline;">
                 <input type="text" name="username" placeholder="Email" required>

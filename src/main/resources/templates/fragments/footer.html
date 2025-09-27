@@ -1,0 +1,8 @@
+<!-- fragments/footer.html -->
+<div th:fragment="footer" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <footer>
+        <a th:href="@{/}" class="footer-link">Accueil</a>
+        <a th:href="@{/login-admin}" class="footer-link" sec:authorize="isAnonymous()">Connexion administrateur</a>
+    </footer>
+</div>
+

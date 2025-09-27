@@ -8,21 +8,23 @@
 </head>
 <body>
 
-    <div th:replace="fragments/navbar :: navbar"></div>
+<header>
+    <div class="header" th:replace="fragments/navbar :: navbar"></div>
+</header>
 
 <div class="page">
+    <div class="content">
+        <h1>Chambre <span th:text="${room.number}"></span> - <span th:text="${@displayText.deleteUnderscore(room.standing.name)}"></span></h1>
 
-    <h1>Chambre <span th:text="${room.number}"></span> - <span th:text="${@displayText.deleteUnderscore(room.standing.name)}"></span></h1>
+        <div class="container">
 
-    <div class="container">
+            <div class="display-table">
 
-        <div class="display-table">
+                <h3>Chambre <span th:text="${@displayText.capitalize(room.type)}"></span></h3>
+                <p>Prix par défaut: <span th:text="${room.nightPrice}"></span>/Nuit</p>
+                <p th:text="${room.description}"></p>
 
-            <h3>Chambre <span th:text="${@displayText.capitalize(room.type)}"></span></h3>
-            <p>Prix par défaut: <span th:text="${room.nightPrice}"></span>/Nuit</p>
-            <p th:text="${room.description}"></p>
-
-            <h3>Extras par défaut:</h3>
+                <h3>Extras par défaut:</h3>
                 <ul id="base-bonus">
                     <li th:each="bonus : ${room.bonuses}"
 
@@ -32,83 +34,86 @@
                         th:data-price="${bonus.dailyPrice}">
 
                         <span
-                            th:text="${@displayText.capitalize(bonus.type.name())}"></span> - <span th:text="${bonus.dailyPrice}">
+                                th:text="${@displayText.capitalize(bonus.type.name())}"></span> - <span th:text="${bonus.dailyPrice}">
                         </span>
                         €/jour
                     </li>
                 </ul>
 
-            <form class="form-select-bonus" th:action="@{/room-reservation/{id}(id=${room.id})}" method="post">
-                <h3>Ajouter des bonus pour cette réservation :</h3>
-                <div class="form-select-bonus-content">
-                <div class="input-add-bonus"
-                     th:each="bonus : ${roomBonusList}">
-                    <label>
-                        <input
-                                th:value="${bonus.type.name()}"
-                                th:data-value="${bonus.type.name()}"
-                                th:data-text="${@displayText.capitalize(bonus.type.name())}"
-                                th:data-price="${bonus.dailyPrice}"
-                                type="checkbox" name="additionalBonuses"  />
-                        <span th:text="${@displayText.capitalize(bonus.type.name()) + ' - ' + bonus.dailyPrice + ' €/Jour' }"></span>
-                    </label>
-                </div>
+                <form class="form-select-bonus" th:action="@{/room-reservation/{id}(id=${room.id})}" method="post">
+                    <h3>Ajouter des bonus pour cette réservation :</h3>
+                    <div class="form-select-bonus-content">
+                        <div class="input-add-bonus"
+                             th:each="bonus : ${roomBonusList}">
+                            <label>
+                                <input
+                                        th:value="${bonus.type.name()}"
+                                        th:data-value="${bonus.type.name()}"
+                                        th:data-text="${@displayText.capitalize(bonus.type.name())}"
+                                        th:data-price="${bonus.dailyPrice}"
+                                        type="checkbox" name="additionalBonuses"  />
+                                <span th:text="${@displayText.capitalize(bonus.type.name()) + ' - ' + bonus.dailyPrice + ' €/Jour' }"></span>
+                            </label>
+                        </div>
 
-                </div>
-            </form>
+                    </div>
+                </form>
 
-            <div class="feedback-list">
-                <h2>Avis précédents :</h2>
-                <div th:each="fb : ${feedbackList}">
-                    <p>Note: <span th:text="${fb.rate}"></span>/5</p>
-                    <p th:text="${fb.comment}"></p>
-                    <hr/>
+                <div class="feedback-list">
+                    <h2>Avis précédents :</h2>
+                    <div th:each="fb : ${feedbackList}">
+                        <p>Note: <span th:text="${fb.rate}"></span>/5</p>
+                        <p th:text="${fb.comment}"></p>
+                        <hr/>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="display-focus-room">
-            <div class="booking-img"
-                 th:classappend="${room.standing.name.toLowerCase()}">
+            <div class="display-focus-room">
+                <div class="booking-img"
+                     th:classappend="${room.standing.name.toLowerCase()}">
+                </div>
+                <form th:object="${roomReservationFields}" class="focus-room-content"
+                      th:action="@{/cart}"
+                      method="post">
+                    <h2>Votre séjour</h2>
+
+                    <p><i class="fa-solid fa-calendar-days"></i>
+                        <span th:text="${startDate}"></span> - <span th:text="${endDate}"></span>
+                    </p>
+                    <p>Nombre de nuits : <span th:text="${nights}"></span></p>
+
+                    <!-- Selected Bonuses -->
+                    <ul id="selected-bonuses">
+                        <li th:each="bonus : ${room.bonuses}"
+                            th:text="${@displayText.capitalize(bonus.type.name()) + ' - ' + bonus.dailyPrice + ' €/Jour'}">
+                        </li>
+                    </ul>
+
+                    <!-- Hidden inputs for RoomReservationFields -->
+                    <input type="hidden" th:field="*{idRoom}"  th:value="${room.id}" />
+                    <input type="hidden" th:field="*{startDate}" th:value="${startDate}" />
+                    <input type="hidden" th:field="*{endDate}" th:value="${endDate}" />
+                    <input type="hidden" th:field="*{roomNumber}" th:value="${room.number}" />
+                    <input type="hidden" th:field="*{capacity}" th:value="${room.capacity}" />
+                    <input type="hidden" th:field="*{description}" th:value="${room.description}" />
+                    <input type="hidden" th:field="*{standingString}" th:value="${room.standing.name}" />
+                    <input type="hidden" id="total-price-hidden" th:field="*{totalPriceWithAdditional}" />
+
+                    <!-- Container for additional bonuses as hidden inputs -->
+                    <div id="bonus-hidden-inputs"></div>
+
+                    <h3>Total <span id="total-price" th:text="${totalPerNight}"></span>€</h3>
+                    <button type="submit" class="btn bg-purple">Réserver</button>
+                </form>
+
             </div>
-            <form th:object="${roomReservationFields}" class="focus-room-content"
-                  th:action="@{/cart}"
-                  method="post">
-                <h2>Votre séjour</h2>
-
-                <p><i class="fa-solid fa-calendar-days"></i>
-                    <span th:text="${startDate}"></span> - <span th:text="${endDate}"></span>
-                </p>
-                <p>Nombre de nuits : <span th:text="${nights}"></span></p>
-
-                <!-- Selected Bonuses -->
-                <ul id="selected-bonuses">
-                    <li th:each="bonus : ${room.bonuses}"
-                        th:text="${@displayText.capitalize(bonus.type.name()) + ' - ' + bonus.dailyPrice + ' €/Jour'}">
-                    </li>
-                </ul>
-
-                <!-- Hidden inputs for RoomReservationFields -->
-                <input type="hidden" th:field="*{idRoom}"  th:value="${room.id}" />
-                <input type="hidden" th:field="*{startDate}" th:value="${startDate}" />
-                <input type="hidden" th:field="*{endDate}" th:value="${endDate}" />
-                <input type="hidden" th:field="*{roomNumber}" th:value="${room.number}" />
-                <input type="hidden" th:field="*{capacity}" th:value="${room.capacity}" />
-                <input type="hidden" th:field="*{description}" th:value="${room.description}" />
-                <input type="hidden" th:field="*{standingString}" th:value="${room.standing.name}" />
-                <input type="hidden" id="total-price-hidden" th:field="*{totalPriceWithAdditional}" />
-
-                <!-- Container for additional bonuses as hidden inputs -->
-                <div id="bonus-hidden-inputs"></div>
-
-                <h3>Total <span id="total-price" th:text="${totalPerNight}"></span>€</h3>
-                <button type="submit" class="btn bg-purple">Réserver</button>
-            </form>
-
         </div>
     </div>
+
 </div>
 
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 <script th:inline="javascript">
     const nights = [[${nights}]];

@@ -13,6 +13,12 @@ import java.util.List;
 
 @Controller
 public class ClientController extends AbstractEntityController<Client, FilterFields> {
+    @Override
+    protected void populateModel(Model model, List<Client> entities, String entityType, List<String> columns) {
+        model.addAttribute("clients", entities);
+        model.addAttribute("focusedClient", focusedEntity);
+        super.populateModel(model, entities, entityType, columns);
+    }
 
     private final ClientService clientService;
     private FilterFields filterFields;
@@ -30,6 +36,8 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
         @RequestParam(required = false) String firstname,
         @RequestParam(required = false) String email,
         @RequestParam(required = false) String phone,
+        @RequestParam(required = false) String password,
+        @RequestParam(required = false) String confirmPassword,
         @RequestParam(required = false) Long id,
         @RequestParam(required = false) Boolean reset,
         @RequestParam(required = false) String action,
@@ -40,7 +48,7 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
             this.resetFocusedField(f -> new FilterFields());
             this.filterFields = new FilterFields();
             List<Client> clients = clientService.findAllFiltered("", "", "", "");
-            this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
+            this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"));
             return "table";
         }
 
@@ -58,19 +66,27 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
                 String validationError = validateFieldInput(lastname, firstname, email, phone);
                 if (validationError != null) {
                     model.addAttribute("error", validationError);
-                    // Retain user input in focus form (doesn't work)
-                    // this.focusedField = new FilterFields();
-                    // this.focusedField.setLastname(lastname);
-                    // this.focusedField.setFirstname(firstname);
-                    // this.focusedField.setEmail(email);
-                    // this.focusedField.setPhone(phone);
+                    
                     List<Client> clients = clientService.findAllFiltered(
                         this.filterFields.getLastname(),
                         this.filterFields.getFirstname(),
                         this.filterFields.getEmail(),
                         this.filterFields.getPhone()
                     );
-                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
+                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"));
+                    return "table";
+                }
+                // Password validation and hashing (factorized)
+                overlook_hotel.overlook_hotel.util.PasswordUtils.PasswordResult pwResult = overlook_hotel.overlook_hotel.util.PasswordUtils.validateAndHash(password, confirmPassword);
+                if (pwResult.error != null) {
+                    model.addAttribute("error", pwResult.error);
+                    List<Client> clients = clientService.findAllFiltered(
+                        this.filterFields.getLastname(),
+                        this.filterFields.getFirstname(),
+                        this.filterFields.getEmail(),
+                        this.filterFields.getPhone()
+                    );
+                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"));
                     return "table";
                 }
                 try {
@@ -79,8 +95,8 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
                     newClient.setFirstname(InputSanitizer.sanitize(firstname));
                     newClient.setEmail(InputSanitizer.sanitize(email));
                     newClient.setPhone(InputSanitizer.sanitize(phone));
-                    newClient.setSalt("defaultSalt");
-                    newClient.setPassword("defaultPassword");
+                    newClient.setPassword(pwResult.hashedPassword);
+                    newClient.setSalt(pwResult.salt);
                     clientService.save(newClient);
                     model.addAttribute("message", "Ajout réussi !");
                 } catch (Exception e) {
@@ -91,20 +107,13 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
             } else if (action.equals("update") && id != null) {
                 String validationError = validateFieldInput(lastname, firstname, email, phone);
                 if (validationError != null) {
-                    model.addAttribute("error", validationError);
-                    // Retain user input in focus form (doesn't work)
-                    // this.focusedField = new FilterFields();
-                    // this.focusedField.setLastname(lastname);
-                    // this.focusedField.setFirstname(firstname);
-                    // this.focusedField.setEmail(email);
-                    // this.focusedField.setPhone(phone);
                     List<Client> clients = clientService.findAllFiltered(
                         this.filterFields.getLastname(),
                         this.filterFields.getFirstname(),
                         this.filterFields.getEmail(),
                         this.filterFields.getPhone()
                     );
-                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
+                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"));
                     return "table";
                 }
                 try {
@@ -161,7 +170,7 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
             filter -> new FilterFields()
         );
 
-        this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
+    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"));
 
         return "table";
     }

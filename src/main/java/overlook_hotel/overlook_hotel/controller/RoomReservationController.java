@@ -13,10 +13,12 @@ import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
 import overlook_hotel.overlook_hotel.service.RoomService;
 import overlook_hotel.overlook_hotel.service.StandingService;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -48,7 +50,21 @@ public class RoomReservationController {
     @RequestMapping(value = "/room-reservation", method = {RequestMethod.GET, RequestMethod.POST})
     public String reservation(@ModelAttribute("roomReservationFilter") RoomReservationFields filterFields,
                               @ModelAttribute("roomReservationCart") RoomReservationCart cart,
+                              @RequestParam(value = "resetFilter", required = false) String resetFilter,
                               Model model) {
+
+
+        List<String> errors = new ArrayList<>();
+
+        this.generateMessage(errors, filterFields);
+
+        if (!errors.isEmpty()) {
+            model.addAttribute("errors", errors);
+        }
+
+        if ("true".equals(resetFilter)) {
+            this.resetFilters(filterFields);
+        }
 
         boolean cartHasRooms = cart.getRooms() != null && !cart.getRooms().isEmpty();
 
@@ -57,11 +73,9 @@ public class RoomReservationController {
             filterFields.setStartDate(firstRoom.getStartDate());
             filterFields.setEndDate(firstRoom.getEndDate());
         } else if (filterFields.getStartDate() == null || filterFields.getEndDate() == null) {
-                filterFields.setStartDate(LocalDate.now());
-                filterFields.setEndDate(LocalDate.now().plusDays(1));
+            filterFields.setStartDate(LocalDate.now());
+            filterFields.setEndDate(LocalDate.now().plusDays(1));
         }
-
-        System.out.println("\n\n\n\n\n\n\n\t\t\t\t\t\t\tpricerange: " + filterFields.getPriceRange());
 
         List<Long> excludedRoomIds = cart.getRooms().stream()
                 .map(RoomReservationFields::getIdRoom)
@@ -120,7 +134,7 @@ public class RoomReservationController {
         }
         model.addAttribute("nights", nights);
 
-        BigDecimal baseTotalPerNight = room.getTotalNightPrice();
+        BigDecimal baseTotalPerNight = room.getTotalNightPrice().multiply(BigDecimal.valueOf(nights));
 
         List<RoomBonus> roomBonusList = roomService.getAllBonuses();
 
@@ -139,5 +153,52 @@ public class RoomReservationController {
         return "room-detail";
     }
 
+    private void resetFilters(RoomReservationFields filterFields) {
+        filterFields.setStartDate(LocalDate.now());
+        filterFields.setEndDate(LocalDate.now().plusDays(1));
+
+        filterFields.setRoomNumber(null);
+        filterFields.setCapacity(null);
+        filterFields.setDescription(null);
+        filterFields.setStanding(null);
+        filterFields.setBedType(null);
+        filterFields.setBonuses(null);
+
+        filterFields.setPriceRange(Arrays.asList(null, null));
+
+        filterFields.setAdditionalBonuses(null);
+    }
+
+    private void generateMessage(List<String> errors, RoomReservationFields filterFields) {
+        if (filterFields.getStartDate() != null && filterFields.getEndDate() != null) {
+            if (filterFields.getStartDate().isAfter(filterFields.getEndDate()) ||
+                    filterFields.getStartDate().isEqual(filterFields.getEndDate())) {
+                errors.add("La date de début doit être avant la date de fin.");
+            }
+        }
+
+        if (filterFields.getStartDate() != null &&
+                filterFields.getStartDate().isBefore(LocalDate.now())) {
+            errors.add("La date de début doit être aujourd'hui ou dans le futur.");
+        }
+
+
+        if (filterFields.getRoomNumber() != null && filterFields.getRoomNumber() <= 0) {
+            errors.add("Le numéro de chambre doit être supérieur à 0.");
+        }
+
+        if (filterFields.getPriceRange() != null && filterFields.getPriceRange().size() == 2) {
+            Integer minPrice = filterFields.getPriceRange().get(0);
+            Integer maxPrice = filterFields.getPriceRange().get(1);
+
+            if (minPrice != null && minPrice < 0) {
+                errors.add("Le prix minimum doit être supérieur ou égal à 0.");
+            }
+
+            if (minPrice != null && maxPrice != null && maxPrice.compareTo(minPrice) < 0) {
+                errors.add("Le prix maximum doit être supérieur ou égal au prix minimum.");
+            }
+        }
+    }
 
 }
