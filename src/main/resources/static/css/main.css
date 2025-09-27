@@ -45,11 +45,14 @@ header {
     vertical-align: center;
 }
 
-nav {
+nav, nav ul div {
     display: flex;
     justify-content: space-between;
     align-items: center;
     align-content: center;
+}
+nav ul div {
+    gap: 20px;
 }
 
 nav ul {
@@ -92,14 +95,15 @@ nav ul {
     color: white;
 }
 
-
 footer {
     grid-area: footer;
     background: var(--main-dark-bg-color);
-    padding: 10px;
+    padding: 16px;
     line-height: 0.8rem;
-    align-self: flex-end;
-    justify: flex-end;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
 }
 
 footer a, footer p {
