@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -38,7 +40,7 @@ public class EmployeeControllerTest {
                 new Employee(2L, "flo", "LEEEEEEEEEEED", "florence@gmail.com", job2 , "ssap","salt2"),
                 new Employee(3L, "thibault", "noname", "thibaultnoname@gmail.com", job3 , "password","salt3"));
 
-        when(mockEmployeeService.findAllFiltered(eq(""), eq(""), eq(""), eq(null)))
+        when(mockEmployeeService.findAllFiltered(any(), any(), any(), any()))
                 .thenReturn(employeesList);
 
         String employeePage = employeeController.employees(
