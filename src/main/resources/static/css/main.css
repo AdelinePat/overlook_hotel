@@ -49,14 +49,15 @@ nav ul {
 }
 
 body {
+    min-height: 100vh;
 }
 
 .page {
     width: 90%;
     max-width: 1400px;
     min-width: 500px;
+    min-height: 80vh;
     margin: auto;
-    min-height: 100vh;
 }
 
 h1, h2 {

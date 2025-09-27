@@ -16,6 +16,14 @@
 <body>
 
 <div th:replace="fragments/navbar :: navbar"></div>
+<!--<nav>-->
+<!--  <a th:href="@{/index.html}">Overlook Hotel</a>-->
+<!--  <ul>-->
+<!--    <li>Dashboard</li>-->
+<!--    <li>Gestion Événements</li>-->
+<!--  </ul>-->
+<!--  <a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a>-->
+<!--</nav>-->
 
 <div class="page">
 
@@ -149,10 +157,16 @@
 
     <form th:action="@{/event-reservation/clear}" method="post" style="margin-top:.5rem">
       <button class="btn">Vider le panier</button>
+
+
+    </form>
+    <form th:action="@{/event-reservation/list}" method="get" style="margin-top:.5rem">
+      <button class="btn bg-purple" type="submit">Voir mes réservations</button>
     </form>
   </div>
 
 </div>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 
 

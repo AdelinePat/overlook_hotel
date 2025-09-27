@@ -73,8 +73,8 @@ public class RoomReservationController {
             filterFields.setStartDate(firstRoom.getStartDate());
             filterFields.setEndDate(firstRoom.getEndDate());
         } else if (filterFields.getStartDate() == null || filterFields.getEndDate() == null) {
-                filterFields.setStartDate(LocalDate.now());
-                filterFields.setEndDate(LocalDate.now().plusDays(1));
+            filterFields.setStartDate(LocalDate.now());
+            filterFields.setEndDate(LocalDate.now().plusDays(1));
         }
 
         List<Long> excludedRoomIds = cart.getRooms().stream()

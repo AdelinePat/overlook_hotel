@@ -1,15 +1,18 @@
 package overlook_hotel.overlook_hotel.service;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import overlook_hotel.overlook_hotel.model.RoomReservationFields;
 import overlook_hotel.overlook_hotel.model.entity.*;
 import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
 import overlook_hotel.overlook_hotel.repository.*;
 import overlook_hotel.overlook_hotel.model.RoomReservationCart;
+import overlook_hotel.overlook_hotel.specification.RoomReservationSpecification;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 public class RoomReservationService {
@@ -40,32 +43,45 @@ public class RoomReservationService {
         this.roomBonusService = roomBonusService;
     }
 
-    public RoomReservation saveCartAsReservation(RoomReservationCart cart, Long clientId) {
-        if (cart.getRooms().isEmpty()) {
-            throw new IllegalArgumentException("Cart is empty");
-        }
-
-        // Pick start and end date from the first room (or calculate a general start/end)
-        LocalDate startDate = cart.getRooms().get(0).getStartDate();
-        LocalDate endDate = cart.getRooms().get(0).getEndDate();
-
+    private void setRoomReservation(RoomReservationCart cart, Long clientId, RoomReservation reservation) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalStateException("Client not found"));
 
-        RoomReservation reservation = new RoomReservation();
+        LocalDate startDate = cart.getRooms().get(0).getStartDate();
+        LocalDate endDate = cart.getRooms().get(0).getEndDate();
+
         reservation.setClient(client);
         reservation.setCreationDate(LocalDate.now());
         reservation.setStartDate(startDate);
         reservation.setEndDate(endDate);
         reservation.setStatus(true); // confirmed
-        reservation.setTotalPrice(BigDecimal.ZERO); // will calculate below
+        reservation.setTotalPrice(BigDecimal.ZERO);
+    }
 
-        reservation = roomReservationRepository.save(reservation); // save to generate ID
+    private void setDefaultRoomBonus(RoomReservation reservation, Room room, RoomBonus bonus) {
+        if (bonus != null) {
+            RoomReservationBonus resBonus = new RoomReservationBonus();
+            resBonus.setRoomReservation(reservation);
+            resBonus.setRoom(room);
+            resBonus.setBonus(bonus);
+            reservation.getAdditionalBonuses().add(resBonus);
+        }
+    }
+
+    public RoomReservation saveCartAsReservation(RoomReservationCart cart, Long clientId) {
+        if (cart.getRooms().isEmpty()) {
+            throw new IllegalArgumentException("Cart is empty");
+        }
+
+
+        RoomReservation reservation = new RoomReservation();
+        this.setRoomReservation(cart, clientId, reservation);
+        reservation = roomReservationRepository.save(reservation);
+
 
         BigDecimal totalCartPrice = BigDecimal.ZERO;
 
         for (RoomReservationFields fields : cart.getRooms()) {
-            // 1️⃣ Link room
             Room room = roomService.findById(fields.getIdRoom());
             RoomLinkReservation link = new RoomLinkReservation();
             link.setRoomReservation(reservation);
@@ -73,21 +89,13 @@ public class RoomReservationService {
 
             reservation.getRoomLinks().add(link);
 
-            // 2️⃣ Add additional bonuses
             if (fields.getAdditionalBonuses() != null) {
                 for (RoomBonusEnum bonusEnum : fields.getAdditionalBonuses()) {
                     RoomBonus bonus = roomBonusService.findBonusByType(bonusEnum);
-                    if (bonus != null) {
-                        RoomReservationBonus resBonus = new RoomReservationBonus();
-                        resBonus.setRoomReservation(reservation);
-                        resBonus.setRoom(room);
-                        resBonus.setBonus(bonus);
-                        reservation.getAdditionalBonuses().add(resBonus);
-                    }
+                    this.setDefaultRoomBonus(reservation, room, bonus);
                 }
             }
 
-            // 3️⃣ Calculate price
             BigDecimal basePrice = room.getNightPrice();
 
             BigDecimal baseBonusTotal = room.getBonuses().stream()
@@ -113,51 +121,49 @@ public class RoomReservationService {
 
         reservation.setTotalPrice(totalCartPrice);
 
-        // Save again to persist room links and bonuses
         return roomReservationRepository.save(reservation);
     }
 
+    public List<RoomReservation> getAllReservationFromClient(Long clientId) {
 
+        Specification<RoomReservation> spec =
+                (root, query, cb) -> cb.conjunction();
 
-//    public void saveReservation(RoomReservationFields fields, Long clientId) {
-//
-//
-//        Client client = clientRepository.findById(clientId)
-//                .orElseThrow(() -> new RuntimeException("Client not found: " + clientId));
-//
-//        RoomReservation reservation = new RoomReservation();
-////        reservation.setId(clientId);
-//        reservation.setClient(client);
-//        reservation.setCreationDate(LocalDate.now());
-//        reservation.setStartDate(fields.getStartDate());
-//        reservation.setEndDate(fields.getEndDate());
-//        reservation.setStatus(true); // assume confirmed
-//        reservation.setTotalPrice(fields.getTotalPriceWithAdditional());
-//
-//        reservation = roomReservationRepository.save(reservation);
-//
-//        // link room
-//        Room roomEntity = roomRepository.findById(fields.getIdRoom())
-//                .orElseThrow(() -> new RuntimeException("Room not found: " + fields.getIdRoom()));
-//        RoomLinkReservation link = new RoomLinkReservation();
-//        link.setRoomReservation(reservation);
-//        link.setRoom(roomEntity);
-//        roomLinkReservationRepository.save(link);
-//
-//        // link additional bonuses
-//        // link additional bonuses
-//        if (fields.getAdditionalBonuses() != null) {
-//            for (RoomBonusEnum bonusEnum : fields.getAdditionalBonuses()) {
-//                RoomBonus bonus = roomBonusRepository.findByType(bonusEnum)
-//                        .orElseThrow(() -> new RuntimeException("Bonus not found for type: " + bonusEnum.name()));
-//
-//                RoomReservationBonus rrBonus = new RoomReservationBonus();
-//                rrBonus.setRoomReservation(reservation); // link to reservation
-//                rrBonus.setRoom(roomEntity);             // link to room
-//                rrBonus.setBonus(bonus);                 // link to bonus
-//
-//                roomReservationBonusRepository.save(rrBonus);
-//            }
-//        }
-//    }
+        if (clientId != null) {
+            spec = spec.and(RoomReservationSpecification.byClientId(clientId));
+        }
+        List<RoomReservation> reservations = roomReservationRepository.findAll(spec);
+        reservations.forEach(roomReservation -> roomReservation.setTotalPrice(calculateReservationTotal(roomReservation)));
+
+        return reservations;
+    }
+
+    private BigDecimal calculateReservationTotal(RoomReservation reservation) {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (RoomLinkReservation link : reservation.getRoomLinks()) {
+            Room room = link.getRoom();
+
+            BigDecimal basePrice = room.getNightPrice();
+            BigDecimal baseBonusTotal = room.getBonuses().stream()
+                    .map(RoomBonus::getDailyPrice)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal additionalBonusTotal = reservation.getAdditionalBonuses().stream()
+                    .filter(b -> b.getRoom().getId().equals(room.getId()))
+                    .map(rb -> rb.getBonus().getDailyPrice())
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            long nights = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
+            if (nights < 1) nights = 1;
+
+            total = total.add(
+                    (basePrice.add(baseBonusTotal).add(additionalBonusTotal))
+                            .multiply(BigDecimal.valueOf(nights))
+            );
+        }
+
+        return total;
+    }
+
 }
