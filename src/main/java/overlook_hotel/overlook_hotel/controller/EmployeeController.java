@@ -30,14 +30,16 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
 
     @RequestMapping(value = "/employees", method = {RequestMethod.GET, RequestMethod.POST})
     public String employees(
-        @RequestParam(required = false) String lastname,
-        @RequestParam(required = false) String firstname,
-        @RequestParam(required = false) String email,
-        @RequestParam(required = false) Long jobParam,
-        @RequestParam(required = false) Long id,
-        @RequestParam(required = false) Boolean reset,
-        @RequestParam(required = false) String action,
-        Model model) {
+    @RequestParam(required = false) String lastname,
+    @RequestParam(required = false) String firstname,
+    @RequestParam(required = false) String email,
+    @RequestParam(required = false) Long jobParam,
+    @RequestParam(required = false) String password,
+    @RequestParam(required = false) String confirmPassword,
+    @RequestParam(required = false) Long id,
+    @RequestParam(required = false) Boolean reset,
+    @RequestParam(required = false) String action,
+    Model model) {
 
         // Handle reset button
         if (reset != null && reset) {
@@ -76,19 +78,32 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
                     this.populateModel(model, employees, "employee", List.of("Nom", "Prénom", "Email", "Job"), jobService.getFullJobList());
                     return "table";
                 }
-                try {
-                    Employee newEmployee = new Employee();
-                    newEmployee.setLastname(InputSanitizer.sanitize(lastname));
-                    newEmployee.setFirstname(InputSanitizer.sanitize(firstname));
-                    newEmployee.setEmail(InputSanitizer.sanitize(email));
-                    newEmployee.setJob(job);
-                    newEmployee.setSalt("defaultSalt");
-                    newEmployee.setPassword("defaultPassword");
-                    employeeService.save(newEmployee);
-                    model.addAttribute("message", "Ajout réussi !");
-                } catch (Exception e) {
-                    model.addAttribute("error", "Erreur lors de l'ajout : " + e.getMessage());
-                }
+                    // Password validation and hashing (factorized)
+                    overlook_hotel.overlook_hotel.util.PasswordUtils.PasswordResult pwResult = overlook_hotel.overlook_hotel.util.PasswordUtils.validateAndHash(password, confirmPassword);
+                    if (pwResult.error != null) {
+                        model.addAttribute("error", pwResult.error);
+                        List<Employee> employees = employeeService.findAllFiltered(
+                            this.filterFields.getLastname(),
+                            this.filterFields.getFirstname(),
+                            this.filterFields.getEmail(),
+                            this.filterFields.getJob()
+                        );
+                        this.populateModel(model, employees, "employee", List.of("Nom", "Prénom", "Email", "Job"), jobService.getFullJobList());
+                        return "table";
+                    }
+                    try {
+                        Employee newEmployee = new Employee();
+                        newEmployee.setLastname(InputSanitizer.sanitize(lastname));
+                        newEmployee.setFirstname(InputSanitizer.sanitize(firstname));
+                        newEmployee.setEmail(InputSanitizer.sanitize(email));
+                        newEmployee.setJob(job);
+                        newEmployee.setPassword(pwResult.hashedPassword);
+                        newEmployee.setSalt(pwResult.salt);
+                        employeeService.save(newEmployee);
+                        model.addAttribute("message", "Ajout réussi !");
+                    } catch (Exception e) {
+                        model.addAttribute("error", "Erreur lors de l'ajout : " + e.getMessage());
+                    }
                 this.resetFocusedField(f -> new FilterFields());
                 this.filterFields = new FilterFields();
             } else if (action.equals("update") && id != null) {
