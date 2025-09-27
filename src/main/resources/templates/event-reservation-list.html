@@ -6,13 +6,14 @@
   <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body>
-<nav>
-  <a th:href="@{/index.html}">Overlook Hotel</a>
-  <ul>
-    <li><a th:href="@{/event-reservation}">Nouvelle réservation</a></li>
-  </ul>
-  <a class="btn bg-purple" th:href="@{/logout}">Se déconnecter</a>
-</nav>
+<div th:replace="fragments/navbar :: navbar"></div>
+<!--<nav>-->
+<!--  <a th:href="@{/index.html}">Overlook Hotel</a>-->
+<!--  <ul>-->
+<!--    <li><a th:href="@{/event-reservation}">Nouvelle réservation</a></li>-->
+<!--  </ul>-->
+<!--  <a class="btn bg-purple" th:href="@{/logout}">Se déconnecter</a>-->
+<!--</nav>-->
 
 <div class="page">
   <h1 class="mt50">Mes réservations</h1>
@@ -54,5 +55,6 @@
 
 
 </div>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

@@ -9,11 +9,13 @@
 
     <div class="page">
         <h2>Login</h2>
+        <p>OOOOOOOOOOOOOOOOOOOOOO</p>
         <div>
             <div th:if="${param.error}" style="color:red;">Invalid email or password.</div>
             <div th:if="${param.logout}" style="color:green;">You have been logged out.</div>
             <div th:if="${param.registered}" style="color:green;">Inscription réussie ! Vous pouvez vous connecter.</div>
         </div>
     </div>
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

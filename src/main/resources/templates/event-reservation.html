@@ -14,14 +14,15 @@
 
 </head>
 <body>
-<nav>
-  <a th:href="@{/index.html}">Overlook Hotel</a>
-  <ul>
-    <li>Dashboard</li>
-    <li>Gestion Événements</li>
-  </ul>
-  <a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a>
-</nav>
+<div th:replace="fragments/navbar :: navbar"></div>
+<!--<nav>-->
+<!--  <a th:href="@{/index.html}">Overlook Hotel</a>-->
+<!--  <ul>-->
+<!--    <li>Dashboard</li>-->
+<!--    <li>Gestion Événements</li>-->
+<!--  </ul>-->
+<!--  <a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a>-->
+<!--</nav>-->
 
 <div class="page">
 
@@ -164,6 +165,7 @@
   </div>
 
 </div>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 
 

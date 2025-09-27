@@ -11,14 +11,9 @@
     <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
 </head>
 <body>
+
 <div th:replace="fragments/navbar :: navbar"></div>
-Gestion Réservation
-</li>
-</ul>
-<form th:action="@{/logout}" method="post" style="display:inline;">
-    <button type="submit" class="btn bg-purple">Se déconnecter</button>
-</form>
-</nav>
+
 <div class="page">
     <h1 th:text="${title}"></h1>
     <div class="container">
@@ -48,5 +43,6 @@ Gestion Réservation
     </div>
 
 </div>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
