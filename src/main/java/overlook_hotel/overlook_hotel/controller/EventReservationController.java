@@ -6,10 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import overlook_hotel.overlook_hotel.model.EventFilterFields;
-import overlook_hotel.overlook_hotel.model.entity.EventLinkReservation;
-import overlook_hotel.overlook_hotel.model.entity.EventReservation;
-import overlook_hotel.overlook_hotel.model.entity.Place;
-import overlook_hotel.overlook_hotel.model.entity.PlaceType;
+import overlook_hotel.overlook_hotel.model.entity.*;
 import overlook_hotel.overlook_hotel.model.enumList.EventType;
 import overlook_hotel.overlook_hotel.repository.ClientRepository;
 import overlook_hotel.overlook_hotel.repository.EventLinkPlaceRepository;
@@ -20,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,12 +51,6 @@ public class EventReservationController {
         LocalDateTime now = LocalDateTime.now();
 
 
-//        if (filterFields.getStartDate() == null) {
-//            filterFields.setStartDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
-//        }
-//        if (filterFields.getEndDate() == null || !filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
-//            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
-//        }
 
         if (filterFields.getStartDate() != null && filterFields.getStartDate().isBefore(now)) {
             model.addAttribute("errorMessage", "La date de début ne peut pas être antérieure à aujourd'hui.");
@@ -156,8 +148,26 @@ public class EventReservationController {
     @PostMapping("/event-reservation/confirm")
     public String confirmReservation(@ModelAttribute EventFilterFields filterFields,
                                      RedirectAttributes redirectAttributes,
-                                     HttpSession session
-    ) {
+                                     HttpSession session,
+                                     Principal principal)
+    {
+
+
+        //check user is connected
+
+        if(principal == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vous devez être connecté pour réserver.");
+                    return "redirect:/login";
+        }
+
+        String email = principal.getName();
+        Client client = clientRepository.findByEmail(email);
+        if(client == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Utilisateur inconnu");
+            return "redirect:/login";
+        }
+
+
         List<Place> cart = (List<Place>) session.getAttribute("eventCart");
         if (cart == null || cart.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Votre panier est vide.");
@@ -176,10 +186,6 @@ public class EventReservationController {
             return "redirect:/event-reservation";
         }
 
-
-//        LocalDateTime startDate = filterFields.getStartDate() != null
-//                ? filterFields.getStartDate()
-//                : LocalDateTime.now();
 
         LocalDateTime endDate = filterFields.getEndDate() != null
                 ? filterFields.getEndDate()
@@ -208,9 +214,12 @@ public class EventReservationController {
             chosenEventType = EventType.AUTRE;
         }
 
+
+
         // entity reservation
         EventReservation reservation = new EventReservation();
-        reservation.setClient(clientRepository.findById(1L).orElseThrow());
+//        reservation.setClient(clientRepository.findById(1L).orElseThrow());
+        reservation.setClient(client);
         reservation.setEventType(filterFields.getEventType());
         reservation.setStartDate(startDate);
         reservation.setEndDate(endDate);
@@ -234,5 +243,34 @@ public class EventReservationController {
 
         return "redirect:/event-reservation";
     }
+    @GetMapping("/event-reservation/list")
+    public String listReservations(Model model, Principal principal, RedirectAttributes redirectAttributes) {
+
+
+        if (principal == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vous devez être connecté pour voir vos réservations.");
+            return "redirect:/login";
+        }
+
+
+        String email = principal.getName();
+        Client client = clientRepository.findByEmail(email);
+
+        if (client == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Utilisateur inconnu.");
+            return "redirect:/login";
+        }
+
+
+        List<EventReservation> reservations = eventReservationRepository.findByClientId(client.getId());
+
+        model.addAttribute("reservations", reservations);
+        model.addAttribute("titlePage", "Mes réservations - Overlook Hotel");
+
+        return "event-reservation-list";
+    }
+
+
+
 
 }
