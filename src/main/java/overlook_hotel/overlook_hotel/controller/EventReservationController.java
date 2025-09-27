@@ -13,16 +13,13 @@ import overlook_hotel.overlook_hotel.repository.EventLinkPlaceRepository;
 import overlook_hotel.overlook_hotel.repository.EventReservationRepository;
 import overlook_hotel.overlook_hotel.service.PlaceService;
 import overlook_hotel.overlook_hotel.service.PlaceTypeService;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Controller
@@ -48,24 +45,29 @@ public class EventReservationController {
                               Model model,
                               HttpSession session) {
 
-        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDateTime tomorrow = LocalDate.now()
+                .plusDays(1)
+                .atTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES));
 
-// Appliquer la date actuelle par défaut si aucune date n’est saisie
+
+
         if (filterFields.getStartDate() == null) {
-            filterFields.setStartDate(now);
+            filterFields.setStartDate(tomorrow);
         }
         if (filterFields.getEndDate() == null) {
             filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
         }
 
-// Vérifie que la date de début n’est pas antérieure à maintenant
-        if (filterFields.getStartDate().isBefore(now)) {
-            model.addAttribute("errorMessage", "La date de début ne peut pas être antérieure à la date du jour.");
+
+        if (filterFields.getStartDate().isBefore(tomorrow)) {
+            filterFields.setStartDate(tomorrow);
+            filterFields.setEndDate(tomorrow.plusHours(1));
         }
 
-// Vérifie que la date de fin est bien après la date de début
+
         if (!filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
             model.addAttribute("errorMessage", "La date de fin doit être postérieure à la date de début.");
+            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
         }
 
 
@@ -140,43 +142,41 @@ public class EventReservationController {
     public String confirmReservation(@ModelAttribute EventFilterFields filterFields,
                                      RedirectAttributes redirectAttributes,
                                      HttpSession session,
-                                     Principal principal)
-    {
+                                     Principal principal) {
 
-
-        //check user is connected
-
-        if(principal == null) {
+        //user is connected
+        if (principal == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "Vous devez être connecté pour réserver.");
-                    return "redirect:/login";
+            return "redirect:/login";
         }
 
         String email = principal.getName();
         Client client = clientRepository.findByEmail(email);
-        if(client == null) {
+        if (client == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "Utilisateur inconnu");
             return "redirect:/login";
         }
 
-
         List<Place> cart = (List<Place>) session.getAttribute("eventCart");
         if (cart == null || cart.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Votre panier est vide.");
-            return "redirect:/event-reservation"; // cart empty
+            return "redirect:/event-reservation";
         }
 
-        LocalDateTime now = LocalDateTime.now();
+        //
+        LocalDateTime tomorrow = LocalDate.now()
+                .plusDays(1)
+                .atTime(LocalTime.now().truncatedTo(ChronoUnit.MINUTES));
 
         LocalDateTime startDate = filterFields.getStartDate();
         if (startDate == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "La date de début est obligatoire.");
             return "redirect:/event-reservation";
         }
-        if (startDate.isBefore(now)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "La date de début ne peut pas être antérieure à aujourd'hui.");
+        if (startDate.isBefore(tomorrow)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "La date de début doit être à partir de demain.");
             return "redirect:/event-reservation";
         }
-
 
         LocalDateTime endDate = filterFields.getEndDate() != null
                 ? filterFields.getEndDate()
@@ -187,14 +187,12 @@ public class EventReservationController {
             return "redirect:/event-reservation";
         }
 
-
-
         long hours = java.time.Duration.between(startDate, endDate).toHours();
         if (java.time.Duration.between(startDate, endDate).toMinutesPart() > 0) {
-            hours++; // round hours
+            hours++;
         }
 
-        // total
+        //
         BigDecimal total = BigDecimal.ZERO;
         for (Place place : cart) {
             total = total.add(place.getHourlyPrice().multiply(BigDecimal.valueOf(hours)));
@@ -206,34 +204,31 @@ public class EventReservationController {
         }
 
 
-
-        // entity reservation
         EventReservation reservation = new EventReservation();
-//        reservation.setClient(clientRepository.findById(1L).orElseThrow());
         reservation.setClient(client);
         reservation.setEventType(filterFields.getEventType());
         reservation.setStartDate(startDate);
         reservation.setEndDate(endDate);
         reservation.setTotalPrice(total);
 
-        EventReservation savedReservation = eventReservationRepository.save(reservation); //to save
+        EventReservation savedReservation = eventReservationRepository.save(reservation);
 
-        // to create link with EventLinkReservation
-        for (Place place : cart)
-        {
-            EventLinkReservation  link = new EventLinkReservation();
+
+        for (Place place : cart) {
+            EventLinkReservation link = new EventLinkReservation();
             link.setEventReservation(savedReservation);
             link.setPlace(place);
             eventLinkPlaceRepository.save(link);
         }
 
-        //remove the cart
+
         session.removeAttribute("eventCart");
 
         redirectAttributes.addFlashAttribute("successMessage", "Réservation enregistrée avec succès !");
-
         return "redirect:/event-reservation";
     }
+
+
     @GetMapping("/event-reservation/list")
     public String listReservations(Model model, Principal principal, RedirectAttributes redirectAttributes) {
 
