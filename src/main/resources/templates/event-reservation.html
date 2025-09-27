@@ -242,10 +242,24 @@
       form.addEventListener('submit', e => {
         e.preventDefault(); // empêche le rechargement
         const li = form.closest('li');
-        li.remove();        // supprime l’élément du DOM
+        const url = form.action;
+
+
+       fetch(url, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => {
+          if (res.ok) {
+          li.remove();
         updateTotals();     // recalcule le total
-      });
+        } else {
+          alert ("Erreur lors du retrait de l'élément.");
+        }
+      })
+      .catch(() => alert ("Impossible de contacter le serveur"));
     });
+  })
   })();
 </script>
 
