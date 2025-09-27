@@ -7,22 +7,33 @@
 </head>
 <body>
 
-    <div th:replace="fragments/navbar :: navbar"></div>
+    <header>
+        <div th:replace="fragments/navbar :: navbar"></div>
+    </header>
 
-    <div class="page">
-        <h1>Connexion Administrateur</h1>
-    <form th:action="@{/login-admin}" method="post">
-            <div>
-                <label for="email">Email</label>
-                <input type="text" id="email" name="username" placeholder="Email" required />
-            </div>
-            <div>
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password" placeholder="Mot de passe" required />
-            </div>
-            <button type="submit" class="btn">Se connecter</button>
-        </form>
-        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div class="page manager_login">
+        <div class="content manager_content">
+            <h1>Connexion Administrateur</h1>
+            <form class="login-form" th:action="@{/login-admin}" method="post">
+                <div>
+                    <label for="email">Email</label>
+                    <input type="text" id="email" name="username" placeholder="Email" required />
+                </div>
+                <div>
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" placeholder="Mot de passe" required />
+                </div>
+                <button type="submit" class="btn">Se connecter</button>
+            </form>
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        </div>
     </div>
+
+
+
+    <footer>
+        <div class="footer" th:replace="fragments/footer :: footer"></div>
+    </footer>
+
 </body>
 </html>

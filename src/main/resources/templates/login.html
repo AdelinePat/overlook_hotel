@@ -4,17 +4,30 @@
     <title>Login</title>
     <link rel="stylesheet" th:href="@{/css/main.css}" />
 </head>
-<body>
-    <div th:replace="fragments/navbar :: navbar"></div>
+<body class="grid">
+    <header>
+        <div class="header" th:replace="fragments/navbar :: navbar"></div>
+    </header>
 
-    <div class="page">
-        <h2>Login</h2>
+    <div class="page landing">
+<!--        <h2>Login</h2>-->
+
+    </div>
+
+    <div class="login-content">
         <div>
             <div th:if="${param.error}" style="color:red;">Invalid email or password.</div>
             <div th:if="${param.logout}" style="color:green;">You have been logged out.</div>
             <div th:if="${param.registered}" style="color:green;">Inscription réussie ! Vous pouvez vous connecter.</div>
         </div>
+        <div>
+            <p>Plus de 100 chambres disponibles</p>
+            <p>Satisfaction de 4.5/5 étoiles</p>
+            <p>30% de clients qui décident de revenir</p>
+        </div>
     </div>
-    <div th:replace="fragments/footer :: footer"></div>
+    <footer>
+        <div class="footer" th:replace="fragments/footer :: footer"></div>
+    </footer>
 </body>
 </html>
