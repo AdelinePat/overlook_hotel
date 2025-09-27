@@ -73,11 +73,26 @@
     <!--    </div>-->
 
 
+<!--    <div class="filter-input reservation-input">-->
+<!--      <label><i class="fa-solid fa-calendar-days"></i></label>-->
+<!--      <input type="datetime-local" th:field="*{startDate}"-->
+<!--      />-->
+<!--      <input type="datetime-local" th:field="*{endDate}"/>-->
+<!--    </div>-->
     <div class="filter-input reservation-input">
       <label><i class="fa-solid fa-calendar-days"></i></label>
-      <input type="datetime-local" th:field="*{startDate}"/>
-      <input type="datetime-local" th:field="*{endDate}"/>
+
+      <input type="datetime-local"
+             th:field="*{startDate}"
+             th:value="${filterFields.startDate != null ? #temporals.format(filterFields.startDate, 'yyyy-MM-dd''T''HH:mm') : #temporals.format(T(java.time.LocalDateTime).now(), 'yyyy-MM-dd''T''HH:mm')}" />
+
+      <input type="datetime-local"
+             th:field="*{endDate}"
+             th:value="${filterFields.endDate != null ? #temporals.format(filterFields.endDate, 'yyyy-MM-dd''T''HH:mm') : #temporals.format(T(java.time.LocalDateTime).now().plusHours(1), 'yyyy-MM-dd''T''HH:mm')}" />
     </div>
+
+
+
 
     <button class="btn lh12" type="submit">Rechercher</button>
   </form>
@@ -242,10 +257,24 @@
       form.addEventListener('submit', e => {
         e.preventDefault(); // empêche le rechargement
         const li = form.closest('li');
-        li.remove();        // supprime l’élément du DOM
+        const url = form.action;
+
+
+       fetch(url, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => {
+          if (res.ok) {
+          li.remove();
         updateTotals();     // recalcule le total
-      });
+        } else {
+          alert ("Erreur lors du retrait de l'élément.");
+        }
+      })
+      .catch(() => alert ("Impossible de contacter le serveur"));
     });
+  })
   })();
 </script>
 
