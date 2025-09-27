@@ -41,7 +41,7 @@
                     <td th:text="${res.numberOfRooms}"></td>
                     <td th:text="${res.numberOfNights}"></td>
 <!--                    <td th:text="${res.paymentDate != null} ? ${#temporals.format(res.paymentDate, 'dd/MM/yy HH:mm')} : ''"></td>-->
-                    <td th:text="${res.totalPrice}"></td>
+                    <td><span th:text="${res.totalPrice}"></span> €</td>
                 </tr>
                 </tbody>
             </table>
@@ -50,25 +50,47 @@
             </form>
         </div>
 
-        <div class="display-focus" th:if="${focusedReservation != null}">
-            <h2>Détails de la réservation</h2>
-            <p>Création: <span th:text="${#temporals.format(focusedReservation.creationDate, 'dd/MM/yy')}"></span></p>
-            <p>Début: <span th:text="${#temporals.format(focusedReservation.startDate, 'dd/MM/yy')}"></span></p>
-            <p>Fin: <span th:text="${#temporals.format(focusedReservation.endDate, 'dd/MM/yy')}"></span></p>
-            <p>Total: <span th:text="${focusedReservation.totalPrice}"></span> €</p>
+        <div class="display-focus" >
 
-<!--            <h3>Chambres</h3>-->
-            <ul>
-                <li th:each="room : ${focusedReservation.rooms}">
-                    Chambre <span th:text="${room.roomNumber}"></span> - <span th:text="${room.description}"></span>
-                    <br/>
-                    Bonus par défaut: <span th:text="${room.bonuses}"></span>
-                    <br/>
-                    Bonus supplémentaires: <span th:text="${room.additionalBonuses}"></span>
-                    <br/>
-                    Total chambre: <span th:text="${room.totalPriceWithAdditional}"></span> €
-                </li>
-            </ul>
+            <div th:if="${focusedReservation != null}">
+                <h2>Détails de la réservation</h2>
+                <p>Créé le: <span th:text="${#temporals.format(focusedReservation.creationDate, 'dd/MM/yy')}"></span> -
+                    Du <span th:text="${#temporals.format(focusedReservation.startDate, 'dd/MM/yy')}"></span>
+                    au <span th:text="${#temporals.format(focusedReservation.endDate, 'dd/MM/yy')}"></span></p>
+
+                <div class="focus-reservation" th:each="room : ${focusedReservation.rooms}">
+                    <h3><span th:text="${room.roomNumber}"></span> -
+                        <span th:text="${@displayText.deleteUnderscore(room.standing.name)}"></span>
+                    </h3>
+                    <ul>
+                        <li th:if="${#lists.isEmpty(room.bonuses)}">
+                            Bonus par défaut: aucun
+                        </li>
+                        <li th:if="${!#lists.isEmpty(room.bonuses)}">Bonus par défaut:</br>
+                            <span th:each="bonus, iterStat : ${room.bonuses}">
+                                <span th:text="${@displayText.deleteUnderscore(bonus)}"></span>
+                                <span th:if="${!iterStat.last}">, </span>
+                            </span>
+<!--                            <span th:text="${@displayText.deleteUnderscore(#lists.join(room.bonuses, ', '))}">-->
+                            </span>
+                        </li>
+                        <li th:if="${#lists.isEmpty(room.additionalBonuses)}">
+                            Bonus supplémentaires: aucun
+                        </li>
+                        <li th:if="${!#lists.isEmpty(room.additionalBonuses)}">Bonus supplémentaires:</br>
+                            <span th:each="bonus, iterStat : ${room.additionalBonuses}">
+                                <span th:text="${@displayText.deleteUnderscore(bonus)}"></span>
+                                <span th:if="${!iterStat.last}">, </span>
+                            </span>
+<!--                            <span th:text="${@displayText.deleteUnderscore(#lists.join(room.additionalBonuses, ', '))">-->
+<!--                            </span>-->
+                        </li>
+                    </ul>
+                    <p>Total de la chambre: <span th:text="${room.totalPriceWithAdditional}"></span> €</p>
+                </div>
+                <p>Total: <span th:text="${focusedReservation.totalPrice}"></span> €</p>
+            </div>
+
         </div>
 
     </div>

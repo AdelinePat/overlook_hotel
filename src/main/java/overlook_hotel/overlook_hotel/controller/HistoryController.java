@@ -41,7 +41,7 @@ public class HistoryController {
 
         model.addAttribute("title", "Historique des réservations");
         model.addAttribute("reservations", reservations);
-        model.addAttribute("columns", List.of("Création", "Début", "Fin", "Nombre de chambres", "Nombre de nuits", "Total"));
+        model.addAttribute("columns", List.of("Création", "Début", "Fin", "Nbr de chambres", "Nbr de nuits", "Total"));
 
         return "history"; // maps to history.html
     }
