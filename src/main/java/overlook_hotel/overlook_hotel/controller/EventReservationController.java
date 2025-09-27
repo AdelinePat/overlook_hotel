@@ -48,33 +48,89 @@ public class EventReservationController {
                               Model model,
                               HttpSession session) {
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
-
-
-        if (filterFields.getStartDate() != null && filterFields.getStartDate().isBefore(now)) {
-            model.addAttribute("errorMessage", "La date de début ne peut pas être antérieure à aujourd'hui.");
-            filterFields.setStartDate(now.truncatedTo(ChronoUnit.MINUTES));
-        }
-
-        if (filterFields.getEndDate() != null && filterFields.getStartDate() != null &&
-                !filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
-            model.addAttribute("errorMessage", "La date de fin doit être postérieure à la date de début.");
-            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
-        }
-        if (filterFields.getStartDate() != null && filterFields.getEndDate() != null &&
-                !filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
-            model.addAttribute("errorMessage", "L'heure de fin doit être postérieure à l'heure de début.");
-            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
-        }
-
+// Appliquer la date actuelle par défaut si aucune date n’est saisie
         if (filterFields.getStartDate() == null) {
-            filterFields.setStartDate(now.truncatedTo(ChronoUnit.MINUTES));
+            filterFields.setStartDate(now);
         }
         if (filterFields.getEndDate() == null) {
             filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
         }
 
+// Vérifie que la date de début n’est pas antérieure à maintenant
+        if (filterFields.getStartDate().isBefore(now)) {
+            model.addAttribute("errorMessage", "La date de début ne peut pas être antérieure à la date du jour.");
+        }
+
+// Vérifie que la date de fin est bien après la date de début
+        if (!filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
+            model.addAttribute("errorMessage", "La date de fin doit être postérieure à la date de début.");
+        }
+
+
+//        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+//
+//        if (filterFields.getStartDate() == null) {
+//            filterFields.setStartDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+//        }
+//        if (filterFields.getEndDate() == null) {
+//            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
+//        }
+//
+//        // Vérification : endDate > startDate ?
+//        if (!filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
+//            if (filterFields.getEndDate() != null) {
+//                // Cas où l’utilisateur a vraiment saisi une mauvaise date
+//                model.addAttribute("errorMessage", "La date de fin doit être postérieure à la date de début.");
+//            }
+//            // Corrige toujours la valeur par défaut (+1h)
+//            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
+//        }
+//
+//        if (filterFields.getStartDate().isBefore(now)) {
+//            if (filterFields.getStartDate() != null) {
+//                model.addAttribute("errorMessage", "La date de début ne peut pas être antérieure à aujourd'hui.");
+//            }
+//            filterFields.setStartDate(now);
+//            filterFields.setEndDate(now.plusHours(1));
+//        }
+
+
+
+
+
+
+
+
+
+
+//        if (filterFields.getStartDate().isBefore(now)) {
+//            model.addAttribute("errorMessage", "La date de début ne peut pas être antérieure à aujourd'hui.");
+//            // on remet par défaut
+//            filterFields.setStartDate(now);
+//            filterFields.setEndDate(now.plusHours(1));
+//        }
+//
+//        if (!filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
+//            model.addAttribute("errorMessage", "La date de fin doit être postérieure à la date de début.");
+//            // on force +1h
+//            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
+//        }
+
+
+
+//        if (filterFields.getStartDate() != null && filterFields.getStartDate().isBefore(now)) {
+//            model.addAttribute("errorMessage", "La date de début ne peut pas être antérieure à aujourd'hui.");
+//            filterFields.setStartDate(now.truncatedTo(ChronoUnit.MINUTES));
+//        }
+
+//        if (filterFields.getEndDate() != null && filterFields.getStartDate() != null &&
+//                !filterFields.getEndDate().isAfter(filterFields.getStartDate())) {
+//            model.addAttribute("errorMessage", "La date de fin doit être postérieure à la date de début.");
+//            filterFields.setEndDate(filterFields.getStartDate().plusHours(1));
+//        }
+//
 
 
 
