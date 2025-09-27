@@ -102,7 +102,7 @@ footer {
     justify: flex-end;
 }
 
-footer a {
+footer a, footer p {
     color: rgba(255,255,255,0.6);
     text-decoration: none;
     }
@@ -816,7 +816,7 @@ create_account ~ .login-content form div input::placeholder {
 }
 
 .cart-content {
-    display-flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     background: none;
