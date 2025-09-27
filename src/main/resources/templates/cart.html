@@ -10,12 +10,15 @@
     <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    
-<div th:replace="fragments/navbar :: navbar"></div>
 
-<div class="page ">
-    <div class="container">
-        <h1>Votre panier</h1>
+<header>
+    <div class="header" th:replace="fragments/navbar :: navbar"></div>
+</header>
+
+<div class="page">
+    <div class="content">
+        <div class="container">
+            <h1>Votre panier</h1>
 
             <div th:if="${message != null}" class="alert success">
                 <p th:text="${message}"></p>
@@ -55,7 +58,7 @@
 
                     </div>
                     <h2>Prix total de toutes les chambres :</h2>
-                        <p><span th:text="${totalCartPrice}"></span> €</p>
+                    <p><span th:text="${totalCartPrice}"></span> €</p>
                     <a href="/room-reservation" class="btn bg-purple">Réserver une chambre</a>
                     <form th:action="@{/cart}" method="post" style="display:inline;">
                         <input type="hidden" name="resetCart" value="true"/>
@@ -69,7 +72,9 @@
 
             </div>
 
-            </div>
+        </div>
+    </div>
+
         </div>
 <div th:replace="fragments/footer :: footer"></div>
 </body>

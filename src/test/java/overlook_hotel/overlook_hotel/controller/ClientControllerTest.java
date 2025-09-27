@@ -35,24 +35,19 @@ public class ClientControllerTest {
             new Client(2L, "flo", "rence", "florence@gmail.com", "0102030405", "ssap","salt2"),
             new Client(3L, "thibault", "noname", "thibaultnoname@gmail.com", "0203040506", "password","salt3"));
 
-        // when(mockClientService.findAllFiltered(eq(""), eq(""), eq(""), eq("")))
-        //     .thenReturn(clientsList); // doesn't work eq("") => empty string, not 'Null'
 
-        // when(mockClientService.findAllFiltered(anyString(), anyString(), anyString(), anyString()))
-        //     .thenReturn(clientsList); // doesn't work
+         when(mockClientService.findAllFiltered(any(), any(), any(), any()))
+                 .thenReturn(clientsList); // works
 
-        // when(mockClientService.findAllFiltered(any(), any(), any(), any()))
-        //         .thenReturn(clientsList); // works
-
-        when(mockClientService.findAllFiltered(any(), any(), any(), any()))
-            .thenAnswer(invocation -> {
-                System.out.println("findAllFiltered (any()) called with: " +
-                invocation.getArgument(0) + ", " +
-                invocation.getArgument(1) + ", " +
-                invocation.getArgument(2) + ", " +
-                invocation.getArgument(3));
-            return clientsList;
-        });
+//        when(mockClientService.findAllFiltered(any(), any(), any(), any()))
+//            .thenAnswer(invocation -> {
+//                System.out.println("findAllFiltered (any()) called with: " +
+//                invocation.getArgument(0) + ", " +
+//                invocation.getArgument(1) + ", " +
+//                invocation.getArgument(2) + ", " +
+//                invocation.getArgument(3));
+//            return clientsList;
+//        });
 
         String clientPage = clientController.clients(
             "",

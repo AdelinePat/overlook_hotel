@@ -28,15 +28,18 @@
     </script>
 </head>
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
+<header>
+    <div class="header" th:replace="fragments/navbar :: navbar"></div>
+</header>
 
 <div class="page ">
+    <div class="content">
         <div th:if="${errors != null}">
             <ul class="alert error">
                 <li th:each="err : ${errors}" th:text="${err}" style="color: red;"></li>
             </ul>
         </div>
-<!--    <h1 th:text="${title}"></h1>-->
+        <!--    <h1 th:text="${title}"></h1>-->
         <div class="filter-bar">
             <form class="filter-bar mt50" th:action="@{/room-reservation}" method="post" th:object="${filterFields}">
 
@@ -140,7 +143,7 @@
                             </li>
                         </ul>
                     </div>
-<!--                    <p class="price"><span th:text="${room.nightPrice}"></span>€/nuit</p>-->
+                    <!--                    <p class="price"><span th:text="${room.nightPrice}"></span>€/nuit</p>-->
                     <form th:action="@{/room-reservation/{id}(id=${room.id})}" method="post" th:object="${filterFields}">
                         <input type="hidden" th:field="*{startDate}" />
                         <input type="hidden" th:field="*{endDate}" />
@@ -159,6 +162,8 @@
                 </div>
             </div>
         </div>
+    </div>
+
 
 </div>
 <div th:replace="fragments/footer :: footer"></div>

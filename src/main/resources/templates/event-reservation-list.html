@@ -6,61 +6,59 @@
   <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
-<!--<nav>-->
-<!--  <a th:href="@{/index.html}">Overlook Hotel</a>-->
-<!--  <ul>-->
-<!--    <li><a th:href="@{/event-reservation}">Nouvelle réservation</a></li>-->
-<!--  </ul>-->
-<!--  <a class="btn bg-purple" th:href="@{/logout}">Se déconnecter</a>-->
-<!--</nav>-->
+<header>
+    <div class="header" th:replace="fragments/navbar :: navbar"></div>
+</header>
 
 <div class="page">
-  <h1 class="mt50">Mes réservations</h1>
+    <div class="content">
+        <h1 class="mt50">Mes réservations</h1>
 
-  <!-- Aucun résultat -->
-  <div th:if="${#lists.isEmpty(reservations)}" class="alert alert-info"
-       style="margin-top:1rem; text-align:center; font-weight:bold;">
-    Aucune réservation trouvée.
-  </div>
+        <!-- Aucun résultat -->
+        <div th:if="${#lists.isEmpty(reservations)}" class="alert alert-info"
+             style="margin-top:1rem; text-align:center; font-weight:bold;">
+            Aucune réservation trouvée.
+        </div>
 
-  <!-- Liste simple -->
-  <table th:if="${!#lists.isEmpty(reservations)}" class="reservation-table">
-    <thead>
-    <tr>
-      <th>Type d'événement</th>
-      <th>Début</th>
-      <th>Fin</th>
-      <th>Durée</th>
-      <th>Espaces réservés</th>
-      <th>Total</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="res : ${reservations}">
-      <td th:text="${@displayText.capitalize(res.eventType.toString())}"></td>
-      <td th:text="${#temporals.format(res.startDate, 'dd/MM/yyyy HH:mm')}"></td>
-      <td th:text="${#temporals.format(res.endDate, 'dd/MM/yyyy HH:mm')}"></td>
+        <!-- Liste simple -->
+        <table th:if="${!#lists.isEmpty(reservations)}" class="reservation-table">
+            <thead>
+            <tr>
+                <th>Type d'événement</th>
+                <th>Début</th>
+                <th>Fin</th>
+                <th>Durée</th>
+                <th>Espaces réservés</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="res : ${reservations}">
+                <td th:text="${@displayText.capitalize(res.eventType.toString())}"></td>
+                <td th:text="${#temporals.format(res.startDate, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${#temporals.format(res.endDate, 'dd/MM/yyyy HH:mm')}"></td>
 
-      <td>
-        <span th:text="${T(java.time.Duration).between(res.startDate, res.endDate).toHours()}"></span> h
-        <span th:text="${T(java.time.Duration).between(res.startDate, res.endDate).toMinutesPart()}"></span> min
-      </td>
+                <td>
+                    <span th:text="${T(java.time.Duration).between(res.startDate, res.endDate).toHours()}"></span> h
+                    <span th:text="${T(java.time.Duration).between(res.startDate, res.endDate).toMinutesPart()}"></span> min
+                </td>
 
 
 
-      <td>
-        <ul>
-          <li th:each="link : ${res.placeLinks}">
-            <span th:text="${@displayText.capitalize(link.place.placeType.name)}"></span>
-            — <span th:text="${link.place.hourlyPrice}"></span> €/h
-          </li>
-        </ul>
-      </td>
-      <td><strong th:text="${res.totalPrice + ' €'}"></strong></td>
-    </tr>
-    </tbody>
-  </table>
+                <td>
+                    <ul>
+                        <li th:each="link : ${res.placeLinks}">
+                            <span th:text="${@displayText.capitalize(link.place.placeType.name)}"></span>
+                            — <span th:text="${link.place.hourlyPrice}"></span> €/h
+                        </li>
+                    </ul>
+                </td>
+                <td><strong th:text="${res.totalPrice + ' €'}"></strong></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
 
 
 </div>

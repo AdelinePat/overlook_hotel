@@ -21,7 +21,7 @@ public class ManagerServiceTest {
     @Test
     public void findAllManagers() {
         List<Manager> managers = managerService.findAllFiltered("", "", "");
-        assertEquals(2, managers.size());
+        assertEquals(3, managers.size());
         System.out.println("\t\t #### 1 #### liste des manager");
         for (Manager manager : managers) {
             System.out.println("\t" + manager.getFirstname() + " " + manager.getLastname());

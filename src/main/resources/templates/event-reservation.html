@@ -15,170 +15,149 @@
 </head>
 <body>
 
-<div th:replace="fragments/navbar :: navbar"></div>
-<!--<nav>-->
-<!--  <a th:href="@{/index.html}">Overlook Hotel</a>-->
-<!--  <ul>-->
-<!--    <li>Dashboard</li>-->
-<!--    <li>Gestion Événements</li>-->
-<!--  </ul>-->
-<!--  <a class="btn bg-purple" th:href="@{/index.html}">Se déconnecter</a>-->
-<!--</nav>-->
+<header>
+    <div class="header" th:replace="fragments/navbar :: navbar"></div>
+</header>
 
 <div class="page">
+    <div class="content">
 
-  <!-- ✅ Messages globaux -->
-  <div th:if="${errorMessage}" class="alert alert-danger"
-       style="color: red; font-weight: bold; margin: 1em 0;">
-    <p th:text="${errorMessage}"></p>
-  </div>
+        <!-- ✅ Messages globaux -->
+        <div th:if="${errorMessage}" class="alert alert-danger"
+             style="color: red; font-weight: bold; margin: 1em 0;">
+            <p th:text="${errorMessage}"></p>
+        </div>
 
-  <div th:if="${successMessage}" class="alert alert-success"
-       style="color: green; font-weight: bold; margin: 1em 0;">
-    <p th:text="${successMessage}"></p>
-  </div>
+        <div th:if="${successMessage}" class="alert alert-success"
+             style="color: green; font-weight: bold; margin: 1em 0;">
+            <p th:text="${successMessage}"></p>
+        </div>
 
-  <!-- FILTER SECTION -->
-
-
-
-
-
-  <form class="filter-bar mt50" th:action="@{/event-reservation}" method="post" th:object="${filterFields}">
-
-    <div class="filter-input reservation-input">
-      <label><i class="fa-solid fa-champagne-glasses"></i></label>
-      <select th:field="*{eventType}">
-        <option value="">-- Type d'événement --</option>
-        <option th:each="et : ${eventTypes}"
-                th:value="${et}"
-                th:text="${@displayText.capitalize(et)}"></option>
-      </select>
-    </div>
-
-    <div class="filter-input reservation-input">
-      <label><i class="fa-solid fa-tags"></i></label>
-      <select th:field="*{placeTypeId}">
-        <option value="">-- Type d'espace --</option>
-        <option th:each="pt : ${placeTypeList}"
-                th:value="${pt.id}"
-                th:text="${@displayText.capitalize(pt.name)}">
-        </option>
-      </select>
-    </div>
-
-    <!--    <div class="filter-input reservation-input">-->
-    <!--      <label><i class="fa-solid fa-user-group"></i></label>-->
-    <!--      <input type="number" th:field="*{minCapacity}" placeholder="Capacité minimale"/>-->
-    <!--    </div>-->
-
-
-<!--    <div class="filter-input reservation-input">-->
-<!--      <label><i class="fa-solid fa-calendar-days"></i></label>-->
-<!--      <input type="datetime-local" th:field="*{startDate}"-->
-<!--      />-->
-<!--      <input type="datetime-local" th:field="*{endDate}"/>-->
-<!--    </div>-->
-    <div class="filter-input reservation-input">
-      <label><i class="fa-solid fa-calendar-days"></i></label>
-
-      <input type="datetime-local"
-             th:field="*{startDate}"
-             th:value="${filterFields.startDate != null ? #temporals.format(filterFields.startDate, 'yyyy-MM-dd''T''HH:mm') : #temporals.format(T(java.time.LocalDateTime).now(), 'yyyy-MM-dd''T''HH:mm')}" />
-
-      <input type="datetime-local"
-             th:field="*{endDate}"
-             th:value="${filterFields.endDate != null ? #temporals.format(filterFields.endDate, 'yyyy-MM-dd''T''HH:mm') : #temporals.format(T(java.time.LocalDateTime).now().plusHours(1), 'yyyy-MM-dd''T''HH:mm')}" />
-    </div>
+        <!-- FILTER SECTION -->
 
 
 
 
-    <button class="btn lh12" type="submit">Rechercher</button>
-  </form>
 
-  <!-- SEARCH RESULTS -->
-  <h1>Résultats: <span th:text="${#lists.size(placeList)}"></span></h1>
-  <div class="booking-content">
-    <div class="book-card"
-         th:each="place : ${placeList}"
-         th:attr="data-hourly=${place.hourlyPrice}">
-      <div class="booking-img"
-           th:classappend="${place.placeType != null ? place.placeType.name.toLowerCase() : 'default'}">
-        <p class="price" th:text="${place.hourlyPrice + ' €/heure'}"></p>
-      </div>
+        <form class="filter-bar mt50" th:action="@{/event-reservation}" method="post" th:object="${filterFields}">
 
-      <div class="card-description">
-        <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
-        <!--        <p>Capacité : <span th:text="${place.capacity}"></span> pers.</p>-->
-        <!--        <p class="price"><span th:text="${place.hourlyPrice}"></span> €/heure</p>-->
-        <form th:action="@{/event-reservation/{id}(id=${place.id})}" method="post" th:object="${filterFields}">
-          <input type="hidden" th:field="*{placeTypeId}"/>
-          <!--          <input type="hidden" th:field="*{minCapacity}"/>-->
-          <input type="hidden" th:field="*{startDate}"/>
-          <input type="hidden" th:field="*{endDate}"/>
-          <input type="hidden" th:field="*{eventType}"/>
-          <button type="submit" class="btn m10">Ajouter au panier</button>
+            <div class="filter-input reservation-input">
+                <label><i class="fa-solid fa-champagne-glasses"></i></label>
+                <select th:field="*{eventType}">
+                    <option value="">-- Type d'événement --</option>
+                    <option th:each="et : ${eventTypes}"
+                            th:value="${et}"
+                            th:text="${@displayText.capitalize(et)}"></option>
+                </select>
+            </div>
+
+            <div class="filter-input reservation-input">
+                <label><i class="fa-solid fa-tags"></i></label>
+                <select th:field="*{placeTypeId}">
+                    <option value="">-- Type d'espace --</option>
+                    <option th:each="pt : ${placeTypeList}"
+                            th:value="${pt.id}"
+                            th:text="${@displayText.capitalize(pt.name)}">
+                    </option>
+                </select>
+            </div>
+
+
+            <div class="filter-input reservation-input">
+                <label><i class="fa-solid fa-calendar-days"></i></label>
+
+                <input type="datetime-local"
+                       th:field="*{startDate}"
+                       th:value="${filterFields.startDate != null ? #temporals.format(filterFields.startDate, 'yyyy-MM-dd''T''HH:mm') : #temporals.format(T(java.time.LocalDateTime).now(), 'yyyy-MM-dd''T''HH:mm')}" />
+
+                <input type="datetime-local"
+                       th:field="*{endDate}"
+                       th:value="${filterFields.endDate != null ? #temporals.format(filterFields.endDate, 'yyyy-MM-dd''T''HH:mm') : #temporals.format(T(java.time.LocalDateTime).now().plusHours(1), 'yyyy-MM-dd''T''HH:mm')}" />
+            </div>
+
+
+
+
+            <button class="btn lh12" type="submit">Rechercher</button>
         </form>
-      </div>
+
+        <!-- SEARCH RESULTS -->
+        <h1>Résultats: <span th:text="${#lists.size(placeList)}"></span></h1>
+        <div class="booking-content">
+            <div class="book-card"
+                 th:each="place : ${placeList}"
+                 th:attr="data-hourly=${place.hourlyPrice}">
+                <div class="booking-img"
+                     th:classappend="${place.placeType != null ? place.placeType.name.toLowerCase() : 'default'}">
+                    <p class="price" th:text="${place.hourlyPrice + ' €/heure'}"></p>
+                </div>
+
+                <div class="card-description">
+                    <h3 th:text="${@displayText.capitalize(place.placeType != null ? place.placeType.name : 'Espace')}"></h3>
+
+                    <form th:action="@{/event-reservation/{id}(id=${place.id})}" method="post" th:object="${filterFields}">
+                        <input type="hidden" th:field="*{placeTypeId}"/>
+                        <input type="hidden" th:field="*{startDate}"/>
+                        <input type="hidden" th:field="*{endDate}"/>
+                        <input type="hidden" th:field="*{eventType}"/>
+                        <button type="submit" class="btn m10">Ajouter au panier</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- EVENT CART -->
+        <div class="display-focus" th:if="${session.eventCart != null}">
+            <h2>Votre panier d’événements</h2>
+            <ul>
+                <li th:each="place : ${session.eventCart}"
+                    th:attr="data-hourly=${place.hourlyPrice}">
+                    <p>
+                        <strong th:text="${@displayText.capitalize(place.placeType.name)}"></strong>
+                        — Prix : <span th:text="${place.hourlyPrice}"></span> €/h
+                        — <span class="calc-total" data-role="total">—</span>
+
+
+                    <form th:action="@{/event-reservation/remove/{id}(id=${place.id})}"
+                          method="post"
+                          class="remove-form"
+                          style="display:inline-block;margin-left:.5rem">
+                        <input type="hidden" th:name="startDate" th:value="${filterFields.startDate}" />
+                        <input type="hidden" th:name="endDate" th:value="${filterFields.endDate}" />
+                        <input type="hidden" th:name="eventType" th:value="${filterFields.eventType}" />
+                        <button class="btn bg-purple" type="submit" title="Retirer">Retirer</button>
+                    </form>
+                    </p>
+                    <hr/>
+                </li>
+            </ul>
+
+            <h3>Total panier : <span id="event-cart-total">—</span></h3>
+
+
+            <div th:if="${successMessage}" class="alert alert-success" style="color: green; font-weight: bold; margin: 1em 0;">
+                <p th:text="${successMessage}"></p>
+            </div>
+
+            <form th:action="@{/event-reservation/confirm}" method="post">
+                <input type="hidden" name="placeTypeId" th:value="${filterFields.placeTypeId}"/>
+                <input type="hidden" name="startDate" th:value="${filterFields.startDate}"/>
+                <input type="hidden" name="endDate" th:value="${filterFields.endDate}"/>
+                <input type="hidden" name="eventType" th:value="${filterFields.eventType}"/>
+                <button class="btn">Confirmer toutes les réservations</button>
+            </form>
+
+            <form th:action="@{/event-reservation/clear}" method="post" style="margin-top:.5rem">
+                <button class="btn">Vider le panier</button>
+
+
+            </form>
+            <form th:action="@{/event-reservation/list}" method="get" style="margin-top:.5rem">
+                <button class="btn bg-purple" type="submit">Voir mes réservations</button>
+            </form>
+        </div>
     </div>
-  </div>
 
-  <!-- EVENT CART -->
-  <div class="display-focus" th:if="${session.eventCart != null}">
-    <h2>Votre panier d’événements</h2>
-    <ul>
-      <!-- 👉 data-hourly ajouté sur <li> -->
-      <li th:each="place : ${session.eventCart}"
-          th:attr="data-hourly=${place.hourlyPrice}">
-        <p>
-          <strong th:text="${@displayText.capitalize(place.placeType.name)}"></strong>
-          <!--          — Capacité : <span th:text="${place.capacity}"></span>-->
-          — Prix : <span th:text="${place.hourlyPrice}"></span> €/h
-          — <span class="calc-total" data-role="total">—</span>
-
-          <!-- ✅ ajout de la classe remove-form -->
-        <form th:action="@{/event-reservation/remove/{id}(id=${place.id})}"
-              method="post"
-              class="remove-form"
-              style="display:inline-block;margin-left:.5rem">
-          <input type="hidden" th:name="startDate" th:value="${filterFields.startDate}" />
-          <input type="hidden" th:name="endDate" th:value="${filterFields.endDate}" />
-          <input type="hidden" th:name="eventType" th:value="${filterFields.eventType}" />
-          <button class="btn bg-purple" type="submit" title="Retirer">Retirer</button>
-        </form>
-        </p>
-        <hr/>
-      </li>
-    </ul>
-
-    <!-- 👉 Total panier global -->
-    <h3>Total panier : <span id="event-cart-total">—</span></h3>
-
-
-    <!-- 👉message success -->
-
-    <div th:if="${successMessage}" class="alert alert-success" style="color: green; font-weight: bold; margin: 1em 0;">
-      <p th:text="${successMessage}"></p>
-    </div>
-
-    <form th:action="@{/event-reservation/confirm}" method="post">
-      <input type="hidden" name="placeTypeId" th:value="${filterFields.placeTypeId}"/>
-      <input type="hidden" name="startDate" th:value="${filterFields.startDate}"/>
-      <input type="hidden" name="endDate" th:value="${filterFields.endDate}"/>
-      <input type="hidden" name="eventType" th:value="${filterFields.eventType}"/>
-      <button class="btn">Confirmer toutes les réservations</button>
-    </form>
-
-    <form th:action="@{/event-reservation/clear}" method="post" style="margin-top:.5rem">
-      <button class="btn">Vider le panier</button>
-
-
-    </form>
-    <form th:action="@{/event-reservation/list}" method="get" style="margin-top:.5rem">
-      <button class="btn bg-purple" type="submit">Voir mes réservations</button>
-    </form>
-  </div>
 
 </div>
 <div th:replace="fragments/footer :: footer"></div>
