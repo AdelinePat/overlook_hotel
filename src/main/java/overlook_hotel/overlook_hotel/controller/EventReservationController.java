@@ -248,7 +248,9 @@ public class EventReservationController {
         }
 
 
-        List<EventReservation> reservations = eventReservationRepository.findByClientId(client.getId());
+//        List<EventReservation> reservations = eventReservationRepository.findByClientId(client.getId());
+        List<EventReservation> reservations = eventReservationRepository.findByClientIdOrderByStartDateDesc(client.getId());
+
 
         model.addAttribute("reservations", reservations);
         model.addAttribute("titlePage", "Mes réservations - Overlook Hotel");

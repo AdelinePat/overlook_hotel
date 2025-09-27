@@ -8,4 +8,8 @@ public interface EventReservationRepository extends JpaRepository<EventReservati
     List<EventReservation> findByClient_Id(Long clientId);
 
     List<EventReservation> findByClientId(Long id);
+
+    List<EventReservation> findByClientIdOrderByStartDateAsc(Long id);
+
+    List<EventReservation> findByClientIdOrderByStartDateDesc(Long id);
 }
