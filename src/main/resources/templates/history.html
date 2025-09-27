@@ -9,26 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/7b20e7d8d0.js" crossorigin="anonymous"></script>
-    <script>
-        function selectRow(id) {
-            document.getElementById("focus-id").value = id;
-            document.getElementById("focusForm").submit();
-        }
-        // Confirm deletion popup for focus form
-        document.addEventListener('DOMContentLoaded', function() {
-            var focusForm = document.getElementById('displayedFocusForm');
-            if (focusForm) {
-                focusForm.addEventListener('submit', function(e) {
-                    var deleteBtn = focusForm.querySelector('button[name="action"][value="delete"]');
-                    if (deleteBtn && document.activeElement === deleteBtn) {
-                        if (!confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) {
-                            e.preventDefault();
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </head>
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
@@ -44,6 +24,22 @@ Gestion Réservation
     <div class="container">
 
         <div class="display-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Prix total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="res : ${reservations}">
+                    <td th:text="${res.startDate}"></td>
+                    <td th:text="${res.endDate}"></td>
+                    <td th:text="${res.totalPrice}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="display-focus">

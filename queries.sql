@@ -198,3 +198,24 @@ JOIN place_type USING (id_place_type)
 ORDER BY id_event_reservation DESC
 LIMIT 5;
 
+
+
+-- Get confirmed reservations for client 1
+SELECT
+    rr.id_room_reservation,
+    rr.id_client,
+    c.lastname,
+    r.id_room,
+    r.number,
+    r.night_price,
+    (r.night_price + COALESCE(SUM(DISTINCT rb.daily_price), 0) + COALESCE(SUM(DISTINCT rrb_bonus.daily_price), 0)) AS total_price
+FROM room_reservation rr
+JOIN client c ON rr.id_client = c.id_client
+JOIN room_link_reservation rlr ON rlr.id_room_reservation = rr.id_room_reservation
+JOIN room r ON r.id_room = rlr.id_room
+LEFT JOIN room_link_bonus rlb ON rlb.id_room = r.id_room
+LEFT JOIN room_bonus rb ON rb.id_room_bonus = rlb.id_room_bonus
+LEFT JOIN room_reservation_bonus rrb ON rrb.id_room_reservation = rr.id_room_reservation AND rrb.id_room = r.id_room
+LEFT JOIN room_bonus rrb_bonus ON rrb_bonus.id_room_bonus = rrb.id_room_bonus
+WHERE c.email = 'quentin.colin@example.com'
+GROUP BY rr.id_room_reservation, rr.id_client, c.lastname, r.id_room, r.number, r.night_price;
