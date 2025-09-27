@@ -15,6 +15,15 @@ import java.util.List;
 
 @Controller
 public class EmployeeController extends AbstractEntityController<Employee, FilterFields> {
+    // Overload (not override) for EmployeeController to support jobEnumValues
+    protected void populateModel(Model model, List<Employee> entities, String entityType, List<String> columns, List<?> enumValues) {
+        model.addAttribute("employees", entities);
+        model.addAttribute("focusedEmployee", focusedEntity);
+        if (enumValues != null) {
+            model.addAttribute("jobEnumValues", enumValues);
+        }
+        super.populateModel(model, entities, entityType, columns);
+    }
 
     private final EmployeeService employeeService;
     private final JobService jobService;
@@ -174,7 +183,7 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
             focusedField -> new FilterFields()
         );
 
-        this.populateModel(model, employees, "employee", List.of("Nom", "Prénom", "Email", "Job"), jobService.getFullJobList());
+    this.populateModel(model, employees, "employee", List.of("Nom", "Prénom", "Email", "Job"), jobService.getFullJobList());
 
         return "table";
     }

@@ -13,6 +13,12 @@ import java.util.List;
 
 @Controller
 public class ClientController extends AbstractEntityController<Client, FilterFields> {
+    @Override
+    protected void populateModel(Model model, List<Client> entities, String entityType, List<String> columns) {
+        model.addAttribute("clients", entities);
+        model.addAttribute("focusedClient", focusedEntity);
+        super.populateModel(model, entities, entityType, columns);
+    }
 
     private final ClientService clientService;
     private FilterFields filterFields;
@@ -42,7 +48,7 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
             this.resetFocusedField(f -> new FilterFields());
             this.filterFields = new FilterFields();
             List<Client> clients = clientService.findAllFiltered("", "", "", "");
-            this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
+            this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"));
             return "table";
         }
 
@@ -67,7 +73,7 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
                         this.filterFields.getEmail(),
                         this.filterFields.getPhone()
                     );
-                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
+                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"));
                     return "table";
                 }
                 // Password validation and hashing (factorized)
@@ -80,7 +86,7 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
                         this.filterFields.getEmail(),
                         this.filterFields.getPhone()
                     );
-                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
+                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"));
                     return "table";
                 }
                 try {
@@ -107,7 +113,7 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
                         this.filterFields.getEmail(),
                         this.filterFields.getPhone()
                     );
-                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
+                    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"));
                     return "table";
                 }
                 try {
@@ -164,7 +170,7 @@ public class ClientController extends AbstractEntityController<Client, FilterFie
             filter -> new FilterFields()
         );
 
-        this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"), null);
+    this.populateModel(model, clients, "client", List.of("Nom", "Prénom", "Email", "Téléphone"));
 
         return "table";
     }
