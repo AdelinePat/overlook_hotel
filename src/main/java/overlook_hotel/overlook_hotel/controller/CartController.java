@@ -13,11 +13,10 @@ import overlook_hotel.overlook_hotel.model.entity.RoomBonus;
 import overlook_hotel.overlook_hotel.model.entity.Standing;
 import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
 import overlook_hotel.overlook_hotel.repository.ClientRepository;
-import overlook_hotel.overlook_hotel.service.RoomBonusService;
-import overlook_hotel.overlook_hotel.service.RoomReservationService;
-import overlook_hotel.overlook_hotel.service.RoomService;
-import overlook_hotel.overlook_hotel.service.StandingService;
+import overlook_hotel.overlook_hotel.service.*;
+
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,18 +34,21 @@ public class CartController {
     private final StandingService standingService;
     private final RoomReservationService roomReservationService;
     private final ClientRepository clientRepository;
+    private final ClientService clientService;
 
     public CartController(RoomService roomService,
                           RoomBonusService roomBonusService,
                           StandingService standingService,
                           RoomReservationService roomReservationService,
-                          ClientRepository clientRepository) {
+                          ClientRepository clientRepository,
+                          ClientService clientService) {
 
         this.roomService = roomService;
         this.roomBonusService = roomBonusService;
         this.standingService = standingService;
         this.roomReservationService = roomReservationService;
         this.clientRepository = clientRepository;
+        this.clientService = clientService;
     }
 
     @ModelAttribute("roomReservationCart")
@@ -114,7 +116,8 @@ public class CartController {
             @ModelAttribute RoomReservationFields roomFields, // only needed for adding items
             @ModelAttribute("roomReservationCart") RoomReservationCart cart,
             SessionStatus sessionStatus,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            Principal principal
     ) {
 
         if (resetCart != null && resetCart) {
@@ -138,14 +141,15 @@ public class CartController {
         }
 
         if (Boolean.TRUE.equals(confirmCart) && !cart.getRooms().isEmpty()) {
-            Optional<Client> dummyClient = clientRepository.findById(1L);
-            if (dummyClient.isEmpty()) {
+//            Optional<Client> dummyClient = clientRepository.findById(1L);
+            Client client = clientService.findByEmail(principal.getName());
+            if (client == null) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Impossible de confirmer la réservation : client introuvable.");
                 return "redirect:/cart";
             }
 
             try {
-                roomReservationService.saveCartAsReservation(cart, dummyClient.get().getId());
+                roomReservationService.saveCartAsReservation(cart, client.getId());
                 cart.getRooms().clear();
                 sessionStatus.setComplete();
                 redirectAttributes.addFlashAttribute("message", "Votre réservation a été confirmée avec succès !");
