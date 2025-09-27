@@ -1,13 +1,62 @@
-# Overlook Hotel
-School group project, 3 contributors.
+ # Overlook Hotel 🏨
+**School group project** 📌, 3 contributors. 
 Solution for hotel management with 3 different services : 
-- Client app (rent a/multiple room(s), rent a/multiple place for an event, comment on past stay)
-- Manager app (CRUD employee, manage employee schedule, view analytics, can do everything clients can in their stead)
+- 👤 **Client app** (rent a/multiple room(s), rent a/multiple place for an event, comment on past stay)
+- 🧑‍💼 **Manager app** (CRUD employee, manage employee schedule, view analytics, can do everything clients can in their stead)
+- 🔒 **Authentication & Security** : Account and session management with Spring Security.
 
-## Tools
-- Language & Framework: Java, Spring Boot
-- Dependencies: Thymeleaf, DevTools, Spring Security, Validation, JPA, Lombok
-- Containerization: Docker & Docker Compose
+___  
+
+🚀 Features  
+
+- 🛎️ Reservation management: rooms + event halls.  
+- 🛠️ Manager interface: full employee management and supervision.  
+- 📊 Statistics & Analytics.  
+- 📝 Customer reviews after stay.  
+- 🔐 Security with Spring Security (login/logout, roles).  
+- 🐳 Docker containerization with MySQL & Spring Boot application.  
+  
+___  
+
+🛠️ Technologies  
+  
+- ☕ Java + Spring Boot  
+- 🎨 Thymeleaf (HTML templates)  
+- 🔄 Spring Data JPA + Hibernate  
+- 🔑 Spring Security  
+- ⚙️ Lombok  
+- 🐳 Docker & Docker Compose  
+
+---  
+📂 ***Project Structure***  
+  
+````
+📂 overlook_hotel  
+ ┣ 📂 src/main/java/overlook_hotel  
+ ┃ ┣ 📂 config          # Configuration Spring (sécurité, beans, etc.)    
+ ┃ ┣ 📂 controller      # Controllers Spring MVC  
+ ┃ ┣ 📂 model           # Entities + DTO  
+ ┃ ┣ 📂 repository      # JPA Repositories  
+ ┃ ┣ 📂 service         # Business logic  
+ ┃ ┣ 📂 specification   # Critères dynamiques pour les requêtes JPA  
+ ┃ ┣ 📂 util            # Fonctions utilitaires  
+ ┣ 📂 resources  
+ ┃ ┣ 📂 templates       # Thymeleaf templates (login, réservation, etc.)  
+ ┃ ┣ 📂 static  
+ ┃ ┃ ┣ 📂 css           # Styles CSS  
+ ┃ ┃ ┣ 📂 img           # Images (logo, background, icônes…)  
+ ┃ ┣ 📄 mpd.jpg         # Schéma de la base de données  
+ ┣ 📄 docker-compose.yml  
+ ┣ 📄 init.sql  
+ ┣ 📄 README.md  
+
+  
+````  
+    
+___   
+  
+ # Installation ⚡
+
 
 ## Setup
 1. Create .env file
@@ -61,3 +110,6 @@ docker compose exec mysql-db sh -c 'mysql -h localhost -u "$MYSQL_USER" -p"$MYSQ
 
 > Notes:
 `$MYSQL_USER`, `$MYSQL_PASSWORD` and `$MYSQL_DATABASE` are set in the mysql-db container environment variables
+
+
+---  
