@@ -1,15 +1,7 @@
 <!-- fragments/footer.html -->
 <div th:fragment="footer" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <footer>
-<!--        if /login (client) =>-->
-        <a>AAAAAAAAAAAAAAAAAAAAAH</a>
         <a th:href="@{/login-admin}" class="footer-link" sec:authorize="isAnonymous()">Connexion administrateur</a>
-
-<!--        if /login-admin-->
-<!--        <a th:href="@{/login}" class="footer-link" sec:authorize="isAnonymous()">Connexion Client</a>-->
-
-<!--        if connecté :-->
-<!--        "tout droit réservé et autres conneries"-->
-
     </footer>
 </div>
+

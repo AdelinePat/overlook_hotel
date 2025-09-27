@@ -88,6 +88,7 @@ public class EmployeeController extends AbstractEntityController<Employee, Filte
                             this.filterFields.getEmail(),
                             this.filterFields.getJob()
                         );
+                      
                         this.populateModel(model, employees, "employee", List.of("Nom", "Prénom", "Email", "Job"), jobService.getFullJobList());
                         return "table";
                     }
