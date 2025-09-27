@@ -31,6 +31,7 @@
       <th>Type d'événement</th>
       <th>Début</th>
       <th>Fin</th>
+      <th>Durée</th>
       <th>Espaces réservés</th>
       <th>Total</th>
     </tr>
@@ -40,6 +41,14 @@
       <td th:text="${@displayText.capitalize(res.eventType.toString())}"></td>
       <td th:text="${#temporals.format(res.startDate, 'dd/MM/yyyy HH:mm')}"></td>
       <td th:text="${#temporals.format(res.endDate, 'dd/MM/yyyy HH:mm')}"></td>
+
+      <td>
+        <span th:text="${T(java.time.Duration).between(res.startDate, res.endDate).toHours()}"></span> h
+        <span th:text="${T(java.time.Duration).between(res.startDate, res.endDate).toMinutesPart()}"></span> min
+      </td>
+
+
+
       <td>
         <ul>
           <li th:each="link : ${res.placeLinks}">
