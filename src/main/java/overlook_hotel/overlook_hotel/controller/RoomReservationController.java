@@ -134,7 +134,7 @@ public class RoomReservationController {
         }
         model.addAttribute("nights", nights);
 
-        BigDecimal baseTotalPerNight = room.getTotalNightPrice();
+        BigDecimal baseTotalPerNight = room.getTotalNightPrice().multiply(BigDecimal.valueOf(nights));
 
         List<RoomBonus> roomBonusList = roomService.getAllBonuses();
 

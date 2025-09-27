@@ -212,6 +212,7 @@ public class RoomReservationService {
             Room room = link.getRoom();
 
             r.setIdRoom(room.getId());
+            r.setRoomNumber(room.getNumber());
             r.setDescription(room.getDescription());
             r.setCapacity(room.getCapacity());
             r.setStanding(room.getStanding());

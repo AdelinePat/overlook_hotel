@@ -51,7 +51,9 @@
         </div>
 
         <div class="display-focus" >
-
+            <div th:if="${focusedReservation == null}">
+                <h3>Veuillez sélectionner une réservation pour voir les détails</h3>
+            </div>
             <div th:if="${focusedReservation != null}">
                 <h2>Détails de la réservation</h2>
                 <p>Créé le: <span th:text="${#temporals.format(focusedReservation.creationDate, 'dd/MM/yy')}"></span> -
@@ -71,8 +73,6 @@
                                 <span th:text="${@displayText.deleteUnderscore(bonus)}"></span>
                                 <span th:if="${!iterStat.last}">, </span>
                             </span>
-<!--                            <span th:text="${@displayText.deleteUnderscore(#lists.join(room.bonuses, ', '))}">-->
-                            </span>
                         </li>
                         <li th:if="${#lists.isEmpty(room.additionalBonuses)}">
                             Bonus supplémentaires: aucun
@@ -82,13 +82,11 @@
                                 <span th:text="${@displayText.deleteUnderscore(bonus)}"></span>
                                 <span th:if="${!iterStat.last}">, </span>
                             </span>
-<!--                            <span th:text="${@displayText.deleteUnderscore(#lists.join(room.additionalBonuses, ', '))">-->
-<!--                            </span>-->
                         </li>
                     </ul>
                     <p>Total de la chambre: <span th:text="${room.totalPriceWithAdditional}"></span> €</p>
                 </div>
-                <p>Total: <span th:text="${focusedReservation.totalPrice}"></span> €</p>
+                <h3>Total: <span th:text="${focusedReservation.totalPrice}"></span> €</h3>
             </div>
 
         </div>
