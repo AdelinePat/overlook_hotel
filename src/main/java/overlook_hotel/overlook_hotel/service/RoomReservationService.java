@@ -2,6 +2,7 @@ package overlook_hotel.overlook_hotel.service;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import overlook_hotel.overlook_hotel.model.ReservationHistoryDTO;
 import overlook_hotel.overlook_hotel.model.RoomReservationFields;
 import overlook_hotel.overlook_hotel.model.entity.*;
 import overlook_hotel.overlook_hotel.model.enumList.RoomBonusEnum;
@@ -12,6 +13,7 @@ import overlook_hotel.overlook_hotel.specification.RoomReservationSpecification;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -138,32 +140,118 @@ public class RoomReservationService {
         return reservations;
     }
 
-    private BigDecimal calculateReservationTotal(RoomReservation reservation) {
-        BigDecimal total = BigDecimal.ZERO;
+    public List<ReservationHistoryDTO> getAllReservationHistoryFromClient(Long clientId) {
+        List<RoomReservation> reservations = this.getAllReservationFromClient(clientId);
+        List<ReservationHistoryDTO> dtoList = new ArrayList<>();
 
-        for (RoomLinkReservation link : reservation.getRoomLinks()) {
+        for (RoomReservation reservation : reservations) {
+
+            int numberOfNights = (int) ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
+            if (numberOfNights < 1) numberOfNights = 1;
+
+            int numberOfRooms = reservation.getRoomLinks().size();
+
+            BigDecimal totalPrice = reservation.getTotalPrice();
+
+            ReservationHistoryDTO dto = new ReservationHistoryDTO(
+                    reservation.getId(),
+                    reservation.getCreationDate(),
+                    reservation.getStartDate(),
+                    reservation.getEndDate(),
+                    numberOfNights,
+                    numberOfRooms,
+                    reservation.getPaymentDate(),
+                    totalPrice,
+                    null
+            );
+
+            dtoList.add(dto);
+        }
+        dtoList.sort((r1, r2) -> r2.getStartDate().compareTo(r1.getStartDate()));
+
+        return dtoList;
+    }
+
+    private BigDecimal calculateReservationTotal(RoomReservation reservation) {
+        return reservation.getRoomLinks().stream()
+                .map(link -> calculateRoomTotal(link.getRoom(), reservation))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//        BigDecimal total = BigDecimal.ZERO;
+//
+//        for (RoomLinkReservation link : reservation.getRoomLinks()) {
+//            Room room = link.getRoom();
+//
+//            BigDecimal basePrice = room.getNightPrice();
+//            BigDecimal baseBonusTotal = room.getBonuses().stream()
+//                    .map(RoomBonus::getDailyPrice)
+//                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//            BigDecimal additionalBonusTotal = reservation.getAdditionalBonuses().stream()
+//                    .filter(b -> b.getRoom().getId().equals(room.getId()))
+//                    .map(rb -> rb.getBonus().getDailyPrice())
+//                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//            long nights = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
+//            if (nights < 1) nights = 1;
+//
+//            total = total.add(
+//                    (basePrice.add(baseBonusTotal).add(additionalBonusTotal))
+//                            .multiply(BigDecimal.valueOf(nights))
+//            );
+//        }
+//
+//        return total;
+    }
+
+
+    public void setReservationWithRooms(ReservationHistoryDTO dto, RoomReservation reservation) {
+        List<RoomReservationFields> rooms = reservation.getRoomLinks().stream().map(link -> {
+
+            RoomReservationFields r = new RoomReservationFields();
+
             Room room = link.getRoom();
 
-            BigDecimal basePrice = room.getNightPrice();
-            BigDecimal baseBonusTotal = room.getBonuses().stream()
-                    .map(RoomBonus::getDailyPrice)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            r.setIdRoom(room.getId());
+            r.setDescription(room.getDescription());
+            r.setCapacity(room.getCapacity());
+            r.setStanding(room.getStanding());
+            r.setStandingString(room.getStanding().toString());
+            r.setStartDate(reservation.getStartDate());
+            r.setEndDate(reservation.getEndDate());
+            r.setTotalPriceWithAdditional(calculateRoomTotal(room, reservation)); // reuse your previous calculation
 
-            BigDecimal additionalBonusTotal = reservation.getAdditionalBonuses().stream()
+            r.setBonuses(room.getBonuses().stream().map(RoomBonus::getType).toList());
+
+            r.setAdditionalBonuses(reservation.getAdditionalBonuses().stream()
                     .filter(b -> b.getRoom().getId().equals(room.getId()))
-                    .map(rb -> rb.getBonus().getDailyPrice())
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    .map(rb -> rb.getBonus().getType())
+                    .toList());
 
-            long nights = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
-            if (nights < 1) nights = 1;
+            return r;
+        }).toList();
 
-            total = total.add(
-                    (basePrice.add(baseBonusTotal).add(additionalBonusTotal))
-                            .multiply(BigDecimal.valueOf(nights))
-            );
-        }
-
-        return total;
+        dto.setRooms(rooms);
     }
+
+    private BigDecimal calculateRoomTotal(Room room, RoomReservation reservation) {
+        BigDecimal basePrice = room.getNightPrice();
+
+        BigDecimal defaultBonusTotal = room.getBonuses().stream()
+                .map(RoomBonus::getDailyPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal additionalBonusTotal = reservation.getAdditionalBonuses().stream()
+                .filter(b -> b.getRoom().getId().equals(room.getId()))
+                .map(rb -> rb.getBonus().getDailyPrice())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        long nights = ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate());
+        if (nights < 1) nights = 1;
+
+        return (basePrice.add(defaultBonusTotal).add(additionalBonusTotal))
+                .multiply(BigDecimal.valueOf(nights));
+    }
+
+
 
 }
