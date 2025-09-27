@@ -6,62 +6,59 @@
   <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body>
-<header>
-    <div class="header" th:replace="fragments/navbar :: navbar"></div>
-</header>
+    <header>
+        <div class="header" th:replace="fragments/navbar :: navbar"></div>
+    </header>
 
-<div class="page">
-    <div class="content">
-        <h1 class="mt50">Mes réservations d'événements</h1>
+    <div class="page">
+        <div class="content">
+            <h1 class="mt50">Mes réservations d'événements</h1>
 
-        <!-- Aucun résultat -->
-        <div th:if="${#lists.isEmpty(reservations)}" class="alert alert-info"
-             style="margin-top:1rem; text-align:center; font-weight:bold;">
-            Aucune réservation trouvée.
+            <!-- Aucun résultat -->
+            <div th:if="${#lists.isEmpty(reservations)}" class="alert alert-info"
+                 style="margin-top:1rem; text-align:center; font-weight:bold;">
+                Aucune réservation trouvée.
+            </div>
+
+            <!-- Liste simple -->
+            <table th:if="${!#lists.isEmpty(reservations)}" class="reservation-table">
+                <thead>
+                <tr>
+                    <th>Type d'événement</th>
+                    <th>Début</th>
+                    <th>Fin</th>
+                    <th>Durée</th>
+                    <th>Espaces réservés</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="res : ${reservations}">
+                    <td th:text="${@displayText.capitalize(res.eventType.toString())}"></td>
+                    <td th:text="${#temporals.format(res.startDate, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${#temporals.format(res.endDate, 'dd/MM/yyyy HH:mm')}"></td>
+
+                    <td>
+                        <span th:text="${T(java.time.Duration).between(res.startDate, res.endDate).toHours()}"></span> h
+                        <span th:text="${T(java.time.Duration).between(res.startDate, res.endDate).toMinutesPart()}"></span> min
+                    </td>
+
+
+
+                    <td>
+                        <ul>
+                            <li th:each="link : ${res.placeLinks}">
+                                <span th:text="${@displayText.capitalize(link.place.placeType.name)}"></span>
+                                — <span th:text="${link.place.hourlyPrice}"></span> €/h
+                            </li>
+                        </ul>
+                    </td>
+                    <td><strong th:text="${res.totalPrice + ' €'}"></strong></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-
-        <!-- Liste simple -->
-        <table th:if="${!#lists.isEmpty(reservations)}" class="reservation-table">
-            <thead>
-            <tr>
-                <th>Type d'événement</th>
-                <th>Début</th>
-                <th>Fin</th>
-                <th>Durée</th>
-                <th>Espaces réservés</th>
-                <th>Total</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="res : ${reservations}">
-                <td th:text="${@displayText.capitalize(res.eventType.toString())}"></td>
-                <td th:text="${#temporals.format(res.startDate, 'dd/MM/yyyy HH:mm')}"></td>
-                <td th:text="${#temporals.format(res.endDate, 'dd/MM/yyyy HH:mm')}"></td>
-
-                <td>
-                    <span th:text="${T(java.time.Duration).between(res.startDate, res.endDate).toHours()}"></span> h
-                    <span th:text="${T(java.time.Duration).between(res.startDate, res.endDate).toMinutesPart()}"></span> min
-                </td>
-
-
-
-                <td>
-                    <ul>
-                        <li th:each="link : ${res.placeLinks}">
-                            <span th:text="${@displayText.capitalize(link.place.placeType.name)}"></span>
-                            — <span th:text="${link.place.hourlyPrice}"></span> €/h
-                        </li>
-                    </ul>
-                </td>
-                <td><strong th:text="${res.totalPrice + ' €'}"></strong></td>
-            </tr>
-            </tbody>
-        </table>
     </div>
-
-
-
-</div>
-<div th:replace="fragments/footer :: footer"></div>
-</body>
+    <div th:replace="fragments/footer :: footer"></div>
+    </body>
 </html>
