@@ -18,47 +18,62 @@
 <div class="page">
     <div class="content">
         <div class="container">
-            <h1>Votre panier</h1>
+            <div class="display-table">
+                <div th:if="${message != null}" class="alert success">
+                    <p th:text="${message}"></p>
+                </div>
 
-            <div th:if="${message != null}" class="alert success">
-                <p th:text="${message}"></p>
-            </div>
+                <div th:if="${errorMessage != null}" class="alert error">
+                    <p th:text="${errorMessage}"></p>
+                </div>
 
-            <div th:if="${errorMessage != null}" class="alert error">
-                <p th:text="${errorMessage}"></p>
-            </div>
+                <h1>Votre panier</h1>
 
-            <div th:if="${#lists.isEmpty(cartItems)}">
-                <p>Votre panier est vide.</p>
-                <a href="/room-reservation" class="btn bg-purple">Réserver une chambre</a>
-            </div>
+                <div class="cart" th:if="${#lists.isEmpty(cartItems)}">
+                    <p>Votre panier est vide.</p>
+                    <a href="/room-reservation" class="btn bg-purple my20">Réserver une chambre</a>
+                </div>
 
-            <div th:if="${!#lists.isEmpty(cartItems)}">
-                <div class="cart-items">
-                    <div class="cart-room" th:each="room,  iterStat : ${cartItems}">
-                        <h2>Chambre <span th:text="${room.roomNumber}"></span></h2>
+                <div class="cart" th:if="${!#lists.isEmpty(cartItems)}">
+                    <div class="cart-items">
 
-                        <p>
-                            <i class="fa-solid fa-calendar-days"></i>
-                            Dates: [[${room.startDate}]] → [[${room.endDate}]]
-                        </p>
+                        <div class="cart-room" th:each="room,  iterStat : ${cartItems}">
 
-                        <p>
-                            <strong>Bonus supplémentaires :</strong>
-                            <span th:if="${#lists.isEmpty(room.additionalBonuses)}">Aucun</span>
-                            <span th:each="bonus, bonusStat : ${@displayText.capitalize(room.additionalBonuses)}">
-                                [[${bonus}]]<span th:if="${!bonusStat.last}">, </span>
-                            </span>
-                        </p>
-                        <form th:action="@{/cart}" method="post" style="display:inline;">
-                            <input type="hidden" name="deleteIndex" th:value="${iterStat.index}" />
-                            <button type="submit" class="btn">Annuler</button>
-                        </form>
-                        <p>Prix de la chambre : <span th:text="${room.getTotalPriceWithAdditional}"></span></p>
+                            <div class="cart-img" th:classappend="${room.standing.name.toLowerCase()}">
+                            </div>
 
+                            <div class="cart-content">
+
+                                <h3>Chambre <span th:text="${room.roomNumber}"></span> - <span th:text="${room.standing.name.toLowerCase()}"></span></h3>
+
+                                <p>
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                    Dates: [[${room.startDate}]] → [[${room.endDate}]]
+                                </p>
+
+                                <p>
+                                    <strong>Bonus supplémentaires :</strong>
+                                    <span th:if="${#lists.isEmpty(room.additionalBonuses)}">Aucun</span>
+                                    <span th:each="bonus, bonusStat : ${@displayText.capitalize(room.additionalBonuses)}">
+                                    [[${bonus}]]<span th:if="${!bonusStat.last}">, </span>
+                                </span>
+                                </p>
+                                <form th:action="@{/cart}" method="post" style="display:inline;">
+                                    <input type="hidden" name="deleteIndex" th:value="${iterStat.index}" />
+                                    <button type="submit" class="btn">Annuler</button>
+                                </form>
+                                <p>Prix de la chambre : <span th:text="${room.getTotalPriceWithAdditional}"></span>€</p>
+                            </div>
+
+
+                        </div>
                     </div>
-                    <h2>Prix total de toutes les chambres :</h2>
-                    <p><span th:text="${totalCartPrice}"></span> €</p>
+                </div>
+            </div>
+
+            <div class="display-focus focus-cart">
+                <h3>Prix total de toutes les chambres : <span th:text="${totalCartPrice}"></span>€</h3>
+                <div class="cart-link">
                     <a href="/room-reservation" class="btn bg-purple">Réserver une chambre</a>
                     <form th:action="@{/cart}" method="post" style="display:inline;">
                         <input type="hidden" name="resetCart" value="true"/>
@@ -71,11 +86,12 @@
                 </div>
 
             </div>
-
         </div>
+
+
     </div>
+</div>
 
-        </div>
 <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
