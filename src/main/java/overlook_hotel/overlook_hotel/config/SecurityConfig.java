@@ -55,13 +55,13 @@ public class SecurityConfig {
             .securityMatcher("/**")
             .userDetailsService(customUserDetailsService)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/cart", "/room_reservation", "/room-detail", "/event-reservation").hasRole("CLIENT")
+                .requestMatchers("/cart", "/room-reservation", "/room-detail", "/event-reservation").hasRole("CLIENT")
                 .requestMatchers("/login", "/css/**", "/js/**", "/img/**", "/").permitAll()
                 .anyRequest().permitAll()
             )
             .formLogin(login -> login
                 .loginPage("/login")
-                .defaultSuccessUrl("/", true)
+                .defaultSuccessUrl("/room-reservation", true)
                 .permitAll()
             )
             .logout(logout -> logout
