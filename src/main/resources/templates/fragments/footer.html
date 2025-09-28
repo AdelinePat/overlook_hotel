@@ -1,8 +1,15 @@
 <!-- fragments/footer.html -->
 <div th:fragment="footer" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <footer>
-        <a th:href="@{/}" class="footer-link">Accueil</a>
-        <a th:href="@{/login-admin}" class="footer-link" sec:authorize="isAnonymous()">Connexion administrateur</a>
+        <a th:href="@{/room-reservation}" class="footer-link" sec:authorize="hasRole('CLIENT')">Accueil</a>
+        <a th:href="@{/clients}" class="footer-link" sec:authorize="hasRole('MANAGER')">Accueil</a>
+        <a th:href="@{/}" class="footer-link" sec:authorize="isAnonymous()">Accueil</a>
+
+        <p>© 2025 Overlook Hotel. Tous droits réservés.</p>
+
+        <div sec:authorize="isAnonymous()">
+            <a th:href="@{/login-admin}" class="footer-link">Connexion administrateur</a>
+        </div>
     </footer>
 </div>
 

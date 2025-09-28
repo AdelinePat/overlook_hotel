@@ -3,30 +3,21 @@
     <nav>
         <a href="/">Overlook Hotel</a>
         <ul class="nav-list">
-            <li th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
-                <a class="nav-link" th:href="@{/clients}">Gestions Clients</a>
-            </li>
-            <li th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
-                <a class="nav-link" th:href="@{/employees}">Gestions Employés</a>
-            </li>
-            <li th:if="${#authorization.expression('hasRole(''EMPLOYEE'')')}">
-                <a class="nav-link" th:href="@{/schedule}">Planning</a>
-            </li>
-            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
-                <a class="nav-link" th:href="@{/room-reservation}">Réserver votre Séjour</a>
-            </li>
-<!--            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">-->
-<!--                <a class="nav-link" th:href="@{/event-reservation}">Réserver votre Événement</a>-->
-<!--            </li>-->
-            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
-                <a class="nav-link" th:href="@{/history}"><i class="fa-solid fa-list-check"></i> Vos séjours</a>
-            </li>
-            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
-                <a class="nav-link" th:href="@{/event-reservation/list}"><i class="fa-solid fa-gifts"></i> Vos événements</a>
-            </li>
-            <li th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
-                <a class="nav-link" th:href="@{/cart}"><i class="fa-solid fa-cart-shopping"></i> Votre Sélection</a>
-            </li>
+            <div th:if="${#authorization.expression('hasRole(''MANAGER'')')}">
+                <li><a class="nav-link" th:href="@{/clients}">Gestions Clients</a></li>
+                <li><a class="nav-link" th:href="@{/employees}">Gestions Employés</a></li>
+            </div>
+
+            <div th:if="${#authorization.expression('hasRole(''EMPLOYEE'')')}">
+                <li><a class="nav-link" th:href="@{/schedule}">Planning</a></li>
+            </div>
+
+            <div th:if="${#authorization.expression('hasRole(''CLIENT'')')}">
+                <li><a class="nav-link" th:href="@{/room-reservation}">Réserver votre Séjour</a></li>
+                <li><a class="nav-link" th:href="@{/history}"><i class="fa-solid fa-list-check"></i> Vos séjours</a></li>
+                <li><a class="nav-link" th:href="@{/event-reservation/list}"><i class="fa-solid fa-gifts"></i> Vos événements</a></li>
+                <li><a class="nav-link" th:href="@{/cart}"><i class="fa-solid fa-cart-shopping"></i> Votre Sélection</a></li>
+            </div>
         </ul>
 
         <div th:if="${!#authorization.expression('isAuthenticated()')}">
@@ -37,11 +28,12 @@
             </form>
             <a th:href="@{/register}" class="btn">Créer un compte</a>
         </div>
-        <ul>
-            <li th:if="${#authorization.expression('isAuthenticated()')}">
+        
+        <ul th:if="${#authorization.expression('isAuthenticated()')}">
+            <li>
                 <span>Bienvenue, <span th:text="${#authentication?.name}"></span></span>
             </li>
-            <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <li>
                 <form th:action="@{/logout}" method="post" style="display:inline;">
                     <button type="submit" class="btn">Déconnexion</button>
                 </form>
