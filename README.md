@@ -64,20 +64,24 @@ Copy `.env.example` and fill in the necessary values:
 ```bash
 cp .env.example .env
 ```
+
 2. Build and run the project in dev mode
 ```bash
 docker compose up --build
 ```
 This will pull & build images and create necessary network and volumes
+
 3. Stop containers (if needed)
 ```bash
 docker compose stop
 ```
 The containers are set to restart automatically; stop them manually if not needed
+
 4. Restart containers
 ```bash
 docker compose start
 ```
+
 ## Running tests
 Since the app runs inside containers, you need to execute tests from the `dev` container:
 - Run all tests:
