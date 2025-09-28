@@ -1,4 +1,7 @@
  # Overlook Hotel 🏨
+![NotreHotel](overlook_hotel.jpg)
+![Noschambres](chambre_overlookhotel.jpg)
+
 **School group project** 📌, 3 contributors. 
 Solution for hotel management with 3 different services : 
 - 👤 **Client app** (rent a/multiple room(s), rent a/multiple place for an event, comment on past stay)
@@ -116,4 +119,18 @@ docker compose exec mysql-db sh -c 'mysql -h localhost -u "$MYSQL_USER" -p"$MYSQ
 `$MYSQL_USER`, `$MYSQL_PASSWORD` and `$MYSQL_DATABASE` are set in the mysql-db container environment variables
 
 
+---  
+
+# Contributing  
+  
+This project was made by:  
+  
+- [Thibault Caron](https://github.com/thibault-caron)  
+- [Adeline Patenne](https://github.com/AdelinePat/)  
+- [Florence Navet](https://github.com/florence-navet)  
+  
+### Licence  
+  
+This project is licensed under the MIT License.  
+  
 ---  
