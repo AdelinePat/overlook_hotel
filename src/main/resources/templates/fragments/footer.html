@@ -5,7 +5,7 @@
         <a th:href="@{/clients}" class="footer-link" sec:authorize="hasRole('MANAGER')">Accueil</a>
         <a th:href="@{/}" class="footer-link" sec:authorize="isAnonymous()">Accueil</a>
 
-        <p>© 2025 Overlook Hotel. Tous droits réservés.</p>
+        <p><span class="copyright">Adeline Florence Thibault - </span> © 2025 Overlook Hotel. Tous droits réservés. </p>
 
         <div sec:authorize="isAnonymous()">
             <a th:href="@{/login-admin}" class="footer-link">Connexion administrateur</a>

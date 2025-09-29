@@ -860,3 +860,7 @@ create_account ~ .login-content form div input::placeholder {
     gap: 24px;
     align-items: center;
 }
+
+.copyright {
+    color: var(--main-dark-bg-color);
+}
